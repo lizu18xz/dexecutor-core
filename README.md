@@ -4,7 +4,7 @@ Execute Dependent tasks in a reliable way
 ## Example
 Lets take a look at an example, here is the content of `DefaultDependentTasksExecutorTest`, which would help you understand the API
 
-   ```
+   
 
 	@Test
 	public void testDependentTaskExecution() {
@@ -53,7 +53,7 @@ Lets take a look at an example, here is the content of `DefaultDependentTasksExe
 			};
 		}		
 	}
-```
+
 As can be seen above, `DefaultDependentTasksExecutor` requires two things
 1. Instance of `ExecutorService` API would use this Service to schedule tasks
 2. Instance of `TaskProvider`, API represents graph using just the basic information (could be task id), it consults the `TaskProvider` to provide the task when it comes to actual execution.
@@ -61,7 +61,7 @@ As can be seen above, `DefaultDependentTasksExecutor` requires two things
 There are two phases
 1. Graph construction 
 
-    ```
+    
 		executor.addDependency(1, 2);
       executor.addDependency(1, 3);
       executor.addDependency(3, 4);
@@ -82,14 +82,14 @@ Which would generate the following graph
 ![Dependent Tasks Graph](http://s29.postimg.org/fhnct6wjr/dependent_tasks_graph.png)
 2. Tasks execution
 
-    ``` 
+    
 	executor.execute()
    	
-   ```
+   
    
 ## Console Output
 
-    ```
+    
     19:57:43.705 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 1 node
     19:57:43.710 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 11 node
     19:57:43.710 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 12 node
@@ -121,5 +121,5 @@ Which would generate the following graph
     19:57:45.725 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 10 done
     19:57:45.726 [main] INFO  c.n.e.DefaultDependentTasksExecutor.execute 69 - Total Time taken to process 14 jobs each taking 500 ms is 2022 ms instead of 7000 ms
     19:57:45.728 [main] INFO  c.n.e.DefaultDependentTasksExecutor.execute 70 - [1, 11, 12, 2, 3, 13, 7, 9, 8, 5, 6, 4, 14, 10]
-```
+
 

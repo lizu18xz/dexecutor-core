@@ -59,33 +59,31 @@ As can be seen above, `DefaultDependentTasksExecutor` requires two things
 2. Instance of `TaskProvider`, API represents graph using just the basic information (could be task id), it consults the `TaskProvider` to provide the task when it comes to actual execution.
 
 There are two phases
+
 1. Graph construction 
 
     
-		executor.addDependency(1, 2);
-      executor.addDependency(1, 3);
-      executor.addDependency(3, 4);
-      executor.addDependency(3, 5);
-      executor.addDependency(3, 6);
-      //executor.addDependency(10, 2); // cycle
-      executor.addDependency(2, 7);
-      executor.addDependency(2, 9);
-      executor.addDependency(2, 8);
-      executor.addDependency(9, 10);
-      executor.addDependency(12, 13);
-      executor.addDependency(13, 4);
-      executor.addDependency(13, 14);
-      executor.addIndependent(11);
-    ```
+	executor.addDependency(1, 2);
+    executor.addDependency(1, 3);
+    executor.addDependency(3, 4);
+    executor.addDependency(3, 5);
+    executor.addDependency(3, 6);
+    //executor.addDependency(10, 2); // cycle
+    executor.addDependency(2, 7);
+    executor.addDependency(2, 9);
+    executor.addDependency(2, 8);
+    executor.addDependency(9, 10);
+    executor.addDependency(12, 13);
+    executor.addDependency(13, 4);
+    executor.addDependency(13, 14);
+    executor.addIndependent(11);
+    
 Which would generate the following graph
 
 ![Dependent Tasks Graph](http://s29.postimg.org/fhnct6wjr/dependent_tasks_graph.png)
 2. Tasks execution
-
     
 	executor.execute()
-   	
-   
    
 ## Console Output
 

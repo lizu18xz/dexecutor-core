@@ -62,7 +62,7 @@ As can be seen above, `DefaultDependentTasksExecutor` requires two things
 1. Graph construction: When you say `executor.addDependency(1, 2)` it means tasks `1` should finish before task `2`can start, `executor.addIndependent(11)` means neither task `11` depend on any task nor any other task depend on task `11`.
 
     
-	executor.addDependency(1, 2);
+	 executor.addDependency(1, 2);
     executor.addDependency(1, 3);
     executor.addDependency(3, 4);
     executor.addDependency(3, 5);

@@ -14,9 +14,9 @@ public final class DefaultGraph<T> implements Graph<T> {
 		doAdd(nodeValue);
 	}
 
-	public void addDependency(final T evalFirstValue, final T evalAfterValue) {
-		Node<T> firstNode = doAdd(evalFirstValue);
-		Node<T> afterNode = doAdd(evalAfterValue);
+	public void addDependency(final T evalFirstNode, final T evalLaterNode) {
+		Node<T> firstNode = doAdd(evalFirstNode);
+		Node<T> afterNode = doAdd(evalLaterNode);
 
 		firstNode.addOutGoingNode(afterNode);
 		afterNode.addInComingNode(firstNode);

@@ -42,8 +42,8 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 		this.graph.addIndependent(nodeValue);
 	}
 
-	public void addDependency(final T evalFirstValue, final T evalAfterValue) {
-		this.graph.addDependency(evalFirstValue, evalAfterValue);
+	public void addDependency(final T evalFirstNode, final T evalLaterNode) {
+		this.graph.addDependency(evalFirstNode, evalLaterNode);
 	}
 
 	private boolean isAlreadyProcessed(final Node<T> node) {

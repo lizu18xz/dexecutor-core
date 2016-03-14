@@ -40,15 +40,15 @@ public final class DefaultGraph<T> implements Graph<T> {
 	}
 
 	public List<Node<T>> getInitialNodes() {
-		List<Node<T>> orphanNodes = new ArrayList<Node<T>>();
+		List<Node<T>> initialNodes = new ArrayList<Node<T>>();
 		Set<T> keys = nodes.keySet();
 		for (T key : keys) {
 			Node<T> node = nodes.get(key);
 			if (node.getInComingNodes().isEmpty()) {				
-				orphanNodes.add(node);
+				initialNodes.add(node);
 			}
 		}
-		return orphanNodes;
+		return initialNodes;
 	}
 
 	public int size() {

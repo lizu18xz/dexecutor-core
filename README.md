@@ -3,7 +3,6 @@ Execute Dependent tasks in a reliable way
 
 ## Example
 Lets take a look at an example, here is the content of `DefaultDependentTasksExecutorTest`, which would help you understand the API
-
    
 
 	@Test
@@ -58,9 +57,9 @@ As can be seen above, `DefaultDependentTasksExecutor` requires two things
 1. Instance of `ExecutorService` API would use this Service to schedule tasks
 2. Instance of `TaskProvider`, API represents graph using just the basic information (could be task id), it consults the `TaskProvider` to provide the task when it comes to actual execution.
 
-There are two phases
+##There are two phases
 
-1. Graph construction 
+1. Graph construction: When you say `executor.addDependency(1, 2)` it means tasks `1` should finish before task `2`can start, `executor.addIndependent(11)` means neither task `11` depend on any task nor any other task depend on task `11`.
 
     
 	executor.addDependency(1, 2);

@@ -1,4 +1,4 @@
-package com.nadeem.executor;
+package com.dexecutor.executor;
 
 public interface TaskProvider <T> {
 

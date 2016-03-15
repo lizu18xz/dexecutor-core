@@ -1,4 +1,4 @@
-package com.nadeem.executor;
+package com.dexecutor.executor;
 
 import java.util.Collection;
 import java.util.Date;
@@ -14,12 +14,12 @@ import java.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.nadeem.executor.TaskProvider.Task;
-import com.nadeem.executor.graph.CyclicValidator;
-import com.nadeem.executor.graph.DefaultGraph;
-import com.nadeem.executor.graph.Graph;
-import com.nadeem.executor.graph.Graph.Node;
-import com.nadeem.executor.graph.Validator;
+import com.dexecutor.executor.TaskProvider.Task;
+import com.dexecutor.executor.graph.CyclicValidator;
+import com.dexecutor.executor.graph.DefaultGraph;
+import com.dexecutor.executor.graph.Graph;
+import com.dexecutor.executor.graph.Graph.Node;
+import com.dexecutor.executor.graph.Validator;
 
 public final class DefaultDependentTasksExecutor <T> implements DependentTasksExecutor<T> {
 

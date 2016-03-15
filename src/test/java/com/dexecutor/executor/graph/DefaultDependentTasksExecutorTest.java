@@ -1,12 +1,12 @@
-package com.nadeem.executor.graph;
+package com.dexecutor.executor.graph;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.junit.Test;
 
-import com.nadeem.executor.DefaultDependentTasksExecutor;
-import com.nadeem.executor.TaskProvider;
+import com.dexecutor.executor.DefaultDependentTasksExecutor;
+import com.dexecutor.executor.TaskProvider;
 
 public class DefaultDependentTasksExecutorTest {
 

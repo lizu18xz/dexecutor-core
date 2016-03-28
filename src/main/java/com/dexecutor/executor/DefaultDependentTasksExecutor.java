@@ -66,8 +66,8 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 
 		long end = new Date().getTime();
 
-		logger.info("Total Time taken to process {} jobs each taking 500 ms is {} ms instead of {} ms", graph.size(), end - start, 500 * this.graph.size());
-		logger.info(this.processedNodes.toString());
+		logger.debug("Total Time taken to process {} jobs each is {} ms.", graph.size(), end - start);
+		logger.debug("Processed Ndoes Ordering {}", this.processedNodes);
 	}
 
 	private void validate() {

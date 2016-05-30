@@ -66,7 +66,7 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 
 		long end = new Date().getTime();
 
-		logger.debug("Total Time taken to process {} jobs each is {} ms.", graph.size(), end - start);
+		logger.debug("Total Time taken to process {} jobs is {} ms.", graph.size(), end - start);
 		logger.debug("Processed Ndoes Ordering {}", this.processedNodes);
 	}
 
@@ -78,7 +78,8 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 		for (Node<T> node : nodes) {
 			if (shouldProcess(node) ) {
 				logger.debug("Going to schedule {} node", node.value);
-				completionService.submit(newTask(node));
+				boolean stopOnError = true;
+				completionService.submit(newTask(node, stopOnError));
 			} else {
 				logger.debug("node {} depends on {}", node.value, node.getInComingNodes());
 			}
@@ -115,13 +116,43 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 		}
 	}
 
-	private Callable<Node<T>> newTask(final Node<T> graphNode) {
-		return new Callable<Node<T>>() {
-			public Node<T> call() throws Exception {
-				Task task = taskProvider.provid(graphNode.value);
+	private Callable<Node<T>> newTask(final Node<T> graphNode, boolean stopOnError) {
+		if (stopOnError) {
+			return new TerminatingTask(graphNode);
+		} else {
+			return new NonTerminatingTask(graphNode);
+		}
+	}
+
+	private class TerminatingTask implements Callable<Node<T>> {
+		private Node<T> node;
+
+		public TerminatingTask(Node<T> graphNode) {
+			this.node = graphNode;
+		}
+
+		public Node<T> call() throws Exception {
+			Task task = taskProvider.provid(node.value);
+			task.execute();
+			return node;
+		}
+	}
+
+	private class NonTerminatingTask implements Callable<Node<T>> {
+		private Node<T> node;
+
+		public NonTerminatingTask(Node<T> graphNode) {
+			this.node = graphNode;
+		}
+
+		public Node<T> call() throws Exception {
+			try {
+				Task task = taskProvider.provid(node.value);
 				task.execute();
-				return graphNode;
+			} catch(Exception ex) {
+				logger.error("Exception caught, executing task :" + node.value, ex);
 			}
-		};
+			return node;
+		}
 	}
 }

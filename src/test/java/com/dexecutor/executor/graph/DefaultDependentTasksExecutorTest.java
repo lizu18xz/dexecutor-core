@@ -30,7 +30,7 @@ public class DefaultDependentTasksExecutorTest {
         executor.addDependency(13, 14);
         executor.addIndependent(11);
 
-        executor.execute();
+        executor.execute(true);
 	}
 
 	private DefaultDependentTasksExecutor<Integer> newTaskExecutor() {

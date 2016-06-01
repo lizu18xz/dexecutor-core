@@ -54,15 +54,16 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
         return this.processedNodes.containsAll(nodes);
     }
 
-	public void execute() {
+	public void execute(boolean stopOnError) {
 		validate();
+
 		List<Node<T>> initialNodes = this.graph.getInitialNodes();
 		CompletionService<Node<T>> completionService = new ExecutorCompletionService<Node<T>>(executorService);
 
 		long start = new Date().getTime();
 
-		doExecute(initialNodes, completionService);
-		doWaitForExecution(completionService, graph.size());
+		doExecute(initialNodes, completionService, stopOnError);
+		doWaitForExecution(completionService, graph.size(), stopOnError);
 
 		long end = new Date().getTime();
 
@@ -74,11 +75,10 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 		this.validator.validate(this.graph);
 	}
 
-	private void doExecute(final Collection<Node<T>> nodes, final CompletionService<Node<T>> completionService) {
+	private void doExecute(final Collection<Node<T>> nodes, final CompletionService<Node<T>> completionService, boolean stopOnError) {
 		for (Node<T> node : nodes) {
 			if (shouldProcess(node) ) {
 				logger.debug("Going to schedule {} node", node.value);
-				boolean stopOnError = true;
 				completionService.submit(newTask(node, stopOnError));
 			} else {
 				logger.debug("node {} depends on {}", node.value, node.getInComingNodes());
@@ -97,7 +97,7 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 		return false;
 	}
 
-	private void doWaitForExecution(final CompletionService<Node<T>> completionService, int totalNodes) {
+	private void doWaitForExecution(final CompletionService<Node<T>> completionService, int totalNodes, boolean stopOnError) {
 		int cuurentCount = 0;
 		while (cuurentCount != totalNodes) {
 			try {
@@ -107,7 +107,7 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 				cuurentCount++;
 				this.processedNodes.add(processedNode);				
 				//System.out.println(this.executorService);
-				doExecute(processedNode.getOutGoingNodes(), completionService);
+				doExecute(processedNode.getOutGoingNodes(), completionService, stopOnError);
 			} catch (InterruptedException e) {
 				logger.error("Task interrupted", e);
 			} catch (ExecutionException e) {

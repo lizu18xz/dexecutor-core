@@ -1,6 +1,6 @@
 package com.dexecutor.executor;
 
-public abstract class PoolUtil {
+public final class PoolUtil {
 	
 	private PoolUtil() {
 		
@@ -8,7 +8,7 @@ public abstract class PoolUtil {
 
 	public static int poolSize() {
 		// Each tasks blocks 90% of the time, and works only 10% of its
-		// lifetime. I/O intensive pool
+		// lifetime. That is, I/O intensive pool
 		double blockingCoefficient = 0.9;
 		return poolSize(blockingCoefficient);
 	}

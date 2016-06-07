@@ -87,7 +87,7 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 	}
 
 	private boolean shouldProcess(final Node<T> node) {
-		return !isAlreadyProcessed(node) && allIncomingNodesProcessed(node);
+		return !this.executorService.isShutdown() && !isAlreadyProcessed(node) && allIncomingNodesProcessed(node);
 	}
 
 	private boolean allIncomingNodesProcessed(final Node<T> node) {

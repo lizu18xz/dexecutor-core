@@ -32,6 +32,7 @@ public class DefaultDependentTasksExecutorTest {
         executor.addIndependent(11);
 
         executor.execute(true);
+        System.out.println("*** Done ***");
 	}
 
 	private DefaultDependentTasksExecutor<Integer> newTaskExecutor() {

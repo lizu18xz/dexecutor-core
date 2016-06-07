@@ -1,19 +1,19 @@
 package com.dexecutor.executor.graph;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public interface Graph<T> {
 
 	void addDependency(T evalFirstValue, T evalAfterValue);
-	List<Node<T>> getInitialNodes();
+	Set<Node<T>> getInitialNodes();
 	void addIndependent(T nodeValue);
 	int size();
 
 	public final class Node<T> {
 	    public T value;
-	    private List<Node<T>> inComingEdges = new LinkedList<Node<T>>();
-	    private List<Node<T>> outGoingEdges = new LinkedList<Node<T>>();
+	    private Set<Node<T>> inComingEdges = new LinkedHashSet<Graph.Node<T>>();
+	    private Set<Node<T>> outGoingEdges = new LinkedHashSet<Graph.Node<T>>();
 
 	    public void addInComingNode(final Node<T> node) {	        
 	        this.inComingEdges.add(node);
@@ -23,11 +23,11 @@ public interface Graph<T> {
 	        this.outGoingEdges.add(node);
 	    }
 
-	    public List<Node<T>> getInComingNodes() {
+	    public Set<Node<T>> getInComingNodes() {
 	        return this.inComingEdges;
 	    }
 
-	    public List<Node<T>> getOutGoingNodes() {
+	    public Set<Node<T>> getOutGoingNodes() {
 	        return this.outGoingEdges;
 	    }
 

@@ -1,8 +1,7 @@
 package com.dexecutor.executor.graph;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,8 +38,8 @@ public final class DefaultGraph<T> implements Graph<T> {
 		return node;
 	}
 
-	public List<Node<T>> getInitialNodes() {
-		List<Node<T>> initialNodes = new ArrayList<Node<T>>();
+	public Set<Node<T>> getInitialNodes() {
+		Set<Node<T>> initialNodes = new LinkedHashSet<Node<T>>();
 		Set<T> keys = nodes.keySet();
 		for (T key : keys) {
 			Node<T> node = nodes.get(key);

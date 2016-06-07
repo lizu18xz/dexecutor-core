@@ -2,7 +2,7 @@ package com.dexecutor.executor;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -50,14 +50,14 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 		return this.processedNodes.contains(node);
 	}
 
-	private boolean areAlreadyProcessed(final List<Node<T>> nodes) {
+	private boolean areAlreadyProcessed(final Set<Node<T>> nodes) {
         return this.processedNodes.containsAll(nodes);
     }
 
 	public void execute(boolean stopOnError) {
 		validate();
 
-		List<Node<T>> initialNodes = this.graph.getInitialNodes();
+		Set<Node<T>> initialNodes = this.graph.getInitialNodes();
 		CompletionService<Node<T>> completionService = new ExecutorCompletionService<Node<T>>(executorService);
 
 		long start = new Date().getTime();

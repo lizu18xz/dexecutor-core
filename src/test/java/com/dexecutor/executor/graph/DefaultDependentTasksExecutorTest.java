@@ -16,6 +16,7 @@ public class DefaultDependentTasksExecutorTest {
 		DefaultDependentTasksExecutor<Integer> executor = newTaskExecutor();
 
         executor.addDependency(1, 2);
+        executor.addDependency(1, 2);
         executor.addDependency(1, 3);
         executor.addDependency(3, 4);
         executor.addDependency(3, 5);

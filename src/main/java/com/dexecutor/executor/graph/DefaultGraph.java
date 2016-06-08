@@ -1,5 +1,7 @@
 package com.dexecutor.executor.graph;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -33,8 +35,7 @@ public final class DefaultGraph<T> implements Graph<T> {
 	}
 
 	private Node<T> createNode(final T value) {
-		Node<T> node = new Node<T>();
-		node.value = value;
+		Node<T> node = new Node<T>(value);
 		return node;
 	}
 
@@ -53,4 +54,9 @@ public final class DefaultGraph<T> implements Graph<T> {
 	public int size() {
 		return nodes.size();
 	}
+
+	public Collection<Graph.Node<T>> allNodes() {
+		return new ArrayList<Graph.Node<T>>(this.nodes.values());
+	}
+
 }

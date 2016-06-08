@@ -1,4 +1,4 @@
-package com.dexecutor.executor.graph;
+package com.dexecutor.executor;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

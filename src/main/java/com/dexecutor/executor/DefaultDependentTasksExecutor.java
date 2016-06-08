@@ -78,10 +78,10 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 	private void doExecute(final Collection<Node<T>> nodes, final CompletionService<Node<T>> completionService, boolean stopOnError) {
 		for (Node<T> node : nodes) {
 			if (shouldProcess(node) ) {
-				logger.debug("Going to schedule {} node", node.value);
+				logger.debug("Going to schedule {} node", node.getValue());
 				completionService.submit(newTask(node, stopOnError));
 			} else {
-				logger.debug("node {} depends on {}", node.value, node.getInComingNodes());
+				logger.debug("node {} depends on {}", node.getValue(), node.getInComingNodes());
 			}
 		}		
 	}
@@ -103,7 +103,7 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 			try {
 				Future<Node<T>> future = completionService.take();
 				Node<T> processedNode = future.get();
-				logger.debug("Processing of node {} done", processedNode.value);
+				logger.debug("Processing of node {} done", processedNode.getValue());
 				cuurentCount++;
 				this.processedNodes.add(processedNode);				
 				//System.out.println(this.executorService);
@@ -132,7 +132,7 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 		}
 
 		public Node<T> call() throws Exception {
-			Task task = taskProvider.provid(node.value);
+			Task task = taskProvider.provid(node.getValue());
 			task.execute();
 			return node;
 		}
@@ -147,10 +147,10 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 
 		public Node<T> call() throws Exception {
 			try {
-				Task task = taskProvider.provid(node.value);
+				Task task = taskProvider.provid(node.getValue());
 				task.execute();
 			} catch(Exception ex) {
-				logger.error("Exception caught, executing task :" + node.value, ex);
+				logger.error("Exception caught, executing task :" + node.getValue(), ex);
 			}
 			return node;
 		}

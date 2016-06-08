@@ -2,7 +2,6 @@ package com.dexecutor.executor.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 
 import com.dexecutor.executor.graph.Graph.Node;
 
@@ -12,10 +11,10 @@ public class CyclicValidator<T> implements Validator<T> {
 	private Collection<Graph.Node<T>> onStackNodes = new ArrayList<Graph.Node<T>>();
 
 	public void validate(final Graph<T> graph) {
-		doProcess(graph.getInitialNodes());
+		doProcess(graph.allNodes());
 	}
 
-	private void doProcess(final Set<Graph.Node<T>> nodes) {
+	private void doProcess(final Collection<Graph.Node<T>> nodes) {
 		for (Graph.Node<T> node : nodes) {
 			detectCycle(node);
 		}

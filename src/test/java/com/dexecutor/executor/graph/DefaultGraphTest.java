@@ -1,7 +1,6 @@
 package com.dexecutor.executor.graph;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collection;
 import java.util.Set;
@@ -20,7 +19,7 @@ public class DefaultGraphTest {
 		graph.addDependency(1, 2);		
 		graph.addIndependent(3);
 		graph.addDependency(1, 3);
-		assertThat(graph.size(), equalTo(3));
+		assertThat(graph.size()).isEqualTo(3);
 	}
 
 	@Test
@@ -33,10 +32,10 @@ public class DefaultGraphTest {
 		graph.addDependency(1, 3);
 		Set<Node<Integer>> initialNodes = graph.getInitialNodes();
 		
-		assertThat(initialNodes.size(), equalTo(1));		
-		assertThat(initialNodes.iterator().next(), equalTo(new Graph.Node<Integer>(1)));
+		assertThat(initialNodes.size()).isEqualTo(1);
+		assertThat(initialNodes).containsSequence(new Graph.Node<Integer>(1));
 	}
-	
+
 	@Test
 	public void testAllNodes() {
 		Graph<Integer> graph = new DefaultGraph<Integer>();
@@ -47,6 +46,7 @@ public class DefaultGraphTest {
 		graph.addDependency(1, 3);
 		Collection<Node<Integer>> initialNodes = graph.allNodes();
 		
-		assertThat(initialNodes.size(), equalTo(3));
+		assertThat(initialNodes.size()).isEqualTo(3);
+		assertThat(initialNodes).containsSequence(new Graph.Node<Integer>(1), new Graph.Node<Integer>(2), new Graph.Node<Integer>(3));
 	}
 }

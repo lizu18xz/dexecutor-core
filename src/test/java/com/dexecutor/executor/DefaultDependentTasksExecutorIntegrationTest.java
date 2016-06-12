@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.dexecutor.executor.DefaultDependentTasksExecutor;
 import com.dexecutor.executor.TaskProvider;
 
-public class DefaultDependentTasksExecutorTest {
+public class DefaultDependentTasksExecutorIntegrationTest {
 
 	@Test
 	public void testDependentTaskExecution() {
@@ -31,7 +31,8 @@ public class DefaultDependentTasksExecutorTest {
         executor.addDependency(13, 14);
         executor.addIndependent(11);
 
-        executor.execute(true);
+        boolean stopOnError = true;
+		executor.execute(stopOnError);
         System.out.println("*** Done ***");
 	}
 
@@ -40,7 +41,7 @@ public class DefaultDependentTasksExecutorTest {
 	}
 
 	private ExecutorService newExecutor() {
-		return Executors.newCachedThreadPool();
+		return Executors.newFixedThreadPool(PoolUtil.ioIntesivePoolSize());
 	}
 
 	private static class SleepyTaskProvider<T> implements TaskProvider<T> {

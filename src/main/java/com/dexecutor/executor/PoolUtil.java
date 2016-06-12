@@ -6,7 +6,7 @@ public final class PoolUtil {
 		
 	}
 
-	public static int poolSize() {
+	public static int ioIntesivePoolSize() {
 		// Each tasks blocks 90% of the time, and works only 10% of its
 		// lifetime. That is, I/O intensive pool
 		double blockingCoefficient = 0.9;

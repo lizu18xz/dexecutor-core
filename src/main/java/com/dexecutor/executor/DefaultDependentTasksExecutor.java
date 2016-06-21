@@ -6,10 +6,10 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +31,7 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 
 	private Validator<T> validator = new CyclicValidator<T>();
 	private Collection<Node<T>> processedNodes = new CopyOnWriteArrayList<Node<T>>();
+	private AtomicInteger nodesCount = new AtomicInteger(0);
 
 	public DefaultDependentTasksExecutor(final ExecutorService executor, final TaskProvider<T> taskProvider) {
 		this.executorService = executor;
@@ -61,14 +62,18 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 		CompletionService<Node<T>> completionService = new ExecutorCompletionService<Node<T>>(executorService);
 
 		long start = new Date().getTime();
-
-		doExecute(initialNodes, completionService, stopOnError);
-		doWaitForExecution(completionService, graph.size(), stopOnError);
+		
+		doProcessNodes(stopOnError, initialNodes, completionService);
 
 		long end = new Date().getTime();
 
 		logger.debug("Total Time taken to process {} jobs is {} ms.", graph.size(), end - start);
 		logger.debug("Processed Ndoes Ordering {}", this.processedNodes);
+	}
+
+	private void doProcessNodes(boolean stopOnError, Set<Node<T>> nodes, CompletionService<Node<T>> completionService) {
+		doExecute(nodes, completionService, stopOnError);
+		doWaitForExecution(completionService, stopOnError);	
 	}
 
 	private void validate() {
@@ -78,6 +83,7 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 	private void doExecute(final Collection<Node<T>> nodes, final CompletionService<Node<T>> completionService, boolean stopOnError) {
 		for (Node<T> node : nodes) {
 			if (shouldProcess(node) ) {
+				nodesCount.incrementAndGet();
 				logger.debug("Going to schedule {} node", node.getValue());
 				completionService.submit(newTask(node, stopOnError));
 			} else {
@@ -97,9 +103,9 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 		return false;
 	}
 
-	private void doWaitForExecution(final CompletionService<Node<T>> completionService, int totalNodes, boolean stopOnError) {
+	private void doWaitForExecution(final CompletionService<Node<T>> completionService, boolean stopOnError) {
 		int cuurentCount = 0;
-		while (cuurentCount != totalNodes) {
+		while (cuurentCount != nodesCount.get()) {
 			try {
 				Future<Node<T>> future = completionService.take();
 				Node<T> processedNode = future.get();
@@ -108,10 +114,9 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 				this.processedNodes.add(processedNode);				
 				//System.out.println(this.executorService);
 				doExecute(processedNode.getOutGoingNodes(), completionService, stopOnError);
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
+				cuurentCount++;
 				logger.error("Task interrupted", e);
-			} catch (ExecutionException e) {
-				logger.error("Task aborted", e);
 			}
 		}
 	}

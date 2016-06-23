@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public interface Graph<T> {
+public interface Graph<T extends Comparable<T>> {
 
 	void addDependency(T evalFirstValue, T evalAfterValue);
 	Set<Node<T>> getInitialNodes();

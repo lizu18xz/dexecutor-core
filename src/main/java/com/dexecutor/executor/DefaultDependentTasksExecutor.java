@@ -21,7 +21,7 @@ import com.dexecutor.executor.graph.Graph;
 import com.dexecutor.executor.graph.Graph.Node;
 import com.dexecutor.executor.graph.Validator;
 
-public final class DefaultDependentTasksExecutor <T> implements DependentTasksExecutor<T> {
+public final class DefaultDependentTasksExecutor <T extends Comparable<T>> implements DependentTasksExecutor<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultDependentTasksExecutor.class);
 
@@ -140,7 +140,7 @@ public final class DefaultDependentTasksExecutor <T> implements DependentTasksEx
 			Task task = taskProvider.provid(node.getValue());
 			task.execute();
 			return node;
-		}
+		}		
 	}
 
 	private class NonTerminatingTask implements Callable<Node<T>> {

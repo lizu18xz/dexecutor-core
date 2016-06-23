@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-public final class DefaultGraph<T> implements Graph<T> {
+public final class DefaultGraph<T extends Comparable<T>> implements Graph<T> {
 
 	private Map<T, Node<T>> nodes = new HashMap<T, Node<T>>();
 

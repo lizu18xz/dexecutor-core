@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import com.dexecutor.executor.graph.Graph.Node;
 
-public class CyclicValidator<T> implements Validator<T> {
+public class CyclicValidator<T extends Comparable<T>> implements Validator<T> {
 
 	private Collection<Graph.Node<T>> processedNodes = new ArrayList<Graph.Node<T>>();
 	private Collection<Graph.Node<T>> onStackNodes = new ArrayList<Graph.Node<T>>();

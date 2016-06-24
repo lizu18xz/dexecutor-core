@@ -37,21 +37,7 @@ public class DefaultDependentTasksExecutorTest {
 
 		DefaultDependentTasksExecutor<Integer> executor = newTaskExecutor(false);
 
-		executor.addDependency(1, 2);
-		executor.addDependency(1, 2);
-		executor.addDependency(1, 3);
-		executor.addDependency(3, 4);
-		executor.addDependency(3, 5);
-		executor.addDependency(3, 6);
-		// executor.addDependency(10, 2); // cycle
-		executor.addDependency(2, 7);
-		executor.addDependency(2, 9);
-		executor.addDependency(2, 8);
-		executor.addDependency(9, 10);
-		executor.addDependency(12, 13);
-		executor.addDependency(13, 4);
-		executor.addDependency(13, 14);
-		executor.addIndependent(11);
+		addDependencies(executor);
 
 		executor.execute(false);
 
@@ -59,7 +45,7 @@ public class DefaultDependentTasksExecutorTest {
 
 		assertThat(processedNodesOrder, equalTo(executionOrderExpectedResult()));
 	}
-	
+
 	
 	@SuppressWarnings("unchecked")
 	@Test
@@ -69,13 +55,23 @@ public class DefaultDependentTasksExecutorTest {
 
 		DefaultDependentTasksExecutor<Integer> executor = newTaskExecutor(true);
 
+		addDependencies(executor);
+
+		executor.execute(true);
+
+		Collection<Node<Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
+
+		assertThat(processedNodesOrder, equalTo((Collection<Node<Integer>>)Arrays.asList(new Node<Integer>(1), new Node<Integer>(11), new Node<Integer>(12))));
+	}
+
+
+	private void addDependencies(DefaultDependentTasksExecutor<Integer> executor) {
 		executor.addDependency(1, 2);
 		executor.addDependency(1, 2);
 		executor.addDependency(1, 3);
 		executor.addDependency(3, 4);
 		executor.addDependency(3, 5);
 		executor.addDependency(3, 6);
-		// executor.addDependency(10, 2); // cycle
 		executor.addDependency(2, 7);
 		executor.addDependency(2, 9);
 		executor.addDependency(2, 8);
@@ -84,12 +80,6 @@ public class DefaultDependentTasksExecutorTest {
 		executor.addDependency(13, 4);
 		executor.addDependency(13, 14);
 		executor.addIndependent(11);
-
-		executor.execute(true);
-
-		Collection<Node<Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
-
-		assertThat(processedNodesOrder, equalTo((Collection<Node<Integer>>)Arrays.asList(new Node<Integer>(1), new Node<Integer>(11), new Node<Integer>(12))));
 	}
 
 	private Collection<Node<Integer>> executionOrderExpectedResult() {
@@ -131,6 +121,10 @@ public class DefaultDependentTasksExecutorTest {
 			return new Task() {
 
 				public void execute() {
+					doExecute(id);
+				}
+
+				private void doExecute(final T id) {
 					if (throwEx) {
 						if (id ==  Integer.valueOf(2)) {
 							throw new RuntimeException();
@@ -168,25 +162,30 @@ public class DefaultDependentTasksExecutorTest {
 					return false;
 				}
 
-				public Node<Integer> get(long timeout, TimeUnit unit)
-						throws InterruptedException, ExecutionException, TimeoutException {
-					return null;
-				}
-
 				public boolean cancel(boolean mayInterruptIfRunning) {
 					return false;
 				}
 
+				public Node<Integer> get(long timeout, TimeUnit unit)
+						throws InterruptedException, ExecutionException, TimeoutException {
+					return doGet();
+				}
+
 				public Node<Integer> get() throws InterruptedException, ExecutionException {
+					return doGet();
+				}
+				
+				private Node<Integer> doGet() {
 					try {
 						Node<Integer> call = nodes.get(index).call();
 						index++;
 						return call;
 					} catch (Exception e) {
-
+						
 					}
 					return null;
 				}
+
 			};
 		}
 	}

@@ -8,9 +8,11 @@ import org.junit.Test;
 import com.dexecutor.executor.DefaultDependentTasksExecutor;
 import com.dexecutor.executor.TaskProvider;
 
+import ch.qos.logback.core.joran.spi.NoAutoStart;
+
 public class DefaultDependentTasksExecutorIntegrationTest {
 
-	@Test
+	//@Test
 	public void testDependentTaskExecution() {
 
 		DefaultDependentTasksExecutor<Integer> executor = newTaskExecutor();

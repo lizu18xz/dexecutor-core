@@ -1,5 +1,6 @@
 package com.dexecutor.executor;
 
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
@@ -19,6 +20,8 @@ import com.dexecutor.executor.graph.CyclicValidator;
 import com.dexecutor.executor.graph.DefaultGraph;
 import com.dexecutor.executor.graph.Graph;
 import com.dexecutor.executor.graph.Graph.Node;
+import com.dexecutor.executor.graph.LevelOrderTraversar;
+import com.dexecutor.executor.graph.Traversar;
 import com.dexecutor.executor.graph.Validator;
 
 public final class DefaultDependentTasksExecutor <T extends Comparable<T>> implements DependentTasksExecutor<T> {
@@ -30,6 +33,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 	private Graph<T> graph;
 
 	private Validator<T> validator = new CyclicValidator<T>();
+	private Traversar<T> traversar = new LevelOrderTraversar<T>();
 	private Collection<Node<T>> processedNodes = new CopyOnWriteArrayList<Node<T>>();
 	private AtomicInteger nodesCount = new AtomicInteger(0);
 
@@ -37,6 +41,10 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		this.executorService = executor;
 		this.taskProvider = taskProvider;
 		this.graph = new DefaultGraph<T>();
+	}
+
+	public void print(Writer writer) {
+		this.traversar.traverse(this.graph, writer);
 	}
 
 	public void addIndependent(final T nodeValue) {

@@ -11,13 +11,15 @@ import java.util.Set;
 import com.dexecutor.executor.graph.Graph.Node;
 
 public class LevelOrderTraversar<T extends Comparable<T>> implements Traversar<T> {
-
+	
+	private List<Graph.Node<T>> processed = new ArrayList<Graph.Node<T>>();
+	
 	public void traverse(final Graph<T> graph, final Writer writer) {
 		List<List<List<Node<T>>>> levelOrderOfGraphs = traverseLevelOrder(graph);
 		int i = 0;
 		for (List<List<Node<T>>> levelOrderOfGraph : levelOrderOfGraphs) {
 			try {
-				writer.write("Path #" + i++ + "\n");
+				writer.write("Path #" + (i++) + "\n");
 				printGraph(levelOrderOfGraph, writer);
 				writer.write("\n");
 			} catch (IOException e) {
@@ -45,12 +47,18 @@ public class LevelOrderTraversar<T extends Comparable<T>> implements Traversar<T
 			int size = queue.size();
 			for (int i = 0; i < size; i++) {
 				Node<T> node = queue.poll();
-				level.add(node);
-				for (Node<T> ogn : node.getOutGoingNodes()) {
-					if (ogn != null) {
-						queue.offer(ogn);
+				if (!this.processed.contains(node)) {
+					if (!level.contains(node)) {					
+						level.add(node);
+					}
+					this.processed.add(node);
+					for (Node<T> ogn : node.getOutGoingNodes()) {
+						if (ogn != null && !this.processed.contains(ogn)) {
+							queue.offer(ogn);
+						}
 					}
 				}
+				
 			}
 			result.add(level);
 		}

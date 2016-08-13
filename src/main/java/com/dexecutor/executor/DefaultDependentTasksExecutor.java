@@ -140,14 +140,14 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 	private class TerminatingTask implements Callable<Node<T>> {
 		private Node<T> node;
 
-		public TerminatingTask(Node<T> graphNode) {
+		public TerminatingTask(final Node<T> graphNode) {
 			this.node = graphNode;
 		}
 
 		public Node<T> call() throws Exception {
-			Task task = taskProvider.provid(node.getValue());
+			Task task = taskProvider.provid(this.node.getValue());
 			task.execute();
-			return node;
+			return this.node;
 		}		
 	}
 
@@ -160,12 +160,12 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 
 		public Node<T> call() throws Exception {
 			try {
-				Task task = taskProvider.provid(node.getValue());
+				Task task = taskProvider.provid(this.node.getValue());
 				task.execute();
 			} catch(Exception ex) {
-				logger.error("Exception caught, executing task :" + node.getValue(), ex);
+				logger.error("Exception caught, executing task :" + this.node.getValue(), ex);
 			}
-			return node;
+			return this.node;
 		}
 	}
 }

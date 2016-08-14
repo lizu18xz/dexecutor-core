@@ -103,7 +103,7 @@ public class DefaultDependentTasksExecutorTest {
 	}
 
 	private DefaultDependentTasksExecutor<Integer> newTaskExecutor(boolean throwEx) {
-		return new DefaultDependentTasksExecutor<Integer>(new DependentTasksExecutorConfig<Integer>(newExecutor(), new DummyTaskProvider<Integer>(throwEx)));
+		return new DefaultDependentTasksExecutor<Integer>(newExecutor(), new DummyTaskProvider<Integer>(throwEx));
 	}
 
 	private ExecutorService newExecutor() {

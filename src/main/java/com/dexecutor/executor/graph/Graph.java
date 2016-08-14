@@ -6,8 +6,8 @@ import java.util.Set;
 
 public interface Graph<T extends Comparable<T>> {
 
-	void addDependency(T evalFirstValue, T evalAfterValue);
-	void addIndependent(T nodeValue);
+	void addDependency(final T evalFirstValue, final T evalAfterValue);
+	void addIndependent(final T nodeValue);
 	Set<Node<T>> getInitialNodes();
 	Set<Node<T>> getLeafNodes();
 	Collection<Node<T>> allNodes();	
@@ -18,7 +18,7 @@ public interface Graph<T extends Comparable<T>> {
 	    private Set<Node<T>> inComingEdges = new LinkedHashSet<Graph.Node<T>>();
 	    private Set<Node<T>> outGoingEdges = new LinkedHashSet<Graph.Node<T>>();
 	    
-	    public Node(T val) {
+	    public Node(final T val) {
 			this.value = val;
 		}
 
@@ -39,14 +39,14 @@ public interface Graph<T extends Comparable<T>> {
 	    }
 
 		public T getValue() {
-			return value;
+			return this.value;
 		}
 
 		@Override
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + ((value == null) ? 0 : value.hashCode());
+			result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
 			return result;
 		}
 

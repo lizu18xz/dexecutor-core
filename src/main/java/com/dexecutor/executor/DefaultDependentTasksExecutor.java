@@ -35,6 +35,10 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 	private Collection<Node<T>> processedNodes = new CopyOnWriteArrayList<Node<T>>();
 	private AtomicInteger nodesCount = new AtomicInteger(0);
 
+	public DefaultDependentTasksExecutor(final ExecutorService executorService, final TaskProvider<T> taskProvider) {
+		this(new DependentTasksExecutorConfig<T>(executorService, taskProvider));
+	}
+
 	public DefaultDependentTasksExecutor(final DependentTasksExecutorConfig<T> config) {
 		config.validate();
 		this.executorService = config.getExecutorService();
@@ -44,7 +48,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		this.graph = new DefaultGraph<T>();
 	}
 
-	public void print(Writer writer) {
+	public void print(final Writer writer) {
 		this.traversar.traverse(this.graph, writer);
 	}
 

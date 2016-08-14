@@ -41,7 +41,7 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 	}
 
 	private DefaultDependentTasksExecutor<Integer> newTaskExecutor() {
-		return new DefaultDependentTasksExecutor<Integer>(new DependentTasksExecutorConfig<Integer>(newExecutor(), new SleepyTaskProvider<Integer>()));
+		return new DefaultDependentTasksExecutor<Integer>(newExecutor(), new SleepyTaskProvider<Integer>());
 	}
 
 	private ExecutorService newExecutor() {

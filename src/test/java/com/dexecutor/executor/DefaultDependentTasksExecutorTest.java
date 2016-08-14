@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.dexecutor.executor.graph.Graph.Node;
+import com.dexecutor.executor.support.PoolUtil;
 
 import mockit.Deencapsulation;
 import mockit.Mock;
@@ -102,14 +103,14 @@ public class DefaultDependentTasksExecutorTest {
 	}
 
 	private DefaultDependentTasksExecutor<Integer> newTaskExecutor(boolean throwEx) {
-		return new DefaultDependentTasksExecutor<Integer>(newExecutor(), new DummyTaskProvider<Integer>(throwEx));
+		return new DefaultDependentTasksExecutor<Integer>(new DependentTasksExecutorConfig<Integer>(newExecutor(), new DummyTaskProvider<Integer>(throwEx)));
 	}
 
 	private ExecutorService newExecutor() {
 		return Executors.newFixedThreadPool(PoolUtil.ioIntesivePoolSize());
 	}
 
-	private static class DummyTaskProvider<T> implements TaskProvider<T> {
+	private static class DummyTaskProvider<T extends Comparable<T>> implements TaskProvider<T> {
 		private boolean throwEx;
 		
 		public DummyTaskProvider(boolean throwEx) {

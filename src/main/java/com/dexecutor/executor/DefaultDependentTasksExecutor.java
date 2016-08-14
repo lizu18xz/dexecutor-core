@@ -16,11 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexecutor.executor.TaskProvider.Task;
-import com.dexecutor.executor.graph.CyclicValidator;
 import com.dexecutor.executor.graph.DefaultGraph;
 import com.dexecutor.executor.graph.Graph;
 import com.dexecutor.executor.graph.Graph.Node;
-import com.dexecutor.executor.graph.LevelOrderTraversar;
 import com.dexecutor.executor.graph.Traversar;
 import com.dexecutor.executor.graph.Validator;
 
@@ -30,16 +28,19 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 
 	private ExecutorService executorService;
 	private TaskProvider<T> taskProvider;
+	private Validator<T> validator;
+	private Traversar<T> traversar;
 	private Graph<T> graph;
 
-	private Validator<T> validator = new CyclicValidator<T>();
-	private Traversar<T> traversar = new LevelOrderTraversar<T>();
 	private Collection<Node<T>> processedNodes = new CopyOnWriteArrayList<Node<T>>();
 	private AtomicInteger nodesCount = new AtomicInteger(0);
 
-	public DefaultDependentTasksExecutor(final ExecutorService executor, final TaskProvider<T> taskProvider) {
-		this.executorService = executor;
-		this.taskProvider = taskProvider;
+	public DefaultDependentTasksExecutor(final DependentTasksExecutorConfig<T> config) {
+		config.validate();
+		this.executorService = config.getExecutorService();
+		this.taskProvider = config.getTaskProvider();
+		this.validator = config.getValidator();
+		this.traversar = config.getTraversar();
 		this.graph = new DefaultGraph<T>();
 	}
 
@@ -53,6 +54,16 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 
 	public void addDependency(final T evalFirstNode, final T evalLaterNode) {
 		this.graph.addDependency(evalFirstNode, evalLaterNode);
+	}
+
+	public void addAsDependencyToAllLeafNodes(final T nodeValue) {
+		if (this.graph.size() == 0) {
+			addIndependent(nodeValue);
+		} else {
+			for (Node<T> node : this.graph.getLeafNodes()) {
+				addDependency(node.getValue(), nodeValue);
+			}
+		}
 	}
 
 	private boolean isAlreadyProcessed(final Node<T> node) {

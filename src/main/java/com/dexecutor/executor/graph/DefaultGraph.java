@@ -59,4 +59,15 @@ public final class DefaultGraph<T extends Comparable<T>> implements Graph<T> {
 		return new ArrayList<Graph.Node<T>>(this.nodes.values());
 	}
 
+	public Set<Graph.Node<T>> getLeafNodes() {
+		Set<Node<T>> leafNodes = new LinkedHashSet<Node<T>>();
+		Set<T> keys = nodes.keySet();
+		for (T key : keys) {
+			Node<T> node = nodes.get(key);
+			if (node.getOutGoingNodes().isEmpty()) {				
+				leafNodes.add(node);
+			}
+		}
+		return leafNodes;
+	}
 }

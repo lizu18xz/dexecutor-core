@@ -6,6 +6,8 @@ import java.util.concurrent.Executors;
 
 import org.junit.Test;
 
+import com.dexecutor.executor.support.PoolUtil;
+
 public class DefaultDependentTasksExecutorIntegrationTest {
 
 	@Test
@@ -39,14 +41,14 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 	}
 
 	private DefaultDependentTasksExecutor<Integer> newTaskExecutor() {
-		return new DefaultDependentTasksExecutor<Integer>(newExecutor(), new SleepyTaskProvider<Integer>());
+		return new DefaultDependentTasksExecutor<Integer>(new DependentTasksExecutorConfig<Integer>(newExecutor(), new SleepyTaskProvider<Integer>()));
 	}
 
 	private ExecutorService newExecutor() {
 		return Executors.newFixedThreadPool(PoolUtil.ioIntesivePoolSize());
 	}
 
-	private static class SleepyTaskProvider<T> implements TaskProvider<T> {
+	private static class SleepyTaskProvider<T extends Comparable<T>> implements TaskProvider<T> {
 
 		public Task provid(T id) {
 

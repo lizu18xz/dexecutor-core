@@ -7,10 +7,11 @@ import java.util.Set;
 public interface Graph<T extends Comparable<T>> {
 
 	void addDependency(T evalFirstValue, T evalAfterValue);
-	Set<Node<T>> getInitialNodes();
 	void addIndependent(T nodeValue);
+	Set<Node<T>> getInitialNodes();
+	Set<Node<T>> getLeafNodes();
+	Collection<Node<T>> allNodes();	
 	int size();
-	Collection<Node<T>> allNodes();
 
 	public final class Node<T> {
 		private T value;

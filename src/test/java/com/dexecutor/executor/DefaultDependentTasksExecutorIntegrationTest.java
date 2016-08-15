@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 
 import org.junit.Test;
 
+import com.dexecutor.executor.DependentTasksExecutor.ExecutionBehavior;
 import com.dexecutor.executor.support.PoolUtil;
 
 public class DefaultDependentTasksExecutorIntegrationTest {
@@ -35,8 +36,7 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 		executor.print(writer);
 		System.out.println(writer);
 
-		boolean stopOnError = true;
-		executor.execute(stopOnError);
+		executor.execute(ExecutionBehavior.RETRY_ONCE_TERMINATING);
         System.out.println("*** Done ***");
 	}
 

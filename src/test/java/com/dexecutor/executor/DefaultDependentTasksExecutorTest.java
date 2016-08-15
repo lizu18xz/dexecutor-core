@@ -20,6 +20,7 @@ import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.dexecutor.executor.DependentTasksExecutor.ExecutionBehavior;
 import com.dexecutor.executor.graph.Graph.Node;
 import com.dexecutor.executor.support.PoolUtil;
 
@@ -40,7 +41,7 @@ public class DefaultDependentTasksExecutorTest {
 
 		addDependencies(executor);
 
-		executor.execute(false);
+		executor.execute(ExecutionBehavior.RETRY_ONCE_TERMINATING);
 
 		Collection<Node<Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 
@@ -58,7 +59,7 @@ public class DefaultDependentTasksExecutorTest {
 
 		addDependencies(executor);
 
-		executor.execute(true);
+		executor.execute(ExecutionBehavior.RETRY_ONCE_TERMINATING);
 
 		Collection<Node<Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 

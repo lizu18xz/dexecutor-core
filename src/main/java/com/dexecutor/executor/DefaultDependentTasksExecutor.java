@@ -78,7 +78,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
         return this.processedNodes.containsAll(nodes);
     }
 
-	public void execute(boolean stopOnError) {
+	public void execute(final ExecutionBehavior behavior) {
 		validate();
 
 		Set<Node<T>> initialNodes = this.graph.getInitialNodes();
@@ -86,7 +86,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 
 		long start = new Date().getTime();
 		
-		doProcessNodes(stopOnError, initialNodes, completionService);
+		doProcessNodes(behavior, initialNodes, completionService);
 
 		long end = new Date().getTime();
 
@@ -94,21 +94,21 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		logger.debug("Processed Ndoes Ordering {}", this.processedNodes);
 	}
 
-	private void doProcessNodes(boolean stopOnError, Set<Node<T>> nodes, CompletionService<Node<T>> completionService) {
-		doExecute(nodes, completionService, stopOnError);
-		doWaitForExecution(completionService, stopOnError);	
+	private void doProcessNodes(final ExecutionBehavior behavior, final Set<Node<T>> nodes, final CompletionService<Node<T>> completionService) {
+		doExecute(nodes, completionService, behavior);
+		doWaitForExecution(completionService, behavior);	
 	}
 
 	private void validate() {
 		this.validator.validate(this.graph);
 	}
 
-	private void doExecute(final Collection<Node<T>> nodes, final CompletionService<Node<T>> completionService, boolean stopOnError) {
+	private void doExecute(final Collection<Node<T>> nodes, final CompletionService<Node<T>> completionService, final ExecutionBehavior behavior) {
 		for (Node<T> node : nodes) {
 			if (shouldProcess(node) ) {
 				nodesCount.incrementAndGet();
 				logger.debug("Going to schedule {} node", node.getValue());
-				completionService.submit(newTask(node, stopOnError));
+				completionService.submit(newTask(node, behavior));
 			} else {
 				logger.debug("node {} depends on {}", node.getValue(), node.getInComingNodes());
 			}
@@ -126,7 +126,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		return false;
 	}
 
-	private void doWaitForExecution(final CompletionService<Node<T>> completionService, boolean stopOnError) {
+	private void doWaitForExecution(final CompletionService<Node<T>> completionService, final ExecutionBehavior behavior) {
 		int cuurentCount = 0;
 		while (cuurentCount != nodesCount.get()) {
 			try {
@@ -136,7 +136,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 				cuurentCount++;
 				this.processedNodes.add(processedNode);				
 				//System.out.println(this.executorService);
-				doExecute(processedNode.getOutGoingNodes(), completionService, stopOnError);
+				doExecute(processedNode.getOutGoingNodes(), completionService, behavior);
 			} catch (Exception e) {
 				cuurentCount++;
 				logger.error("Task interrupted", e);
@@ -144,11 +144,13 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		}
 	}
 
-	private Callable<Node<T>> newTask(final Node<T> graphNode, boolean stopOnError) {
-		if (stopOnError) {
-			return new TerminatingTask(graphNode);
-		} else {
+	private Callable<Node<T>> newTask(final Node<T> graphNode, final ExecutionBehavior behavior) {
+		if (ExecutionBehavior.NON_TERMINATING.equals(behavior)) {
 			return new NonTerminatingTask(graphNode);
+		} else if (ExecutionBehavior.RETRY_ONCE_TERMINATING.equals(behavior)) { 
+			return new RetryOnceAndTerminateTask(graphNode);
+		} else {
+			return new TerminatingTask(graphNode);
 		}
 	}
 
@@ -160,7 +162,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		}
 
 		public Node<T> call() throws Exception {
-			Task task = taskProvider.provid(this.node.getValue());
+			Task task = newTask(this.node.getValue());
 			task.execute();
 			return this.node;
 		}		
@@ -169,18 +171,73 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 	private class NonTerminatingTask implements Callable<Node<T>> {
 		private Node<T> node;
 
-		public NonTerminatingTask(Node<T> graphNode) {
+		public NonTerminatingTask(final Node<T> graphNode) {
 			this.node = graphNode;
 		}
 
 		public Node<T> call() throws Exception {
 			try {
-				Task task = taskProvider.provid(this.node.getValue());
+				Task task = newTask(this.node.getValue());
 				task.execute();
 			} catch(Exception ex) {
-				logger.error("Exception caught, executing task :" + this.node.getValue(), ex);
+				logger.error("Exception caught, executing node # " + this.node.getValue(), ex);
 			}
 			return this.node;
+		}
+	}
+
+	private class RetryOnceAndTerminateTask implements Callable<Node<T>> {
+		private Node<T> node;
+
+		public RetryOnceAndTerminateTask(final Node<T> graphNode) {
+			this.node = graphNode;
+		}
+
+		public Node<T> call() throws Exception {
+			Task task = newTask(this.node.getValue());
+			try {
+				task.execute();
+			} catch(Exception ex) {
+				boolean retry = shouldRetry(this.node.getValue());
+				logger.error("Exception caught, executing node # " + this.node.getValue() + " Retry would happen : " + getYesNo(retry), ex);
+				if (retry) {
+					task.execute();
+				}
+			}
+			return this.node;
+		}
+
+		private String getYesNo(boolean retry) {
+			return retry ? "Yes" : "No";
+		}	
+	}
+
+	protected boolean shouldRetry(final T node) {
+		return true;
+	}
+	
+	private Task newTask(final T taskId) {
+		return new LogTask(taskId, taskProvider.provid(taskId));
+	}
+
+	private class LogTask implements Task {
+		private final Task task;
+		private final T taskId;
+		private int retryCount = 0;
+		
+		public LogTask(final T taskId, final Task task) {
+			this.task = task;
+			this.taskId = taskId;
+		}
+
+		public void execute() {
+			logger.debug("{} Node # {}", msg(this.retryCount), taskId);
+			this.retryCount ++;
+			task.execute();
+			logger.debug("Node # {}, Execution Done!", taskId);
+		}
+		private String msg(int retryCount) {
+			return retryCount > 0 ? "Retrying(" + retryCount+ ") " : "Executing";
 		}
 	}
 }

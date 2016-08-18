@@ -163,6 +163,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 
 		public Node<T> call() throws Exception {
 			Task task = newTask(this.node.getValue());
+			task.setConsiderExecutionError(true);
 			task.execute();
 			return this.node;
 		}		
@@ -178,6 +179,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		public Node<T> call() throws Exception {
 			try {
 				Task task = newTask(this.node.getValue());
+				task.setConsiderExecutionError(false);
 				task.execute();
 			} catch(Exception ex) {
 				logger.error("Exception caught, executing node # " + this.node.getValue(), ex);
@@ -195,12 +197,14 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 
 		public Node<T> call() throws Exception {
 			Task task = newTask(this.node.getValue());
+			boolean retry = shouldRetry(this.node.getValue());
+			task.setConsiderExecutionError(!retry);
 			try {
 				task.execute();
 			} catch(Exception ex) {
-				boolean retry = shouldRetry(this.node.getValue());
 				logger.error("Exception caught, executing node # " + this.node.getValue() + " Retry would happen : " + getYesNo(retry), ex);
 				if (retry) {
+					task.setConsiderExecutionError(true);
 					task.execute();
 				}
 			}
@@ -215,29 +219,35 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 	protected boolean shouldRetry(final T node) {
 		return true;
 	}
-	
+
 	private Task newTask(final T taskId) {
-		return new LogTask(taskId, taskProvider.provid(taskId));
+		return new LoggingTask(taskId, this.taskProvider.provid(taskId));
 	}
 
-	private class LogTask implements Task {
+	private class LoggingTask extends Task {
 		private final Task task;
 		private final T taskId;
 		private int retryCount = 0;
 		
-		public LogTask(final T taskId, final Task task) {
+		public LoggingTask(final T taskId, final Task task) {
 			this.task = task;
 			this.taskId = taskId;
 		}
 
 		public void execute() {
-			logger.debug("{} Node # {}", msg(this.retryCount), taskId);
+			logger.debug("{} Node # {}", msg(this.retryCount), this.taskId);
 			this.retryCount ++;
-			task.execute();
-			logger.debug("Node # {}, Execution Done!", taskId);
+			this.task.execute();
+			logger.debug("Node # {}, Execution Done!", this.taskId);
 		}
+
 		private String msg(int retryCount) {
 			return retryCount > 0 ? "Retrying(" + retryCount+ ") " : "Executing";
+		}
+
+		@Override
+		void setConsiderExecutionError(boolean considerExecutionError) {
+			this.task.setConsiderExecutionError(considerExecutionError);
 		}
 	}
 }

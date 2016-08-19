@@ -87,36 +87,65 @@ Which would generate the following graph
 ## Console Output
 
     
-    19:57:43.705 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 1 node
-    19:57:43.710 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 11 node
-    19:57:43.710 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 12 node
-    19:57:44.212 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 1 done
-    19:57:44.213 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 2 node
-    19:57:44.214 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 3 node
-    19:57:44.215 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 11 done
-    19:57:44.216 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 12 done
-    19:57:44.217 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 13 node
-    19:57:44.717 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 2 done
-    19:57:44.718 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 7 node
-    19:57:44.719 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 9 node
-    19:57:44.720 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 8 node
-    19:57:44.721 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 3 done
-    19:57:44.722 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 83 - node 4 depends on [3, 13]
-    19:57:44.724 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 5 node
-    19:57:44.726 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 6 node
-    19:57:44.728 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 13 done
-    19:57:44.729 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 4 node
-    19:57:44.730 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 14 node
-    19:57:45.219 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 7 done
-    19:57:45.221 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 9 done
-    19:57:45.223 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doExecute 80 - Going to schedule 10 node
-    19:57:45.225 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 8 done
-    19:57:45.227 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 5 done
-    19:57:45.228 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 6 done
-    19:57:45.234 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 4 done
-    19:57:45.235 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 14 done
-    19:57:45.725 [main] DEBUG c.n.e.DefaultDependentTasksExecutor.doWaitForExecution 105 - Processing of node 10 done
-    19:57:45.726 [main] INFO  c.n.e.DefaultDependentTasksExecutor.execute 69 - Total Time taken to process 14 jobs each taking 500 ms is 2022 ms instead of 7000 ms
-    19:57:45.728 [main] INFO  c.n.e.DefaultDependentTasksExecutor.execute 70 - [1, 11, 12, 2, 3, 13, 7, 9, 8, 5, 6, 4, 14, 10]
-
-
+    21:35:36.198 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 1 node
+	21:35:36.298 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 11 node
+	21:35:36.299 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 12 node
+	21:35:36.300 [pool-1-thread-1] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 1
+	21:35:36.300 [pool-1-thread-3] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 12
+	21:35:36.301 [pool-1-thread-2] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 11
+	21:35:36.800 [pool-1-thread-1] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 1, Execution Done!
+	21:35:36.800 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 1 done
+	21:35:36.801 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 2 node
+	21:35:36.801 [pool-1-thread-3] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 12, Execution Done!
+	21:35:36.801 [pool-1-thread-2] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 11, Execution Done!
+	21:35:36.801 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 3 node
+	21:35:36.801 [pool-1-thread-4] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 2
+	21:35:36.801 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 12 done
+	21:35:36.801 [pool-1-thread-5] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 3
+	21:35:36.802 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 13 node
+	21:35:36.802 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 11 done
+	21:35:36.802 [pool-1-thread-6] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 13
+	21:35:37.301 [pool-1-thread-4] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 2, Execution Done!
+	21:35:37.301 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 2 done
+	21:35:37.301 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 7 node
+	21:35:37.302 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 9 node
+	21:35:37.302 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 8 node
+	21:35:37.303 [pool-1-thread-5] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 3, Execution Done!
+	21:35:37.303 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 3 done
+	21:35:37.304 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 113 - node 4 depends on [3, 13]
+	21:35:37.304 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 5 node
+	21:35:37.304 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 6 node
+	21:35:37.304 [pool-1-thread-6] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 13, Execution Done!
+	21:35:37.305 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 13 done
+	21:35:37.305 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 4 node
+	21:35:37.305 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 14 node
+	21:35:37.306 [pool-1-thread-7] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 7
+	21:35:37.306 [pool-1-thread-9] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 8
+	21:35:37.306 [pool-1-thread-10] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 5
+	21:35:37.307 [pool-1-thread-11] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 6
+	21:35:37.307 [pool-1-thread-13] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 14
+	21:35:37.308 [pool-1-thread-8] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 9
+	21:35:37.309 [pool-1-thread-12] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 4
+	21:35:37.806 [pool-1-thread-9] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 8, Execution Done!
+	21:35:37.806 [pool-1-thread-7] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 7, Execution Done!
+	21:35:37.806 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 8 done
+	21:35:37.806 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 7 done
+	21:35:37.807 [pool-1-thread-10] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 5, Execution Done!
+	21:35:37.807 [pool-1-thread-13] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 14, Execution Done!
+	21:35:37.807 [pool-1-thread-11] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 6, Execution Done!
+	21:35:37.807 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 5 done
+	21:35:37.807 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 14 done
+	21:35:37.808 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 6 done
+	21:35:37.809 [pool-1-thread-8] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 9, Execution Done!
+	21:35:37.809 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 9 done
+	21:35:37.809 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doExecute 110 - Going to schedule 10 node
+	21:35:37.809 [pool-1-thread-12] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 4, Execution Done!
+	21:35:37.810 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 4 done
+	21:35:37.810 [pool-1-thread-14] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 238 - Executing Node # 10
+	21:35:38.310 [pool-1-thread-14] DEBUG c.d.e.DefaultDependentTasksExecutor$LoggingTask.execute 241 - Node # 10, Execution Done!
+	21:35:38.310 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.doWaitForExecution 135 - Processing of node 10 done
+	21:35:38.310 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.execute 93 - Total Time taken to process 14 jobs is 2113 ms.
+	21:35:38.310 [main] DEBUG c.d.e.DefaultDependentTasksExecutor.execute 94 - Processed Ndoes Ordering [1, 12, 11, 2, 3, 13, 8, 7, 5, 14, 6, 9, 4, 10]
+	
+	
+	

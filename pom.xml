@@ -66,5 +66,14 @@
 		</dependency>
 		
 	</dependencies>
+	
+	<developers>
+		 <developer>
+	      <name>Dexecutor Library</name>
+	      <email>dexecutorlibrary@gmail.com</email>
+	      <organization>Dexecutor</organization>
+	      <organizationUrl>https://github.com/dexecutor</organizationUrl>
+	    </developer>
+	</developers>
 
 </project>

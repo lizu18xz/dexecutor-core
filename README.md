@@ -2,7 +2,7 @@
 Execute Dependent tasks in a reliable way
 
 ## Example
-Lets take a look at an example, here is the content of `DefaultDependentTasksExecutorTest`, which would help you understand the API
+Lets take a look at an example, here is the content of `DefaultDependentTasksExecutorIntegrationTest`, which would help you understand the API
    
 
 	@Test
@@ -53,7 +53,7 @@ Lets take a look at an example, here is the content of `DefaultDependentTasksExe
 		}		
 	}
 
-As can be seen above, `DefaultDependentTasksExecutor` requires two things
+As can be seen above, `DefaultDependentTasksExecutorIntegrationTest` requires two things
 1. Instance of `ExecutorService` API would use this Service to schedule tasks
 2. Instance of `TaskProvider`, API represents graph using just the basic information (could be task id), it consults the `TaskProvider` to provide the task when it comes to actual execution.
 

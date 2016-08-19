@@ -1,5 +1,5 @@
 # Dexecutor
-Execute Dependent tasks in a reliable way is made so easy that even your grandma can do it.
+Executing dependent tasks in a reliable way, is made so easy that even your grandma can do it.
 
 ## Example
 Lets take a look at an example, here is the content of `DefaultDependentTasksExecutorIntegrationTest`, which would help you understand the API

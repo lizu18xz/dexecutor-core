@@ -25,7 +25,7 @@ Lets take a look at an example, here is the content of `DefaultDependentTasksExe
         executor.addDependency(13, 14);
         executor.addIndependent(11);
 
-        executor.execute();
+        executor.execute(ExecutionBehavior.RETRY_ONCE_TERMINATING);
 	}
 
 	private DefaultDependentTasksExecutor<Integer> newTaskExecutor() {
@@ -61,7 +61,7 @@ As can be seen above, `DefaultDependentTasksExecutor` requires two things
 
 1. Graph construction: When you say `executor.addDependency(1, 2)` it means tasks `1` should finish before task `2`can start, `executor.addIndependent(11)` means neither task `11` depend on any task nor any other task depend on task `11`.
 
-
+```
     executor.addDependency(1, 2);
     executor.addDependency(1, 3);
     executor.addDependency(3, 4);
@@ -76,13 +76,13 @@ As can be seen above, `DefaultDependentTasksExecutor` requires two things
     executor.addDependency(13, 4);
     executor.addDependency(13, 14);
     executor.addIndependent(11);
-    
+```
 Which would generate the following graph
 
 ![Dependent Tasks Graph](http://s29.postimg.org/fhnct6wjr/dependent_tasks_graph.png)
 2. Tasks execution
     
-	executor.execute()
+	executor.execute(ExecutionBehavior.RETRY_ONCE_TERMINATING);
    
 ## Console Output
 

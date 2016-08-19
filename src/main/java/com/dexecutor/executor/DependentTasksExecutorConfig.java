@@ -15,7 +15,7 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>> {
 	private Validator<T> validator = new CyclicValidator<T>();
 	private Traversar<T> traversar = new LevelOrderTraversar<T>();
 
-	public DependentTasksExecutorConfig(ExecutorService executorService, TaskProvider<T> taskProvider) {
+	public DependentTasksExecutorConfig(final ExecutorService executorService, final TaskProvider<T> taskProvider) {
 		this.executorService = executorService;
 		this.taskProvider = taskProvider;
 	}
@@ -38,13 +38,13 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>> {
 	Validator<T> getValidator() {
 		return validator;
 	}
-	public void setValidator(Validator<T> validator) {
+	public void setValidator(final Validator<T> validator) {
 		this.validator = validator;
 	}
 	Traversar<T> getTraversar() {
 		return traversar;
 	}
-	public void setTraversar(Traversar<T> traversar) {
+	public void setTraversar(final Traversar<T> traversar) {
 		this.traversar = traversar;
 	}
 }

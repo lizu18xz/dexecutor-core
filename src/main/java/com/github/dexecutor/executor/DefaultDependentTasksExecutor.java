@@ -1,4 +1,4 @@
-package com.dexecutor.executor;
+package com.github.dexecutor.executor;
 
 import java.io.Writer;
 import java.util.Collection;
@@ -15,12 +15,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexecutor.executor.TaskProvider.Task;
-import com.dexecutor.executor.graph.DefaultGraph;
-import com.dexecutor.executor.graph.Graph;
-import com.dexecutor.executor.graph.Graph.Node;
-import com.dexecutor.executor.graph.Traversar;
-import com.dexecutor.executor.graph.Validator;
+import com.github.dexecutor.executor.TaskProvider.Task;
+import com.github.dexecutor.executor.graph.DefaultGraph;
+import com.github.dexecutor.executor.graph.Graph;
+import com.github.dexecutor.executor.graph.Graph.Node;
+import com.github.dexecutor.executor.graph.Traversar;
+import com.github.dexecutor.executor.graph.Validator;
 
 public final class DefaultDependentTasksExecutor <T extends Comparable<T>> implements DependentTasksExecutor<T> {
 

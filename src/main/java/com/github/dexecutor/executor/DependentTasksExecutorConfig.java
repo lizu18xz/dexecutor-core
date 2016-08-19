@@ -1,12 +1,12 @@
-package com.dexecutor.executor;
+package com.github.dexecutor.executor;
 
 import java.util.concurrent.ExecutorService;
 
-import com.dexecutor.executor.graph.CyclicValidator;
-import com.dexecutor.executor.graph.LevelOrderTraversar;
-import com.dexecutor.executor.graph.Traversar;
-import com.dexecutor.executor.graph.Validator;
-import static com.dexecutor.executor.support.Preconditions.*;
+import com.github.dexecutor.executor.graph.CyclicValidator;
+import com.github.dexecutor.executor.graph.LevelOrderTraversar;
+import com.github.dexecutor.executor.graph.Traversar;
+import com.github.dexecutor.executor.graph.Validator;
+import static com.github.dexecutor.executor.support.Preconditions.*;
 
 public class DependentTasksExecutorConfig<T extends Comparable<T>> {
 

@@ -1,4 +1,4 @@
-package com.dexecutor.executor;
+package com.github.dexecutor.executor;
 
 import java.io.StringWriter;
 import java.util.concurrent.ExecutorService;
@@ -6,8 +6,8 @@ import java.util.concurrent.Executors;
 
 import org.junit.Test;
 
-import com.dexecutor.executor.DependentTasksExecutor.ExecutionBehavior;
-import com.dexecutor.executor.support.PoolUtil;
+import com.github.dexecutor.executor.DependentTasksExecutor.ExecutionBehavior;
+import com.github.dexecutor.executor.support.PoolUtil;
 
 public class DefaultDependentTasksExecutorIntegrationTest {
 

@@ -1,4 +1,4 @@
-package com.dexecutor.executor;
+package com.github.dexecutor.executor;
 
 public interface TaskProvider <T extends Comparable<T>> {
 

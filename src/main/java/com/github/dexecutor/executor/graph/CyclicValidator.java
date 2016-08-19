@@ -1,9 +1,9 @@
-package com.dexecutor.executor.graph;
+package com.github.dexecutor.executor.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.dexecutor.executor.graph.Graph.Node;
+import com.github.dexecutor.executor.graph.Graph.Node;
 
 public class CyclicValidator<T extends Comparable<T>> implements Validator<T> {
 

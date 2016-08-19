@@ -1,4 +1,4 @@
-package com.dexecutor.executor;
+package com.github.dexecutor.executor;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -20,9 +20,9 @@ import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.dexecutor.executor.DependentTasksExecutor.ExecutionBehavior;
-import com.dexecutor.executor.graph.Graph.Node;
-import com.dexecutor.executor.support.PoolUtil;
+import com.github.dexecutor.executor.DependentTasksExecutor.ExecutionBehavior;
+import com.github.dexecutor.executor.graph.Graph.Node;
+import com.github.dexecutor.executor.support.PoolUtil;
 
 import mockit.Deencapsulation;
 import mockit.Mock;

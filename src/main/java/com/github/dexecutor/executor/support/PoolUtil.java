@@ -1,4 +1,4 @@
-package com.dexecutor.executor.support;
+package com.github.dexecutor.executor.support;
 
 public final class PoolUtil {
 	

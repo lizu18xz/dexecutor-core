@@ -1,4 +1,4 @@
-package com.dexecutor.executor.graph;
+package com.github.dexecutor.executor.graph;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;

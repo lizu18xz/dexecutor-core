@@ -1,4 +1,4 @@
-package com.dexecutor.executor;
+package com.github.dexecutor.executor;
 
 import java.io.Writer;
 

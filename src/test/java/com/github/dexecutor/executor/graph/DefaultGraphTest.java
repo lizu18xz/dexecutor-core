@@ -1,4 +1,4 @@
-package com.dexecutor.executor.graph;
+package com.github.dexecutor.executor.graph;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.dexecutor.executor.graph.Graph.Node;
+import com.github.dexecutor.executor.graph.Graph.Node;
 
 public class DefaultGraphTest {
 

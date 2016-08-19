@@ -1,4 +1,4 @@
-package com.dexecutor.executor.graph;
+package com.github.dexecutor.executor.graph;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import com.dexecutor.executor.graph.Graph.Node;
+import com.github.dexecutor.executor.graph.Graph.Node;
 
 public class LevelOrderTraversar<T extends Comparable<T>> implements Traversar<T> {
 	

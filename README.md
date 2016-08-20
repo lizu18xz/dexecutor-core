@@ -1,4 +1,6 @@
 # Dexecutor
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dependent-tasks-executor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dependent-tasks-executor)
+
 Executing dependent tasks in a reliable way, is made so easy that even your grandma can do it.
 
 Look [here](https://github.com/dexecutor/dependent-tasks-executor/wiki) for more Details.

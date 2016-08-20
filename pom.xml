@@ -95,7 +95,7 @@
 
 	<scm>
 		<connection>scm:git:git://github.com/dexecutor/dependent-tasks-executor.git</connection>
-		<developerConnection>scm:git:git@github.com:dexecutor/dexecutor.git</developerConnection>
+		<developerConnection>scm:git:mnadeem@github.com:dexecutor/dexecutor.git</developerConnection>
 		<url>https://github.com/dexecutor/dependent-tasks-executor</url>
 	</scm>
 

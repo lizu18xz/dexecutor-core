@@ -21,6 +21,7 @@
 		<version.commons-lang3>3.4</version.commons-lang3>
 		<version.logback>1.1.6</version.logback>
 		<version.slf4j>1.7.18</version.slf4j>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
@@ -111,26 +112,26 @@
 	</distributionManagement>
 
 	<build>
-
+		
+		<resources>
+			<resource>
+				<directory>${project.basedir}</directory>
+				<includes>
+					<include>README*</include>
+					<include>NOTICE*</include>
+					<include>LICENSE*</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
-			</plugin>
+			
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
 				<configuration>
 					<encoding>UTF-8</encoding>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.6</source>
+					<target>1.6</target>
 					<showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
@@ -184,23 +185,78 @@
 					</execution>
 				</executions>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.6</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5</version>
+
+				<configuration>
+					<!-- Automated passphrase entry: -->
+
+					<!-- To pass your passphrase to the build automatically, so avoiding 
+						manual interaction, you'll need to put the passphrase into settings.xml. 
+						You don't really want that to be in plain text, so you'll want to follow: 
+						http://maven.apache.org/guides/mini/guide-encryption.html -->
+					<!-- <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments> -->
+
+					<!-- Manual passphrase entry: -->
+
+					<!-- This is the simplest secure solution, but requires you to type 
+						your key passphrase in manually when performing a release. No biggie unless 
+						you want your CI server to decide when to release for you. -->
+					<mavenExecutorId>forked-path</mavenExecutorId>
+
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
 			</plugin>
 
 		</plugins>
 	</build>
+	
+	<profiles>
+
+		<!-- GPG Signature on release -->
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.4</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
 
 
 </project>

@@ -24,8 +24,8 @@ public final class PoolUtil {
 	 * Coefficient) where the blocking coefficient is between 0 and 1.
 	 * 
 	 * A computation-intensive task has a blocking coefficient of 0, whereas an
-	 * IO-intensive task has a value close to 1—a fully blocked task is doomed,
-	 * so we don’t have to worry about the value reaching 1.
+	 * IO-intensive task has a value close to 1,
+	 * so we don't have to worry about the value reaching 1.
 	 */
 	public static int poolSize(double blockingCoefficient) {
 		int numberOfCores = Runtime.getRuntime().availableProcessors();

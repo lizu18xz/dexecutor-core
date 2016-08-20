@@ -29,6 +29,11 @@ import mockit.Mock;
 import mockit.MockUp;
 import mockit.integration.junit4.JMockit;
 
+/**
+ * 
+ * @author Nadeem Mohammad
+ *
+ */
 @RunWith(JMockit.class)
 public class DefaultDependentTasksExecutorTest {
 
@@ -49,7 +54,6 @@ public class DefaultDependentTasksExecutorTest {
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testDependentTaskExecutionOrderWithException() {
 

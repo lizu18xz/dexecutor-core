@@ -5,6 +5,12 @@ import java.util.Collection;
 
 import com.github.dexecutor.executor.graph.Graph.Node;
 
+/**
+ * 
+ * @author Nadeem Mohammad
+ *
+ * @param <T>
+ */
 public class CyclicValidator<T extends Comparable<T>> implements Validator<T> {
 
 	private Collection<Graph.Node<T>> processedNodes = new ArrayList<Graph.Node<T>>();

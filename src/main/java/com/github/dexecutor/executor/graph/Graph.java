@@ -4,6 +4,12 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * 
+ * @author Nadeem Mohammad
+ *
+ * @param <T>
+ */
 public interface Graph<T extends Comparable<T>> {
 
 	void addDependency(final T evalFirstValue, final T evalAfterValue);
@@ -12,7 +18,13 @@ public interface Graph<T extends Comparable<T>> {
 	Set<Node<T>> getLeafNodes();
 	Collection<Node<T>> allNodes();	
 	int size();
-
+	
+	/**
+	 * 
+	 * @author Nadeem Mohammad
+	 *
+	 * @param <T>
+	 */
 	public final class Node<T> {
 		private T value;
 	    private Set<Node<T>> inComingEdges = new LinkedHashSet<Graph.Node<T>>();

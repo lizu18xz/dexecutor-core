@@ -10,6 +10,12 @@ import java.util.Set;
 
 import com.github.dexecutor.executor.graph.Graph.Node;
 
+/**
+ * 
+ * @author Nadeem Mohammad
+ *
+ * @param <T>
+ */
 public class LevelOrderTraversar<T extends Comparable<T>> implements Traversar<T> {
 	
 	private List<Graph.Node<T>> processed = new ArrayList<Graph.Node<T>>();

@@ -7,6 +7,13 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Default implementation of Graph
+ * 
+ * @author Nadeem Mohammad
+ *
+ * @param <T>
+ */
 public final class DefaultGraph<T extends Comparable<T>> implements Graph<T> {
 
 	private Map<T, Node<T>> nodes = new HashMap<T, Node<T>>();

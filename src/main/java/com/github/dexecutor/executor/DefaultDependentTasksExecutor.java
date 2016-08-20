@@ -22,6 +22,13 @@ import com.github.dexecutor.executor.graph.Graph.Node;
 import com.github.dexecutor.executor.graph.Traversar;
 import com.github.dexecutor.executor.graph.Validator;
 
+/**
+ * Default implementation of @DependentTasksExecutor
+ * 
+ * @author Nadeem Mohammad
+ *
+ * @param <T>
+ */
 public final class DefaultDependentTasksExecutor <T extends Comparable<T>> implements DependentTasksExecutor<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultDependentTasksExecutor.class);

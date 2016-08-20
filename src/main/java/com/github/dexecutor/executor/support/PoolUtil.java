@@ -1,5 +1,10 @@
 package com.github.dexecutor.executor.support;
 
+/**
+ * 
+ * @author Nadeem Mohammad
+ *
+ */
 public final class PoolUtil {
 	
 	private PoolUtil() {

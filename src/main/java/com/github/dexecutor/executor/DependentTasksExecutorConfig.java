@@ -8,6 +8,12 @@ import com.github.dexecutor.executor.graph.Traversar;
 import com.github.dexecutor.executor.graph.Validator;
 import static com.github.dexecutor.executor.support.Preconditions.*;
 
+/**
+ * 
+ * @author Nadeem Mohammad
+ *
+ * @param <T>
+ */
 public class DependentTasksExecutorConfig<T extends Comparable<T>> {
 
 	private ExecutorService executorService;

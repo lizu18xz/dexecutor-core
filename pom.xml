@@ -21,6 +21,7 @@
 		<version.commons-lang3>3.4</version.commons-lang3>
 		<version.logback>1.1.6</version.logback>
 		<version.slf4j>1.7.18</version.slf4j>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
@@ -97,7 +98,6 @@
 		<connection>scm:git:git://github.com/dexecutor/dependent-tasks-executor.git</connection>
 		<developerConnection>scm:git:git@github.com:dexecutor/dexecutor.git</developerConnection>
 		<url>https://github.com/dexecutor/dependent-tasks-executor</url>
-		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>

@@ -7,7 +7,6 @@ Look [here](https://github.com/dexecutor/dependent-tasks-executor/wiki) for more
 
 Dexecutor is licensed under **Apache Software License, Version 2.0**.
 
-
 ## News
 
 * Version **0.0.1** released on 08/20/2016.

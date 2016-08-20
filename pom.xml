@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.dexecutor</groupId>
 	<artifactId>dependent-tasks-executor</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 
 	<name>Dependent Tasks Executor</name>
 	<description>Executing dependent tasks in a reliable way, is made so easy that even your grandma can do it.</description>
@@ -96,7 +96,7 @@
 		<connection>scm:git:git://github.com/dexecutor/dependent-tasks-executor.git</connection>
 		<developerConnection>scm:git:git@github.com:dexecutor/dexecutor.git</developerConnection>
 		<url>https://github.com/dexecutor/dependent-tasks-executor</url>
-	  <tag>dependent-tasks-executor-0.0.1</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 	<build>

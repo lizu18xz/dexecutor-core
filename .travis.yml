@@ -1,7 +1,9 @@
 language: java
-script: mvn clean package
 jdk:
   - oraclejdk7
   - openjdk7
 os:
-  - linux
+  - linux  
+
+after_success:
+  - mvn clean test jacoco:report coveralls:report

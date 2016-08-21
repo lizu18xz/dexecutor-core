@@ -127,6 +127,7 @@ public class DefaultDependentTasksExecutorTest {
 			return new Task() {
 
 				public void execute() {
+					shouldConsiderExecutionError();
 					doExecute(id);
 				}
 

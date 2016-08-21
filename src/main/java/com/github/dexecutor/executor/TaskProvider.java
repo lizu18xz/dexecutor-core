@@ -24,7 +24,7 @@ public interface TaskProvider <T extends Comparable<T>> {
 		/**
 		 * Framework would call this method, when it comes for tasks to be executed.
 		 */
-		abstract void execute();
+		public abstract void execute();
 		/**
 		 * When using retry behavior, execution error should not be considered until the last retry, this would define when execution error should be considered
 		 */

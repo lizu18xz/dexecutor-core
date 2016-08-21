@@ -105,7 +105,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		long end = new Date().getTime();
 
 		logger.debug("Total Time taken to process {} jobs is {} ms.", graph.size(), end - start);
-		logger.debug("Processed Ndoes Ordering {}", this.processedNodes);
+		logger.debug("Processed Nodes Ordering {}", this.processedNodes);
 	}
 
 	private void doProcessNodes(final ExecutionBehavior behavior, final Set<Node<T>> nodes, final CompletionService<Node<T>> completionService) {
@@ -149,7 +149,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 				logger.debug("Processing of node {} done", processedNode.getValue());
 				cuurentCount++;
 				this.processedNodes.add(processedNode);				
-				//System.out.println(this.executorService);
+				//logger.debug(this.executorService.toString());
 				doExecute(processedNode.getOutGoingNodes(), completionService, behavior);
 			} catch (Exception e) {
 				cuurentCount++;

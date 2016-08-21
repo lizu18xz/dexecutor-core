@@ -1,5 +1,5 @@
 /**
- * Package related to graph apis
+ * Package related to graph APIs
  */
 /**
  * @author Nadeem Mohammad

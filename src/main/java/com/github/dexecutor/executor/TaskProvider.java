@@ -7,7 +7,7 @@ package com.github.dexecutor.executor;
  */
 public interface TaskProvider <T extends Comparable<T>> {
 	/**
-	 * Given the node id, returns the task to be executed
+	 * Given the node id, returns the task to be executed, while building graph only the node ids are required, when it comes to execution Task objects would be constructed
 	 * 
 	 * @param id
 	 * @return @Task
@@ -22,13 +22,16 @@ public interface TaskProvider <T extends Comparable<T>> {
 	 */
 	abstract class Task {
 		/**
-		 * 
+		 * Framework would call this method, when it comes for tasks to be executed.
 		 */
 		abstract void execute();
+		/**
+		 * When using retry behavior, execution error should not be considered until the last retry, this would define when execution error should be considered
+		 */
 		private boolean considerExecutionError = true;
 		/**
 		 * 
-		 * @return
+		 * @return whether execution error should be considered or not
 		 */
 		public final boolean shouldConsiderExecutionError() {
 			return this.considerExecutionError;

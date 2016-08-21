@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 import org.junit.Test;
 
 import com.github.dexecutor.executor.DependentTasksExecutor.ExecutionBehavior;
-import com.github.dexecutor.executor.support.PoolUtil;
+import com.github.dexecutor.executor.support.ThreadPoolUtil;
 
 /**
  * 
@@ -50,7 +50,7 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 	}
 
 	private ExecutorService newExecutor() {
-		return Executors.newFixedThreadPool(PoolUtil.ioIntesivePoolSize());
+		return Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
 	}
 
 	private static class SleepyTaskProvider<T extends Comparable<T>> implements TaskProvider<T> {

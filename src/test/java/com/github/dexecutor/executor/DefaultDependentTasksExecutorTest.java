@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 
 import com.github.dexecutor.executor.DependentTasksExecutor.ExecutionBehavior;
 import com.github.dexecutor.executor.graph.Graph.Node;
-import com.github.dexecutor.executor.support.PoolUtil;
+import com.github.dexecutor.executor.support.ThreadPoolUtil;
 
 import mockit.Deencapsulation;
 import mockit.Mock;
@@ -112,7 +112,7 @@ public class DefaultDependentTasksExecutorTest {
 	}
 
 	private ExecutorService newExecutor() {
-		return Executors.newFixedThreadPool(PoolUtil.ioIntesivePoolSize());
+		return Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
 	}
 
 	private static class DummyTaskProvider<T extends Comparable<T>> implements TaskProvider<T> {

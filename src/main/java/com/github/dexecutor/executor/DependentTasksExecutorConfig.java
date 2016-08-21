@@ -9,16 +9,29 @@ import com.github.dexecutor.executor.graph.Validator;
 import static com.github.dexecutor.executor.support.Preconditions.*;
 
 /**
+ * <p>Configuration Object for Dexecutor framework. At a minimum it needs {@code ExecutorService} and {@code TaskProvider}, rest are optional and takes default values</p>
+ * <p>This provides way to hook in your own {@code Validator} and {@code Traversar}</p>
  * 
  * @author Nadeem Mohammad
  *
  * @param <T>
  */
 public class DependentTasksExecutorConfig<T extends Comparable<T>> {
-
+	/**
+	 * executorService is the main platform on which tasks are executed
+	 */
 	private ExecutorService executorService;
+	/**
+	 * When it comes to task execution, task provider would be consulted to provide task objects for execution
+	 */
 	private TaskProvider<T> taskProvider;
+	/**
+	 * Validator for validating the consturcted graph, defaults to detecting Cyclic checks
+	 */
 	private Validator<T> validator = new CyclicValidator<T>();
+	/**
+	 * Traversar used to traverse the graph while printing it on a Writer
+	 */
 	private Traversar<T> traversar = new LevelOrderTraversar<T>();
 
 	public DependentTasksExecutorConfig(final ExecutorService executorService, final TaskProvider<T> taskProvider) {

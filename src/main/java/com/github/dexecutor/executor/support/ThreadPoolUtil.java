@@ -5,15 +5,18 @@ package com.github.dexecutor.executor.support;
  * @author Nadeem Mohammad
  *
  */
-public final class PoolUtil {
+public final class ThreadPoolUtil {
 	
-	private PoolUtil() {
+	private ThreadPoolUtil() {
 		
 	}
-
+	/**
+	 * Each tasks blocks 90% of the time, and works only 10% of its
+	 *	lifetime. That is, I/O intensive pool
+	 * @return io intesive Thread pool size
+	 */
 	public static int ioIntesivePoolSize() {
-		// Each tasks blocks 90% of the time, and works only 10% of its
-		// lifetime. That is, I/O intensive pool
+		
 		double blockingCoefficient = 0.9;
 		return poolSize(blockingCoefficient);
 	}
@@ -26,6 +29,7 @@ public final class PoolUtil {
 	 * A computation-intensive task has a blocking coefficient of 0, whereas an
 	 * IO-intensive task has a value close to 1,
 	 * so we don't have to worry about the value reaching 1.
+	 *  @return Thread pool size
 	 */
 	public static int poolSize(double blockingCoefficient) {
 		int numberOfCores = Runtime.getRuntime().availableProcessors();

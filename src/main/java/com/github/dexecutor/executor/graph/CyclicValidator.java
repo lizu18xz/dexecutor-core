@@ -6,7 +6,7 @@ import java.util.Collection;
 import com.github.dexecutor.executor.graph.Graph.Node;
 
 /**
- * 
+ * A {@code Validator} which does cyclic checks
  * @author Nadeem Mohammad
  *
  * @param <T>

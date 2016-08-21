@@ -11,6 +11,7 @@ import java.util.Set;
 import com.github.dexecutor.executor.graph.Graph.Node;
 
 /**
+ * A Traversar which does level order traversal of the given graph
  * 
  * @author Nadeem Mohammad
  *

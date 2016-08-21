@@ -1,5 +1,5 @@
 /**
- * Package providing main classes/interface for dexecutor framework
+ * Package providing main classes/interfaces for dexecutor framework
  */
 /**
  * @author Nadeem Mohammad

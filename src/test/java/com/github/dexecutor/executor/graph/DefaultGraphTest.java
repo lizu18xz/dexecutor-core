@@ -54,4 +54,18 @@ public class DefaultGraphTest {
 		assertThat(initialNodes.size()).isEqualTo(3);
 		assertThat(initialNodes).containsSequence(new Graph.Node<Integer>(1), new Graph.Node<Integer>(2), new Graph.Node<Integer>(3));
 	}
+	
+	@Test
+	public void testLeafNodes() {
+Graph<Integer> graph = new DefaultGraph<Integer>();
+		
+		graph.addIndependent(1);		
+		graph.addDependency(1, 2);		
+		graph.addIndependent(3);
+		graph.addDependency(1, 3);
+		Collection<Node<Integer>> initialNodes = graph.getLeafNodes();
+		
+		assertThat(initialNodes.size()).isEqualTo(2);
+		assertThat(initialNodes).containsSequence(new Graph.Node<Integer>(2), new Graph.Node<Integer>(3));
+	}
 }

@@ -27,23 +27,23 @@ public interface Graph<T extends Comparable<T>> {
 	void addIndependent(final T nodeValue);
 	/**
 	 * Returns the Set of nodes for which there is no incoming dependencies.
-	 * @return
+	 * @return set of initial nodes
 	 */
 	Set<Node<T>> getInitialNodes();
 	/**
 	 * Retruns the set of nodes for which there is no outgoing dependencies.
-	 * @return
+	 * @return set of leaf nodes
 	 */
 	Set<Node<T>> getLeafNodes();
 	/**
 	 * Returns all nodes in this graph
-	 * @return
+	 * @return all nodes in this graph
 	 */
 	Collection<Node<T>> allNodes();
 	/**
 	 * Returns the total number of nodes in this graph
 	 * 
-	 * @return
+	 * @return total number of nodes in this graph
 	 */
 	int size();
 	
@@ -67,27 +67,45 @@ public interface Graph<T extends Comparable<T>> {
 	     * outgoing dependencies for this node
 	     */
 	    private Set<Node<T>> outGoingEdges = new LinkedHashSet<Graph.Node<T>>();
-	    
+	    /**
+	     * Constructs the node with the given node Id
+	     * @param val
+	     */
 	    public Node(final T val) {
 			this.value = val;
 		}
-
+	    /**
+	     * Add the given node, to the set of incoming nodes
+	     * @param node
+	     */
 	    public void addInComingNode(final Node<T> node) {	        
 	        this.inComingEdges.add(node);
 	    }
-
+	    /**
+	     * add the given to the set of out going nodes
+	     * @param node
+	     */
 	    public void addOutGoingNode(final Node<T> node) {	        
 	        this.outGoingEdges.add(node);
 	    }
-
+	    /**
+	     * 
+	     * @return the set of incoming nodes
+	     */
 	    public Set<Node<T>> getInComingNodes() {
 	        return this.inComingEdges;
 	    }
-
+	    /**
+	     * 
+	     * @return set of out going nodes
+	     */
 	    public Set<Node<T>> getOutGoingNodes() {
 	        return this.outGoingEdges;
 	    }
-
+	    /**
+	     * 
+	     * @return the node's value
+	     */
 		public T getValue() {
 			return this.value;
 		}

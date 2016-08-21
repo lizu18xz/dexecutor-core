@@ -33,7 +33,11 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>> {
 	 * Traversar used to traverse the graph while printing it on a Writer
 	 */
 	private Traversar<T> traversar = new LevelOrderTraversar<T>();
-
+	/**
+	 * Construct the object with mandatory params, rest are optional
+	 * @param executorService
+	 * @param taskProvider
+	 */
 	public DependentTasksExecutorConfig(final ExecutorService executorService, final TaskProvider<T> taskProvider) {
 		this.executorService = executorService;
 		this.taskProvider = taskProvider;
@@ -57,12 +61,20 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>> {
 	Validator<T> getValidator() {
 		return validator;
 	}
+	/**
+	 * change the validator to that of specified
+	 * @param validator
+	 */
 	public void setValidator(final Validator<T> validator) {
 		this.validator = validator;
 	}
 	Traversar<T> getTraversar() {
 		return traversar;
 	}
+	/**
+	 * Change the traversar to that of specified
+	 * @param traversar
+	 */
 	public void setTraversar(final Traversar<T> traversar) {
 		this.traversar = traversar;
 	}

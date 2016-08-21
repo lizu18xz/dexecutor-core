@@ -41,11 +41,18 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 
 	private Collection<Node<T>> processedNodes = new CopyOnWriteArrayList<Node<T>>();
 	private AtomicInteger nodesCount = new AtomicInteger(0);
-
+	/**
+	 * Creates the Executor with bare minimum required params
+	 * @param executorService
+	 * @param taskProvider
+	 */
 	public DefaultDependentTasksExecutor(final ExecutorService executorService, final TaskProvider<T> taskProvider) {
 		this(new DependentTasksExecutorConfig<T>(executorService, taskProvider));
 	}
-
+	/**
+	 * Creates the Executor with Config
+	 * @param config
+	 */
 	public DefaultDependentTasksExecutor(final DependentTasksExecutorConfig<T> config) {
 		config.validate();
 		this.executorService = config.getExecutorService();

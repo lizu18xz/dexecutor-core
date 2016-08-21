@@ -47,7 +47,7 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>> {
 		checkNotNull(this.executorService, "Executer Service should not be null");
 		checkNotNull(this.taskProvider, "Task Provider should not be null");
 		checkNotNull(this.validator, "Validator should not be null");
-		checkNotNull(this.validator, "Traversar should not be null");
+		checkNotNull(this.traversar, "Traversar should not be null");
 	}
 
 	ExecutorService getExecutorService() {

@@ -72,6 +72,7 @@ public class DefaultDependentTasksExecutorTest {
 
 
 	private void addDependencies(DefaultDependentTasksExecutor<Integer> executor) {
+		executor.addAsDependencyToAllLeafNodes(1);
 		executor.addDependency(1, 2);
 		executor.addDependency(1, 2);
 		executor.addDependency(1, 3);

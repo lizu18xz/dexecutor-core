@@ -12,7 +12,7 @@ public interface TaskProvider <T extends Comparable<T>> {
 	 * @param id
 	 * @return @Task
 	 */
-	Task provid(final T id);
+	public Task provid(final T id);
 	
 	/**
 	 * Represent a unit of execution in Dexecutor framework
@@ -20,7 +20,7 @@ public interface TaskProvider <T extends Comparable<T>> {
 	 * @author Nadeem Mohammad
 	 *
 	 */
-	abstract class Task {
+	public abstract class Task {
 		/**
 		 * Framework would call this method, when it comes for tasks to be executed.
 		 */

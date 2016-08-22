@@ -17,6 +17,14 @@ import com.github.dexecutor.executor.graph.Graph.Node;
 public class DefaultGraphTest {
 	
 	@Test
+	public void nodeTest() {
+		Node<Integer> intNode = new Node<Integer>(1);
+		assertThat(intNode.equals(null)).isFalse();
+		Node<String> strNode = new Node<String>("");
+		assertThat(intNode.equals(strNode)).isFalse();
+	}
+	
+	@Test
 	public void testAddSameDependency() {
 		Graph<Integer> graph = new DefaultGraph<Integer>();
 		

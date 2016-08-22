@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.dexecutor.executor.DependentTasksExecutor.ExecutionBehavior;
@@ -14,6 +15,7 @@ import com.github.dexecutor.executor.support.ThreadPoolUtil;
  * @author Nadeem Mohammad
  *
  */
+@Ignore
 public class DefaultDependentTasksExecutorIntegrationTest {
 
 	@Test

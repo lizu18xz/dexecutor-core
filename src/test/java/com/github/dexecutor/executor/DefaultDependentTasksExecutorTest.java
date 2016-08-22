@@ -73,6 +73,20 @@ public class DefaultDependentTasksExecutorTest {
 		assertThat(writer.toString(), equalTo("Path #0\n1[] \n2[1] \n\n"));
 	}
 	
+	public void testTerminatingTask() {
+		new MockedCompletionService();
+		DefaultDependentTasksExecutor<Integer> executor = newTaskExecutor(false);
+		executor.addDependency(1, 2);
+		executor.execute(ExecutionBehavior.TERMINATING);
+	}
+	
+	public void testNonTerminatingTask() {
+		new MockedCompletionService();
+		DefaultDependentTasksExecutor<Integer> executor = newTaskExecutor(false);
+		executor.addDependency(1, 2);
+		executor.execute(ExecutionBehavior.NON_TERMINATING);
+	}
+	
 	@Test
 	public void testDependentTaskExecutionOrder() {
 

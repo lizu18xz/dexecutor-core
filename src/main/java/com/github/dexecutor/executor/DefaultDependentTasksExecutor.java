@@ -74,7 +74,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		this.graph.addDependency(evalFirstNode, evalLaterNode);
 	}
 
-	public void addAsDependencyToAllLeafNodes(final T nodeValue) {
+	public void addAsDependentOnAllLeafNodes(final T nodeValue) {
 		if (this.graph.size() == 0) {
 			addIndependent(nodeValue);
 		} else {

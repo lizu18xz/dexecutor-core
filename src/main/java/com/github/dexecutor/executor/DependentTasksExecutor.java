@@ -29,7 +29,7 @@ public interface DependentTasksExecutor<T extends Comparable<T>> {
 	 * 
 	 * @param nodeValue
 	 */
-	void addAsDependencyToAllLeafNodes(final T nodeValue);
+	void addAsDependentOnAllLeafNodes(final T nodeValue);
 	/**
 	 * Kicks off the execution of the nodes based on the dependency graph constructed, using {@code addDepen***} apis
 	 * 

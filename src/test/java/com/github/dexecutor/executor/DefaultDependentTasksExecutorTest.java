@@ -72,7 +72,7 @@ public class DefaultDependentTasksExecutorTest {
 
 
 	private void addDependencies(DefaultDependentTasksExecutor<Integer> executor) {
-		executor.addAsDependencyToAllLeafNodes(1);
+		executor.addAsDependentOnAllLeafNodes(1);
 		executor.addDependency(1, 2);
 		executor.addDependency(1, 2);
 		executor.addDependency(1, 3);
@@ -87,7 +87,7 @@ public class DefaultDependentTasksExecutorTest {
 		executor.addDependency(13, 4);
 		executor.addDependency(13, 14);
 		executor.addIndependent(11);
-		executor.addAsDependencyToAllLeafNodes(15);
+		executor.addAsDependentOnAllLeafNodes(15);
 	}
 
 	private Collection<Node<Integer>> executionOrderExpectedResult() {

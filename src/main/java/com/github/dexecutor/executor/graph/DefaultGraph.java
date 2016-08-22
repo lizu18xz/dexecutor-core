@@ -26,8 +26,10 @@ public final class DefaultGraph<T extends Comparable<T>> implements Graph<T> {
 		Node<T> firstNode = doAdd(evalFirstNode);
 		Node<T> afterNode = doAdd(evalLaterNode);
 
-		firstNode.addOutGoingNode(afterNode);
-		afterNode.addInComingNode(firstNode);
+		if (!firstNode.equals(afterNode)) {
+			firstNode.addOutGoingNode(afterNode);
+			afterNode.addInComingNode(firstNode);			
+		}
 	}
 
 	private Node<T> doAdd(final T nodeValue) {

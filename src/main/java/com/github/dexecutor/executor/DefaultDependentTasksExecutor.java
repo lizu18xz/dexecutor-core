@@ -84,6 +84,17 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		}
 	}
 
+	@Override
+	public void addAsDependencyToAllInitialNodes(final T nodeValue) {
+		if (this.graph.size() == 0) {
+			addIndependent(nodeValue);
+		} else {
+			for (Node<T> node : this.graph.getInitialNodes()) {
+				addDependency(nodeValue, node.getValue());
+			}
+		}		
+	}
+
 	private boolean isAlreadyProcessed(final Node<T> node) {
 		return this.processedNodes.contains(node);
 	}

@@ -25,11 +25,17 @@ public interface DependentTasksExecutor<T extends Comparable<T>> {
 	 */
 	void addDependency(final T evalFirstValue, final T evalAfterValue);
 	/**
-	 * Adds the node as dependent on all leaf nodes (currently), meaning all leaf nodes would be evaluated first and then the given node
+	 * Adds the node as dependent on all leaf nodes (at the time of adding), meaning all leaf nodes would be evaluated first and then the given node
 	 * 
 	 * @param nodeValue
 	 */
 	void addAsDependentOnAllLeafNodes(final T nodeValue);
+	/**
+	 * Adds the node as dependency to all initial nodes (at the time of adding), meaning this given node would be evaluated first and then all initial nodes would run in parallel
+	 * 
+	 * @param nodeValue
+	 */
+	void addAsDependencyToAllInitialNodes(final T nodeValue);
 	/**
 	 * Kicks off the execution of the nodes based on the dependency graph constructed, using {@code addDepen***} apis
 	 * 

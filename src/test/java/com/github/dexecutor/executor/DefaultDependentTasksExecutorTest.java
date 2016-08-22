@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.github.dexecutor.executor.DependentTasksExecutor.ExecutionBehavior;
+import com.github.dexecutor.executor.graph.Graph;
 import com.github.dexecutor.executor.graph.Graph.Node;
 import com.github.dexecutor.executor.support.ThreadPoolUtil;
 
@@ -36,7 +37,31 @@ import mockit.integration.junit4.JMockit;
  */
 @RunWith(JMockit.class)
 public class DefaultDependentTasksExecutorTest {
-
+	
+	@Test
+	public void testAddAsDependencyToAllInitialNodes() {
+		new MockedCompletionService();
+		DefaultDependentTasksExecutor<Integer> executor = newTaskExecutor(false);
+		executor.addAsDependencyToAllInitialNodes(1);
+		Graph<Integer> graph = Deencapsulation.getField(executor, "graph");
+		assertThat(graph.size(), equalTo(1));
+		executor.addDependency(1, 2);
+		executor.addAsDependencyToAllInitialNodes(1);
+		assertThat(graph.size(), equalTo(2));
+	}
+	
+	@Test
+	public void testAddAsDependentOnAllLeafNodes() {
+		new MockedCompletionService();
+		DefaultDependentTasksExecutor<Integer> executor = newTaskExecutor(false);
+		executor.addAsDependentOnAllLeafNodes(1);
+		Graph<Integer> graph = Deencapsulation.getField(executor, "graph");
+		assertThat(graph.size(), equalTo(1));
+		executor.addDependency(1, 2);
+		executor.addAsDependentOnAllLeafNodes(1);
+		assertThat(graph.size(), equalTo(2));
+	}
+	
 	@Test
 	public void testDependentTaskExecutionOrder() {
 
@@ -72,7 +97,6 @@ public class DefaultDependentTasksExecutorTest {
 
 
 	private void addDependencies(DefaultDependentTasksExecutor<Integer> executor) {
-		executor.addAsDependentOnAllLeafNodes(1);
 		executor.addDependency(1, 2);
 		executor.addDependency(1, 2);
 		executor.addDependency(1, 3);
@@ -87,7 +111,6 @@ public class DefaultDependentTasksExecutorTest {
 		executor.addDependency(13, 4);
 		executor.addDependency(13, 14);
 		executor.addIndependent(11);
-		executor.addAsDependentOnAllLeafNodes(15);
 	}
 
 	private Collection<Node<Integer>> executionOrderExpectedResult() {
@@ -106,7 +129,6 @@ public class DefaultDependentTasksExecutorTest {
 		result.add(new Node<Integer>(4));
 		result.add(new Node<Integer>(14));
 		result.add(new Node<Integer>(10));
-		result.add(new Node<Integer>(15));
 		return result;
 	}
 

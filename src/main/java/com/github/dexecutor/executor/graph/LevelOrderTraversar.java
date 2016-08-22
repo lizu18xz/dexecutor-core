@@ -55,7 +55,7 @@ public class LevelOrderTraversar<T extends Comparable<T>> implements Traversar<T
 			for (int i = 0; i < size; i++) {
 				Node<T> node = queue.poll();
 				if (!this.processed.contains(node)) {
-					if (!level.contains(node)) {					
+					if (!level.contains(node)) {
 						level.add(node);
 					}
 					this.processed.add(node);
@@ -75,7 +75,7 @@ public class LevelOrderTraversar<T extends Comparable<T>> implements Traversar<T
 		for (List<Node<T>> nodes : list) {
 			try {
 				for (Node<T> node : nodes) {
-					writer.write(node + "" + node.getInComingNodes() + " ");					
+					writer.write(node + "" + node.getInComingNodes() + " ");
 				}
 				writer.write("\n");
 			} catch (IOException e) {

@@ -3,6 +3,7 @@ package com.github.dexecutor.executor;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -60,6 +61,16 @@ public class DefaultDependentTasksExecutorTest {
 		executor.addDependency(1, 2);
 		executor.addAsDependentOnAllLeafNodes(1);
 		assertThat(graph.size(), equalTo(2));
+	}
+	
+	@Test
+	public void testPrint() {
+		new MockedCompletionService();
+		DefaultDependentTasksExecutor<Integer> executor = newTaskExecutor(false);
+		executor.addDependency(1, 2);
+		StringWriter writer = new StringWriter();
+		executor.print(writer);
+		assertThat(writer.toString(), equalTo("Path #0\n1[] \n2[1] \n\n"));
 	}
 	
 	@Test

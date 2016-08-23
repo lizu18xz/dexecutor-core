@@ -133,7 +133,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 			if (shouldProcess(node) ) {
 				nodesCount.incrementAndGet();
 				logger.debug("Going to schedule {} node", node.getValue());
-				completionService.submit(newTask(node, behavior));
+				completionService.submit(newWorker(node, behavior));
 			} else {
 				logger.debug("node {} depends on {}", node.getValue(), node.getInComingNodes());
 			}
@@ -169,7 +169,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		}
 	}
 
-	private Callable<Node<T>> newTask(final Node<T> graphNode, final ExecutionBehavior behavior) {
+	private Callable<Node<T>> newWorker(final Node<T> graphNode, final ExecutionBehavior behavior) {
 		if (ExecutionBehavior.NON_TERMINATING.equals(behavior)) {
 			return new NonTerminatingTask(graphNode);
 		} else if (ExecutionBehavior.RETRY_ONCE_TERMINATING.equals(behavior)) { 
@@ -187,7 +187,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		}
 
 		public Node<T> call() throws Exception {
-			Task task = newTask(this.node.getValue());
+			Task task = newLoggingTask(this.node.getValue());
 			task.setConsiderExecutionError(true);
 			task.execute();
 			return this.node;
@@ -203,7 +203,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 
 		public Node<T> call() throws Exception {
 			try {
-				Task task = newTask(this.node.getValue());
+				Task task = newLoggingTask(this.node.getValue());
 				task.setConsiderExecutionError(false);
 				task.execute();
 			} catch(Exception ex) {
@@ -221,7 +221,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		}
 
 		public Node<T> call() throws Exception {
-			Task task = newTask(this.node.getValue());
+			Task task = newLoggingTask(this.node.getValue());
 			boolean retry = shouldRetry(this.node.getValue());
 			task.setConsiderExecutionError(!retry);
 			try {
@@ -245,7 +245,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>> imple
 		return true;
 	}
 
-	private Task newTask(final T taskId) {
+	private Task newLoggingTask(final T taskId) {
 		return new LoggingTask(taskId, this.taskProvider.provid(taskId));
 	}
 

@@ -261,8 +261,8 @@
 		</plugins>
 	</build>
 
-	<!-- <profiles>
-		GPG Signature on release
+	<profiles>
+		<!-- GPG Signature on release -->
 		<profile>
 			<id>release-sign-artifacts</id>
 			<activation>
@@ -291,5 +291,5 @@
 			</build>
 		</profile>
 	</profiles>
- -->
+
 </project>

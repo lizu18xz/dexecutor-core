@@ -20,10 +20,13 @@ public interface TaskProvider <T extends Comparable<T>, R> {
 	 * 
 	 * @author Nadeem Mohammad
 	 *
+	 * @param <T> Type of Node/Task ID
+	 * @param <R> Type of Node/Task result
 	 */
 	public abstract class Task<T, R> {
 		/**
 		 * Framework would call this method, when it comes for tasks to be executed.
+		 * @return the result of task execution
 		 */
 		public abstract R execute();
 		/**
@@ -44,7 +47,12 @@ public interface TaskProvider <T extends Comparable<T>, R> {
 		void setConsiderExecutionError(boolean considerExecutionError) {
 			this.considerExecutionError = considerExecutionError;
 		}
-		
+		/**
+		 * Defines whether or not this task should be executed
+		 * 
+		 * @param parentResults
+		 * @return Whether or not this task should be executed
+		 */
 		public boolean shouldExecute(final ExecutionResults<T, R> parentResults) {
 			return true;
 		}

@@ -178,7 +178,12 @@ public interface Graph<T extends Comparable<T>, R> {
 	    	return String.valueOf(this.value);
 	    }
 	}
-
+	/**
+	 * Represents node's execution status
+	 * 
+	 * @author Nadeem Mohammad
+	 *
+	 */
 	public enum NodeStatus {
 		ERRORED,SKIPPED,SUCCESS;
 	}

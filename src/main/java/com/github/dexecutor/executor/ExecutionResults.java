@@ -2,7 +2,14 @@ package com.github.dexecutor.executor;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Wrapper class around @ExecutionResult
+ * 
+ * @author Nadeem Mohammad
+ *
+ * @param <T> Type of Node/Task ID
+ * @param <R> Type of Node/Task result
+ */
 public final class ExecutionResults<T, R> {
 
 	private List<ExecutionResult<T, R>> results = new ArrayList<ExecutionResult<T, R>>();

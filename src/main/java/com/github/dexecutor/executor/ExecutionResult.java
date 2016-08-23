@@ -1,5 +1,12 @@
 package com.github.dexecutor.executor;
-
+/**
+ * Holds execution result of a node identified by id 
+ * 
+ * @author Nadeem Mohammad
+ *
+ * @param <T> Type of Node/Task ID
+ * @param <R> Type of Node/Task result
+ */
 public class ExecutionResult <T, R> {
 
 	private T id;

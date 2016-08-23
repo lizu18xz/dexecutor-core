@@ -8,23 +8,23 @@ public class DependentTasksExecutorConfigTest {
 
 	@Test(expected= IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWhenValidatorIsNull() {
-		DependentTasksExecutorConfig<String> config = new DependentTasksExecutorConfig<>(Executors.newCachedThreadPool(), newTaskProvider());
+		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<>(Executors.newCachedThreadPool(), newTaskProvider());
 		config.setValidator(null);
 		config.validate();
 	}
 
 	@Test(expected= IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWhenTraversarIsNull() {
-		DependentTasksExecutorConfig<String> config = new DependentTasksExecutorConfig<>(Executors.newCachedThreadPool(), newTaskProvider());
+		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<>(Executors.newCachedThreadPool(), newTaskProvider());
 		config.setTraversar(null);
 		config.validate();
 	}
 
-	private TaskProvider<String> newTaskProvider() {
-		return new TaskProvider<String>() {
+	private TaskProvider<String, String> newTaskProvider() {
+		return new TaskProvider<String, String>() {
 			
 			@Override
-			public Task provid(String id) {
+			public Task<String, String> provid(String id) {
 				return null;
 			}
 		};

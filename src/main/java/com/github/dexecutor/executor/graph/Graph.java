@@ -5,12 +5,13 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Dependency would be construced based on this APIs, Dexecutor uses this data structure to represet the dependencies between tasks
+ * Dependency would be constructed based on this APIs, Dexecutor uses this data structure to represent the dependencies between tasks
  * @author Nadeem Mohammad
  *
- * @param <T>
+ * @param <T> Type of Node/Task ID
+ * @param <R> Type of Node/Task result
  */
-public interface Graph<T extends Comparable<T>> {
+public interface Graph<T extends Comparable<T>, R> {
 	/**
 	 * Should add the two nodes in the datastructure in such a way that {@code evalFirstValue} should be evaluated before {@code evalAfterValue}.
 	 * Nodes should be created only if it is not already added.
@@ -29,17 +30,17 @@ public interface Graph<T extends Comparable<T>> {
 	 * Returns the Set of nodes for which there is no incoming dependencies.
 	 * @return set of initial nodes
 	 */
-	Set<Node<T>> getInitialNodes();
+	Set<Node<T, R>> getInitialNodes();
 	/**
 	 * Retruns the set of nodes for which there is no outgoing dependencies.
 	 * @return set of leaf nodes
 	 */
-	Set<Node<T>> getLeafNodes();
+	Set<Node<T, R>> getLeafNodes();
 	/**
 	 * Returns all nodes in this graph
 	 * @return all nodes in this graph
 	 */
-	Collection<Node<T>> allNodes();
+	Collection<Node<T, R>> allNodes();
 	/**
 	 * Returns the total number of nodes in this graph
 	 * 
@@ -54,19 +55,27 @@ public interface Graph<T extends Comparable<T>> {
 	 *
 	 * @param <T>
 	 */
-	public final class Node<T> {
+	public final class Node<T, R> {
 		/**
 		 * Unique id of the node
 		 */
 		private T value;
 		/**
+		 * Execution result of this node
+		 */
+		private R result;
+		/**
+		 * Execution status of this node
+		 */
+		private NodeStatus status;
+		/**
 		 * incoming dependencies for this node
 		 */
-	    private Set<Node<T>> inComingEdges = new LinkedHashSet<Graph.Node<T>>();
+	    private Set<Node<T, R>> inComingEdges = new LinkedHashSet<Graph.Node<T, R>>();
 	    /**
 	     * outgoing dependencies for this node
 	     */
-	    private Set<Node<T>> outGoingEdges = new LinkedHashSet<Graph.Node<T>>();
+	    private Set<Node<T, R>> outGoingEdges = new LinkedHashSet<Graph.Node<T, R>>();
 	    /**
 	     * Constructs the node with the given node Id
 	     * @param val
@@ -78,28 +87,28 @@ public interface Graph<T extends Comparable<T>> {
 	     * Add the given node, to the set of incoming nodes
 	     * @param node
 	     */
-	    public void addInComingNode(final Node<T> node) {	        
+	    public void addInComingNode(final Node<T, R> node) {	        
 	        this.inComingEdges.add(node);
 	    }
 	    /**
 	     * add the given to the set of out going nodes
 	     * @param node
 	     */
-	    public void addOutGoingNode(final Node<T> node) {	        
+	    public void addOutGoingNode(final Node<T, R> node) {	        
 	        this.outGoingEdges.add(node);
 	    }
 	    /**
 	     * 
 	     * @return the set of incoming nodes
 	     */
-	    public Set<Node<T>> getInComingNodes() {
+	    public Set<Node<T, R>> getInComingNodes() {
 	        return this.inComingEdges;
 	    }
 	    /**
 	     * 
 	     * @return set of out going nodes
 	     */
-	    public Set<Node<T>> getOutGoingNodes() {
+	    public Set<Node<T, R>> getOutGoingNodes() {
 	        return this.outGoingEdges;
 	    }
 	    /**
@@ -108,6 +117,38 @@ public interface Graph<T extends Comparable<T>> {
 	     */
 		public T getValue() {
 			return this.value;
+		}
+
+		public R getResult() {
+			return result;
+		}
+
+		public void setResult(final R result) {
+			this.result = result;
+		}
+		
+		public boolean isSuccess() {
+			return NodeStatus.SUCCESS.equals(this.status);
+		}
+		
+		public boolean isErrored() {
+			return NodeStatus.ERRORED.equals(this.status);
+		}
+
+		public boolean isSkipped() {
+			return NodeStatus.SKIPPED.equals(this.status);
+		}
+
+		public void setSuccess() {
+			this.status = NodeStatus.SUCCESS;
+		}
+		
+		public void setErrored() {
+			this.status = NodeStatus.ERRORED;
+		}
+		
+		public void setSkipped() {
+			this.status = NodeStatus.SKIPPED;
 		}
 
 		@Override
@@ -127,7 +168,7 @@ public interface Graph<T extends Comparable<T>> {
 				return false;
 			}
 			@SuppressWarnings("unchecked")
-			Node<T> other = (Node<T>) obj;
+			Node<T, R> other = (Node<T, R>) obj;
 
 			return this.value.equals(other.value);
 		}
@@ -136,5 +177,9 @@ public interface Graph<T extends Comparable<T>> {
 	    public String toString() {
 	    	return String.valueOf(this.value);
 	    }
+	}
+
+	public enum NodeStatus {
+		ERRORED,SKIPPED,SUCCESS;
 	}
 }

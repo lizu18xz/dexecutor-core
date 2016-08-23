@@ -14,9 +14,10 @@ import static com.github.dexecutor.executor.support.Preconditions.*;
  * 
  * @author Nadeem Mohammad
  *
- * @param <T>
+ * @param <T> Type of Node/Task ID
+ * @param <R> Type of Node/Task result
  */
-public class DependentTasksExecutorConfig<T extends Comparable<T>> {
+public class DependentTasksExecutorConfig<T extends Comparable<T>, R> {
 	/**
 	 * executorService is the main platform on which tasks are executed
 	 */
@@ -24,21 +25,21 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>> {
 	/**
 	 * When it comes to task execution, task provider would be consulted to provide task objects for execution
 	 */
-	private TaskProvider<T> taskProvider;
+	private TaskProvider<T, R> taskProvider;
 	/**
 	 * Validator for validating the consturcted graph, defaults to detecting Cyclic checks
 	 */
-	private Validator<T> validator = new CyclicValidator<T>();
+	private Validator<T, R> validator = new CyclicValidator<T, R>();
 	/**
 	 * Traversar used to traverse the graph while printing it on a Writer
 	 */
-	private Traversar<T> traversar = new LevelOrderTraversar<T>();
+	private Traversar<T, R> traversar = new LevelOrderTraversar<T, R>();
 	/**
 	 * Construct the object with mandatory params, rest are optional
 	 * @param executorService
 	 * @param taskProvider
 	 */
-	public DependentTasksExecutorConfig(final ExecutorService executorService, final TaskProvider<T> taskProvider) {
+	public DependentTasksExecutorConfig(final ExecutorService executorService, final TaskProvider<T, R> taskProvider) {
 		this.executorService = executorService;
 		this.taskProvider = taskProvider;
 	}
@@ -54,28 +55,28 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>> {
 		return executorService;
 	}
 
-	TaskProvider<T> getTaskProvider() {
+	TaskProvider<T, R> getTaskProvider() {
 		return taskProvider;
 	}
 
-	Validator<T> getValidator() {
+	Validator<T, R> getValidator() {
 		return validator;
 	}
 	/**
 	 * change the validator to that of specified
 	 * @param validator
 	 */
-	public void setValidator(final Validator<T> validator) {
+	public void setValidator(final Validator<T, R> validator) {
 		this.validator = validator;
 	}
-	Traversar<T> getTraversar() {
+	Traversar<T, R> getTraversar() {
 		return traversar;
 	}
 	/**
 	 * Change the traversar to that of specified
 	 * @param traversar
 	 */
-	public void setTraversar(final Traversar<T> traversar) {
+	public void setTraversar(final Traversar<T, R> traversar) {
 		this.traversar = traversar;
 	}
 }

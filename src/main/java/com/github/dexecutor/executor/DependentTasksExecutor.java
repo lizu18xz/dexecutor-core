@@ -7,7 +7,8 @@ import java.io.Writer;
  * 
  * @author Nadeem Mohammad
  *
- * @param <T>
+ * @param <T> Type of Node/Task ID
+ * @param <R> Type of Node/Task result
  */
 public interface DependentTasksExecutor<T extends Comparable<T>> {
 	/**

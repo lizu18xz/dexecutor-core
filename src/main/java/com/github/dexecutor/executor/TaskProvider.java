@@ -3,16 +3,17 @@ package com.github.dexecutor.executor;
  * A Task Provider provides Tasks to be executed, when it comes to execution
  * @author Nadeem Mohammad
  *
- * @param <T>
+ * @param <T> Type of Node/Task ID
+ * @param <R> Type of Node/Task result
  */
-public interface TaskProvider <T extends Comparable<T>> {
+public interface TaskProvider <T extends Comparable<T>, R> {
 	/**
 	 * Given the node id, returns the task to be executed, while building graph only the node ids are required, when it comes to execution Task objects would be constructed
 	 * 
 	 * @param id
 	 * @return @Task
 	 */
-	public Task provid(final T id);
+	public Task<T, R> provid(final T id);
 	
 	/**
 	 * Represent a unit of execution in Dexecutor framework
@@ -20,11 +21,11 @@ public interface TaskProvider <T extends Comparable<T>> {
 	 * @author Nadeem Mohammad
 	 *
 	 */
-	public abstract class Task {
+	public abstract class Task<T, R> {
 		/**
 		 * Framework would call this method, when it comes for tasks to be executed.
 		 */
-		public abstract void execute();
+		public abstract R execute();
 		/**
 		 * When using retry behavior, execution error should not be considered until the last retry, this would define when execution error should be considered
 		 */
@@ -42,6 +43,10 @@ public interface TaskProvider <T extends Comparable<T>> {
 		 */
 		void setConsiderExecutionError(boolean considerExecutionError) {
 			this.considerExecutionError = considerExecutionError;
+		}
+		
+		public boolean shouldExecute(final ExecutionResults<T, R> parentResults) {
+			return true;
 		}
 	}
 }

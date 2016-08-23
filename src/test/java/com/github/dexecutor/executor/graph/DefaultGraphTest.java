@@ -18,15 +18,15 @@ public class DefaultGraphTest {
 	
 	@Test
 	public void nodeTest() {
-		Node<Integer> intNode = new Node<Integer>(1);
+		Node<Integer, Integer> intNode = new Node<Integer, Integer>(1);
 		assertThat(intNode.equals(null)).isFalse();
-		Node<String> strNode = new Node<String>("");
+		Node<String, String> strNode = new Node<String, String>("");
 		assertThat(intNode.equals(strNode)).isFalse();
 	}
 	
 	@Test
 	public void testAddSameDependency() {
-		Graph<Integer> graph = new DefaultGraph<Integer>();
+		Graph<Integer, Integer> graph = new DefaultGraph<Integer, Integer>();
 		
 		graph.addIndependent(1);		
 		graph.addDependency(1, 1);
@@ -38,7 +38,7 @@ public class DefaultGraphTest {
 
 	@Test
 	public void testGraphSize() {
-		Graph<Integer> graph = new DefaultGraph<Integer>();
+		Graph<Integer, Integer> graph = new DefaultGraph<Integer, Integer>();
 		
 		graph.addIndependent(1);		
 		graph.addDependency(1, 2);		
@@ -49,43 +49,43 @@ public class DefaultGraphTest {
 
 	@Test
 	public void testInitialNodes() {
-		Graph<Integer> graph = new DefaultGraph<Integer>();
+		Graph<Integer, Integer> graph = new DefaultGraph<Integer, Integer>();
 		
 		graph.addIndependent(1);		
 		graph.addDependency(1, 2);		
 		graph.addIndependent(3);
 		graph.addDependency(1, 3);
-		Set<Node<Integer>> initialNodes = graph.getInitialNodes();
+		Set<Node<Integer, Integer>> initialNodes = graph.getInitialNodes();
 		
 		assertThat(initialNodes.size()).isEqualTo(1);
-		assertThat(initialNodes).containsSequence(new Graph.Node<Integer>(1));
+		assertThat(initialNodes).containsSequence(new Graph.Node<Integer, Integer>(1));
 	}
 
 	@Test
 	public void testAllNodes() {
-		Graph<Integer> graph = new DefaultGraph<Integer>();
+		Graph<Integer, Integer> graph = new DefaultGraph<Integer, Integer>();
 		
 		graph.addIndependent(1);		
 		graph.addDependency(1, 2);		
 		graph.addIndependent(3);
 		graph.addDependency(1, 3);
-		Collection<Node<Integer>> initialNodes = graph.allNodes();
+		Collection<Node<Integer, Integer>> initialNodes = graph.allNodes();
 		
 		assertThat(initialNodes.size()).isEqualTo(3);
-		assertThat(initialNodes).containsSequence(new Graph.Node<Integer>(1), new Graph.Node<Integer>(2), new Graph.Node<Integer>(3));
+		assertThat(initialNodes).containsSequence(new Graph.Node<Integer, Integer>(1), new Graph.Node<Integer, Integer>(2), new Graph.Node<Integer, Integer>(3));
 	}
 
 	@Test
 	public void testLeafNodes() {
-		Graph<Integer> graph = new DefaultGraph<Integer>();
+		Graph<Integer, Integer> graph = new DefaultGraph<Integer, Integer>();
 		
 		graph.addIndependent(1);		
 		graph.addDependency(1, 2);		
 		graph.addIndependent(3);
 		graph.addDependency(1, 3);
-		Collection<Node<Integer>> initialNodes = graph.getLeafNodes();
+		Collection<Node<Integer, Integer>> initialNodes = graph.getLeafNodes();
 		
 		assertThat(initialNodes.size()).isEqualTo(2);
-		assertThat(initialNodes).containsSequence(new Graph.Node<Integer>(2), new Graph.Node<Integer>(3));
+		assertThat(initialNodes).containsSequence(new Graph.Node<Integer, Integer>(2), new Graph.Node<Integer, Integer>(3));
 	}
 }

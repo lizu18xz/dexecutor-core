@@ -21,7 +21,7 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 	@Test
 	public void testDependentTaskExecution() {
 
-		DefaultDependentTasksExecutor<Integer> executor = newTaskExecutor();
+		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor();
 
         executor.addDependency(1, 2);
         executor.addDependency(1, 2);
@@ -47,28 +47,30 @@ public class DefaultDependentTasksExecutorIntegrationTest {
         System.out.println("*** Done ***");
 	}
 
-	private DefaultDependentTasksExecutor<Integer> newTaskExecutor() {
-		return new DefaultDependentTasksExecutor<Integer>(newExecutor(), new SleepyTaskProvider<Integer>());
+	private DefaultDependentTasksExecutor<Integer, Integer> newTaskExecutor() {
+		return new DefaultDependentTasksExecutor<Integer, Integer>(newExecutor(), new SleepyTaskProvider());
 	}
 
 	private ExecutorService newExecutor() {
 		return Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
 	}
 
-	private static class SleepyTaskProvider<T extends Comparable<T>> implements TaskProvider<T> {
+	private static class SleepyTaskProvider implements TaskProvider<Integer, Integer> {
 
-		public Task provid(T id) {
+		public Task<Integer, Integer> provid(final Integer id) {
 
-			return new Task() {
+			return new Task<Integer, Integer>() {
 
-				public void execute() {
+				public Integer execute() {
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					return id;
 				}
-			};
-		}		
+			};			
+		}
+		
 	}
 }

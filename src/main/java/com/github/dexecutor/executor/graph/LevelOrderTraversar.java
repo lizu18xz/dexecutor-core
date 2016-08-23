@@ -15,16 +15,17 @@ import com.github.dexecutor.executor.graph.Graph.Node;
  * 
  * @author Nadeem Mohammad
  *
- * @param <T>
+ * @param <T> Type of Node/Task ID
+ * @param <R> Type of Node/Task result
  */
-public class LevelOrderTraversar<T extends Comparable<T>> implements Traversar<T> {
+public class LevelOrderTraversar<T extends Comparable<T>, R> implements Traversar<T, R> {
 	
-	private List<Graph.Node<T>> processed = new ArrayList<Graph.Node<T>>();
+	private List<Graph.Node<T, R>> processed = new ArrayList<Graph.Node<T, R>>();
 	
-	public void traverse(final Graph<T> graph, final Writer writer) {
-		List<List<List<Node<T>>>> levelOrderOfGraphs = traverseLevelOrder(graph);
+	public void traverse(final Graph<T, R> graph, final Writer writer) {
+		List<List<List<Node<T, R>>>> levelOrderOfGraphs = traverseLevelOrder(graph);
 		int i = 0;
-		for (List<List<Node<T>>> levelOrderOfGraph : levelOrderOfGraphs) {
+		for (List<List<Node<T, R>>> levelOrderOfGraph : levelOrderOfGraphs) {
 			try {
 				writer.write("Path #" + (i++) + "\n");
 				printGraph(levelOrderOfGraph, writer);
@@ -35,31 +36,31 @@ public class LevelOrderTraversar<T extends Comparable<T>> implements Traversar<T
 		}
 	}
 
-	private List<List<List<Node<T>>>> traverseLevelOrder(final Graph<T> graph) {
-		List<List<List<Node<T>>>> result = new ArrayList<List<List<Node<T>>>>();
-		Set<Node<T>> initialNodes = graph.getInitialNodes();
-		for (Node<T> iNode : initialNodes) {
-			List<List<Node<T>>> iresult = new ArrayList<List<Node<T>>>();
+	private List<List<List<Node<T, R>>>> traverseLevelOrder(final Graph<T, R> graph) {
+		List<List<List<Node<T, R>>>> result = new ArrayList<List<List<Node<T, R>>>>();
+		Set<Node<T, R>> initialNodes = graph.getInitialNodes();
+		for (Node<T, R> iNode : initialNodes) {
+			List<List<Node<T, R>>> iresult = new ArrayList<List<Node<T, R>>>();
 			doTraverse(iresult, iNode);
 			result.add(iresult);
 		}
 		return result;
 	}
 
-	private void doTraverse(final List<List<Node<T>>> result, final Node<T> iNode) {
-		Queue<Node<T>> queue = new LinkedList<Node<T>>();
+	private void doTraverse(final List<List<Node<T, R>>> result, final Node<T, R> iNode) {
+		Queue<Node<T, R>> queue = new LinkedList<Node<T, R>>();
 		queue.offer(iNode);
 		while (!queue.isEmpty()) {
-			List<Node<T>> level = new ArrayList<Node<T>>();
+			List<Node<T, R>> level = new ArrayList<Node<T, R>>();
 			int size = queue.size();
 			for (int i = 0; i < size; i++) {
-				Node<T> node = queue.poll();
+				Node<T, R> node = queue.poll();
 				if (!this.processed.contains(node)) {
 					if (!level.contains(node)) {
 						level.add(node);
 					}
 					this.processed.add(node);
-					for (Node<T> ogn : node.getOutGoingNodes()) {
+					for (Node<T, R> ogn : node.getOutGoingNodes()) {
 						if (ogn != null && !this.processed.contains(ogn)) {
 							queue.offer(ogn);
 						}
@@ -71,10 +72,10 @@ public class LevelOrderTraversar<T extends Comparable<T>> implements Traversar<T
 		}
 	}
 
-	private void printGraph(final List<List<Node<T>>> list, final Writer writer) {
-		for (List<Node<T>> nodes : list) {
+	private void printGraph(final List<List<Node<T, R>>> list, final Writer writer) {
+		for (List<Node<T, R>> nodes : list) {
 			try {
-				for (Node<T> node : nodes) {
+				for (Node<T, R> node : nodes) {
 					writer.write(node + "" + node.getInComingNodes() + " ");
 				}
 				writer.write("\n");

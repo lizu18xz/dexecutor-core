@@ -12,19 +12,20 @@ import java.util.Set;
  * 
  * @author Nadeem Mohammad
  *
- * @param <T>
+ * @param <T> Type of Node/Task ID
+ * @param <R> Type of Node/Task result
  */
-public final class DefaultGraph<T extends Comparable<T>> implements Graph<T> {
+public final class DefaultGraph<T extends Comparable<T>, R> implements Graph<T, R> {
 
-	private Map<T, Node<T>> nodes = new HashMap<T, Node<T>>();
+	private Map<T, Node<T, R>> nodes = new HashMap<T, Node<T, R>>();
 
 	public void addIndependent(T nodeValue) {
 		doAdd(nodeValue);
 	}
 
 	public void addDependency(final T evalFirstNode, final T evalLaterNode) {
-		Node<T> firstNode = doAdd(evalFirstNode);
-		Node<T> afterNode = doAdd(evalLaterNode);
+		Node<T, R> firstNode = doAdd(evalFirstNode);
+		Node<T, R> afterNode = doAdd(evalLaterNode);
 
 		if (!firstNode.equals(afterNode)) {
 			firstNode.addOutGoingNode(afterNode);
@@ -32,8 +33,8 @@ public final class DefaultGraph<T extends Comparable<T>> implements Graph<T> {
 		}
 	}
 
-	private Node<T> doAdd(final T nodeValue) {
-		Node<T> graphNode = null;
+	private Node<T, R> doAdd(final T nodeValue) {
+		Node<T, R> graphNode = null;
 		if (nodes.containsKey(nodeValue)) {
 			graphNode = nodes.get(nodeValue);
 		} else {
@@ -43,16 +44,16 @@ public final class DefaultGraph<T extends Comparable<T>> implements Graph<T> {
 		return graphNode;
 	}
 
-	private Node<T> createNode(final T value) {
-		Node<T> node = new Node<T>(value);
+	private Node<T, R> createNode(final T value) {
+		Node<T, R> node = new Node<T, R>(value);
 		return node;
 	}
 
-	public Set<Node<T>> getInitialNodes() {
-		Set<Node<T>> initialNodes = new LinkedHashSet<Node<T>>();
+	public Set<Node<T, R>> getInitialNodes() {
+		Set<Node<T, R>> initialNodes = new LinkedHashSet<Node<T, R>>();
 		Set<T> keys = nodes.keySet();
 		for (T key : keys) {
-			Node<T> node = nodes.get(key);
+			Node<T, R> node = nodes.get(key);
 			if (node.getInComingNodes().isEmpty()) {				
 				initialNodes.add(node);
 			}
@@ -64,15 +65,15 @@ public final class DefaultGraph<T extends Comparable<T>> implements Graph<T> {
 		return nodes.size();
 	}
 
-	public Collection<Graph.Node<T>> allNodes() {
-		return new ArrayList<Graph.Node<T>>(this.nodes.values());
+	public Collection<Graph.Node<T, R>> allNodes() {
+		return new ArrayList<Graph.Node<T, R>>(this.nodes.values());
 	}
 
-	public Set<Graph.Node<T>> getLeafNodes() {
-		Set<Node<T>> leafNodes = new LinkedHashSet<Node<T>>();
+	public Set<Graph.Node<T, R>> getLeafNodes() {
+		Set<Node<T, R>> leafNodes = new LinkedHashSet<Node<T, R>>();
 		Set<T> keys = nodes.keySet();
 		for (T key : keys) {
-			Node<T> node = nodes.get(key);
+			Node<T, R> node = nodes.get(key);
 			if (node.getOutGoingNodes().isEmpty()) {				
 				leafNodes.add(node);
 			}

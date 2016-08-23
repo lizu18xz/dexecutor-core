@@ -20,11 +20,15 @@ public class ExecutionResultTest {
 	}
 
 	@Test
+	public void testExecutionResultToStringShouldNotBeNull() {
+		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1, ExecutionStatus.SUCCESS);
+		assertNotNull(result.toString());
+	}
+
+	@Test
 	public void testExecutionResultShouldBeSuccess() {
 		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1, ExecutionStatus.SUCCESS);
 		assertThat(result.isSuccess(), equalTo(true));
-		assertThat(result.getId(), equalTo(1));
-		assertThat(result.getResult(), equalTo(1));
 	}
 	
 	@Test

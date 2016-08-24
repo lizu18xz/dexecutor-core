@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/dexecutor/dependent-tasks-executor.svg?branch=master)](https://travis-ci.org/dexecutor/dependent-tasks-executor)
 [![Coverage Status](https://coveralls.io/repos/github/dexecutor/dependent-tasks-executor/badge.svg?branch=master)](https://coveralls.io/github/dexecutor/dependent-tasks-executor?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dependent-tasks-executor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dependent-tasks-executor)
+[![Dependency Status](https://www.versioneye.com/user/projects/57bd71da69d9490042f72a7e/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57bd71da69d9490042f72a7e)
 
 Executing dependent tasks in a reliable way, is made so easy that even your grandma can do it.
 

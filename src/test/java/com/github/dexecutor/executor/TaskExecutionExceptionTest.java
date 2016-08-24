@@ -13,11 +13,4 @@ public class TaskExecutionExceptionTest {
 		TaskExecutionException ex = new TaskExecutionException(msg);
 		assertThat(ex.getMessage(), equalTo(msg));
 	}
-	
-	@Test
-	public void testMsgShouldBeNull() {
-		TaskExecutionException ex = new TaskExecutionException();
-		assertNull(ex.getMessage());
-	}
-
 }

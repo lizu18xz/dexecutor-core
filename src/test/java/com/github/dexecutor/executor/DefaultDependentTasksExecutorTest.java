@@ -187,7 +187,7 @@ public class DefaultDependentTasksExecutorTest {
 				private void doExecute(final Integer id) {
 					if (throwEx) {
 						if (id ==  Integer.valueOf(2)) {
-							throw new TaskExecutionException();
+							throw new TaskExecutionException("Error Executing task " + id);
 						}
 					}
 				}

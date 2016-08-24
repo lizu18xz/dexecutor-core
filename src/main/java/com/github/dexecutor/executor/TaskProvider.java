@@ -51,7 +51,9 @@ public interface TaskProvider <T extends Comparable<T>, R> {
 		 * Defines whether or not this task should be executed
 		 * 
 		 * @param parentResults
-		 * @return Whether or not this task should be executed
+		 * 
+		 * @return {@code true} If this task should be executed
+		 * {@code false} If the task should be skipped
 		 */
 		public boolean shouldExecute(final ExecutionResults<T, R> parentResults) {
 			return true;

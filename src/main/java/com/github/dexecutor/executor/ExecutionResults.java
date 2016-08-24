@@ -13,11 +13,19 @@ import java.util.List;
 public final class ExecutionResults<T, R> {
 
 	private List<ExecutionResult<T, R>> results = new ArrayList<ExecutionResult<T, R>>();
-
+	
+	/**
+	 * adds {@code result} to existing collection of results
+	 * 
+	 * @param result Result to be added to all results
+	 */
 	public final void add(final ExecutionResult<T, R> result) {
 		this.results.add(result);
 	}
-
+	/**
+	 *  
+	 * @return the first {@link ExecutionResult in the collection}
+	 */
 	public ExecutionResult<T, R> getFirst() {
 		if (this.results.isEmpty()) {
 			return null;
@@ -25,7 +33,11 @@ public final class ExecutionResults<T, R> {
 			return this.results.iterator().next();
 		}
 	}
-
+	/**
+	 * 
+	 * @return {@code true} If there is any result
+	 * {@code false} if no result
+	 */
 	public boolean hasAnyParentResult() {
 		if (this.results.isEmpty()) {
 			return false;
@@ -33,7 +45,10 @@ public final class ExecutionResults<T, R> {
 			return true;
 		}
 	}
-
+	/**
+	 * 
+	 * @return all result in the collection
+	 */
 	public List<ExecutionResult<T, R>> getAll() {
 		return new ArrayList<ExecutionResult<T, R>>(this.results);
 	}

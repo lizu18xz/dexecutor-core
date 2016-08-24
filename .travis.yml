@@ -7,7 +7,19 @@ os:
   - linux  
 
 script:
-  - mvn test jacoco:report
+  - mvn test jacoco:report coveralls:report
 
-after_success:
-  - mvn coveralls:report
+after_success: |
+  if [ -n "${GITHUB_API_KEY}" ]; then
+    cd "$TRAVIS_BUILD_DIR"
+    make web
+    cd web
+    git init
+    git checkout -b gh-pages
+    git add .
+    git -c user.name='travis' -c user.email='travis' commit -m init
+    git push -fq https://dexecutor:${GITHUB_API_KEY}@github.com/dexecutor/dependent-tasks-executor-gh-pages gh-pages &2>/dev/null
+    cd "$TRAVIS_BUILD_DIR"
+  fi
+  
+ 

@@ -5,7 +5,7 @@
 	<version>0.0.5-SNAPSHOT</version>
 
 	<name>Dependent Tasks Executor</name>
-	<description>Executing dependent tasks in a reliable way, is made so easy that even your grandma can do it.</description>
+	<description>Executing dependent/Independent tasks in a reliable way, is made so easy that even your grandma can do it.</description>
 	<url>https://github.com/dexecutor/dependent-tasks-executor</url>
 
 	<organization>

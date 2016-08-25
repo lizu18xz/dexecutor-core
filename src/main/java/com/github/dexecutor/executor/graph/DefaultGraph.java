@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -55,9 +56,8 @@ public final class DefaultGraph<T extends Comparable<T>, R> implements Graph<T, 
 
 	public Set<Node<T, R>> getInitialNodes() {
 		Set<Node<T, R>> initialNodes = new LinkedHashSet<Node<T, R>>();
-		Set<T> keys = this.nodes.keySet();
-		for (T key : keys) {
-			Node<T, R> node = this.nodes.get(key);
+		for (Entry<T, Graph.Node<T, R>> entry : this.nodes.entrySet()) {
+			Graph.Node<T, R> node = entry.getValue();
 			if (node.getInComingNodes().isEmpty()) {				
 				initialNodes.add(node);
 			}
@@ -75,9 +75,8 @@ public final class DefaultGraph<T extends Comparable<T>, R> implements Graph<T, 
 
 	public Set<Graph.Node<T, R>> getLeafNodes() {
 		Set<Node<T, R>> leafNodes = new LinkedHashSet<Node<T, R>>();
-		Set<T> keys = this.nodes.keySet();
-		for (T key : keys) {
-			Node<T, R> node = this.nodes.get(key);
+		for (Entry<T, Graph.Node<T, R>> entry : this.nodes.entrySet()) {
+			Graph.Node<T, R> node = entry.getValue();
 			if (node.getOutGoingNodes().isEmpty()) {				
 				leafNodes.add(node);
 			}

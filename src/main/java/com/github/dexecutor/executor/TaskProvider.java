@@ -6,6 +6,7 @@ package com.github.dexecutor.executor;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
+
 public interface TaskProvider <T extends Comparable<T>, R> {
 	/**
 	 * Given the node id, returns the task to be executed, while building graph only the node ids are required, when it comes to execution Task objects would be constructed

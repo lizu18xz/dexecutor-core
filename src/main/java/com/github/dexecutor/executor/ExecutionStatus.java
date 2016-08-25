@@ -4,6 +4,7 @@ package com.github.dexecutor.executor;
  * @author Nadeem Mohammad
  *
  */
+
 public enum ExecutionStatus {
 	ERRORED, SKIPPED, SUCCESS;
 }

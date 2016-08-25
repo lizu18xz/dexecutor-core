@@ -6,9 +6,10 @@ package com.github.dexecutor.executor;
  * @author Nadeem Mohammad
  *
  */
+
 public class TaskExecutionException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Create a new TaskExecutionException.
 	 * @param msg the detail message

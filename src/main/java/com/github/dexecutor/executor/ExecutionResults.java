@@ -10,13 +10,14 @@ import java.util.List;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
+
 public final class ExecutionResults<T, R> {
 
 	private List<ExecutionResult<T, R>> results = new ArrayList<ExecutionResult<T, R>>();
-	
+
 	/**
 	 * adds {@code result} to existing collection of results
-	 * 
+	 *
 	 * @param result Result to be added to all results
 	 */
 	public final void add(final ExecutionResult<T, R> result) {
@@ -34,7 +35,7 @@ public final class ExecutionResults<T, R> {
 		}
 	}
 	/**
-	 * 
+	 *
 	 * @return {@code true} If there is any result
 	 * {@code false} if no result
 	 */

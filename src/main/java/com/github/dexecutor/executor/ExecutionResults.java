@@ -20,7 +20,7 @@ public final class ExecutionResults<T, R> {
 	 *
 	 * @param result Result to be added to all results
 	 */
-	public final void add(final ExecutionResult<T, R> result) {
+	public void add(final ExecutionResult<T, R> result) {
 		this.results.add(result);
 	}
 	/**

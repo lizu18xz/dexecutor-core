@@ -15,7 +15,7 @@ public interface TaskProvider <T extends Comparable<T>, R> {
 	 * @return @Task
 	 */
 	public Task<T, R> provid(final T id);
-	
+
 	/**
 	 * Represent a unit of execution in Dexecutor framework
 	 * 

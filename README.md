@@ -4,6 +4,8 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dependent-tasks-executor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dependent-tasks-executor)
 [![Dependency Status](https://www.versioneye.com/user/projects/57bd71da69d9490042f72a7e/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57bd71da69d9490042f72a7e)
 [![Gitter](https://badges.gitter.im/dexecutor/dependent-tasks-executor.svg)](https://gitter.im/dexecutor/dependent-tasks-executor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Build StatusCoverity Scan Build Status](https://scan.coverity.com/projects/10019/badge.svg)](https://scan.coverity.com/projects/dexecutor-dependent-tasks-executor)
+
 
 Executing dependent/Independent tasks in a reliable way, is made so easy that even your grandma can do it.
 

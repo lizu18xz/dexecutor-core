@@ -5,7 +5,7 @@
 [![Dependency Status](https://www.versioneye.com/user/projects/57bd71da69d9490042f72a7e/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57bd71da69d9490042f72a7e)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/10019/badge.svg)](https://scan.coverity.com/projects/dexecutor-dependent-tasks-executor)
 [![Gitter](https://badges.gitter.im/dexecutor/dependent-tasks-executor.svg)](https://gitter.im/dexecutor/dependent-tasks-executor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
+[![View My profile on LinkedIn](https://static.licdn.com/scds/common/u/img/webpromo/btn_viewmy_160x33.png)](https://in.linkedin.com/pub/nadeem-mohammad/17/411/21)
 
 
 Executing dependent/Independent tasks in a reliable way, is made so easy that even your grandma can do it.

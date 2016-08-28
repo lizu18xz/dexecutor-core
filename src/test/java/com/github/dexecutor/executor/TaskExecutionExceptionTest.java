@@ -30,4 +30,11 @@ public class TaskExecutionExceptionTest {
 		TaskExecutionException ex = new TaskExecutionException(msg);
 		assertThat(ex.getMessage(), equalTo(msg));
 	}
+	
+	@Test
+	public void testCauseShouldNotBeNull() {
+		String msg = "MSG";
+		TaskExecutionException ex = new TaskExecutionException(msg, new RuntimeException());
+		assertNotNull(ex.getCause());
+	}
 }

@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/dexecutor/dependent-tasks-executor/badge.svg?branch=master)](https://coveralls.io/github/dexecutor/dependent-tasks-executor?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dependent-tasks-executor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dependent-tasks-executor)
 [![Dependency Status](https://www.versioneye.com/user/projects/57bd71da69d9490042f72a7e/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57bd71da69d9490042f72a7e)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/10019/badge.svg)](https://scan.coverity.com/projects/dexecutor-dependent-tasks-executor)
+[![Issue Count](https://codeclimate.com/github/dexecutor/dependent-tasks-executor/badges/issue_count.svg)](https://codeclimate.com/github/dexecutor/dependent-tasks-executor)
 [![Gitter](https://badges.gitter.im/dexecutor/dependent-tasks-executor.svg)](https://gitter.im/dexecutor/dependent-tasks-executor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 

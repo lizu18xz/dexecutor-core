@@ -7,7 +7,7 @@
 [![Gitter](https://badges.gitter.im/dexecutor/dependent-tasks-executor.svg)](https://gitter.im/dexecutor/dependent-tasks-executor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
-Executing dependent/Independent tasks in a reliable way, is made so easy that even your grandma can do it.
+Executing dependent/Independent tasks in a reliable way, is made so easy that even grandma can do it.
 
 Refer [wiki](https://github.com/dexecutor/dependent-tasks-executor/wiki) or [Project Web site](https://dexecutor.github.io/) for more Details.
 

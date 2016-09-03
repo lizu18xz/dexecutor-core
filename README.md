@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/dexecutor/dexecutor-core/badge.svg?branch=master)](https://coveralls.io/github/dexecutor/dexecutor-core?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dexecutor-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dexecutor-core)
 [![Dependency Status](https://www.versioneye.com/user/projects/57cafb94939fc6004abe4b21/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57cafb94939fc6004abe4b21)
-[![Gitter](https://badges.gitter.im/dexecutor/dependent-tasks-executor.svg)](https://gitter.im/dexecutor/dependent-tasks-executor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Gitter](https://badges.gitter.im/dexecutor/dependent-tasks-executor.svg)](https://gitter.im/dexecutor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
 Executing dependent/Independent tasks in a reliable way, is made so easy that even grandma can do it.

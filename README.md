@@ -8,7 +8,7 @@
 
 Executing dependent/Independent tasks in a reliable way, is made so easy that even grandma can do it.
 
-Refer [wiki](https://github.com/dexecutor/dependent-tasks-executor/wiki) or [Project Web site](https://dexecutor.github.io/) for more Details.
+Refer [wiki](https://github.com/dexecutor/dexecutor-core/wiki) or [Project Web site](https://dexecutor.github.io/) for more Details.
 
 ## License
 

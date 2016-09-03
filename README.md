@@ -1,9 +1,8 @@
 # Dexecutor
-[![Build Status](https://travis-ci.org/dexecutor/dependent-tasks-executor.svg?branch=master)](https://travis-ci.org/dexecutor/dependent-tasks-executor)
-[![Coverage Status](https://coveralls.io/repos/github/dexecutor/dependent-tasks-executor/badge.svg?branch=master)](https://coveralls.io/github/dexecutor/dependent-tasks-executor?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dependent-tasks-executor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dependent-tasks-executor)
-[![Dependency Status](https://www.versioneye.com/user/projects/57bd71da69d9490042f72a7e/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57bd71da69d9490042f72a7e)
-[![Issue Count](https://codeclimate.com/github/dexecutor/dependent-tasks-executor/badges/issue_count.svg)](https://codeclimate.com/github/dexecutor/dependent-tasks-executor)
+[![Build Status](https://travis-ci.org/dexecutor/dexecutor-core.svg?branch=master)](https://travis-ci.org/dexecutor/dexecutor-core)
+[![Coverage Status](https://coveralls.io/repos/github/dexecutor/dexecutor-core/badge.svg?branch=master)](https://coveralls.io/github/dexecutor/dexecutor-core?branch=master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dexecutor-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dexecutor-core)
+[![Dependency Status](https://www.versioneye.com/user/projects/57cafb94939fc6004abe4b21/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57cafb94939fc6004abe4b21)
 [![Gitter](https://badges.gitter.im/dexecutor/dependent-tasks-executor.svg)](https://gitter.im/dexecutor/dependent-tasks-executor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 

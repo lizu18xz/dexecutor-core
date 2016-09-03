@@ -44,8 +44,8 @@ Alternatively you can  pull Dexecutor from the central maven repository, just ad
 ```xml
 <dependency>
   <groupId>com.github.dexecutor</groupId>
-  <artifactId>dependent-tasks-executor</artifactId>
-  <version>0.0.4</version>
+  <artifactId>dexecutor-core</artifactId>
+  <version>1.0.0</version>
 </dependency>
 ```
 

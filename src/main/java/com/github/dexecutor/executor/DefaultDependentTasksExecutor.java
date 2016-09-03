@@ -22,9 +22,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -53,7 +51,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultDependentTasksExecutor.class);
 
-	private ExecutorService executorService;
+	private ExecutionEngine<T, R> executionEngine;
 	private TaskProvider<T, R> taskProvider;
 	private Validator<T, R> validator;
 	private Traversar<T, R> traversar;
@@ -75,7 +73,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	 */
 	public DefaultDependentTasksExecutor(final DependentTasksExecutorConfig<T, R> config) {
 		config.validate();
-		this.executorService = config.getExecutorService();
+		this.executionEngine = config.getExecutorEngine();
 		this.taskProvider = config.getTaskProvider();
 		this.validator = config.getValidator();
 		this.traversar = config.getTraversar();
@@ -127,11 +125,10 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		validate();
 
 		Set<Node<T, R>> initialNodes = this.graph.getInitialNodes();
-		CompletionService<Node<T, R>> completionService = new ExecutorCompletionService<Node<T, R>>(executorService);
 
 		long start = new Date().getTime();
 		
-		doProcessNodes(behavior, initialNodes, completionService);
+		doProcessNodes(behavior, initialNodes);
 
 		long end = new Date().getTime();
 
@@ -139,21 +136,21 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		logger.debug("Processed Nodes Ordering {}", this.processedNodes);
 	}
 
-	private void doProcessNodes(final ExecutionBehavior behavior, final Set<Node<T, R>> nodes, final CompletionService<Node<T, R>> completionService) {
-		doExecute(nodes, completionService, behavior);
-		doWaitForExecution(completionService, behavior);	
-	}
-
 	private void validate() {
 		this.validator.validate(this.graph);
 	}
 
-	private void doExecute(final Collection<Node<T, R>> nodes, final CompletionService<Node<T, R>> completionService, final ExecutionBehavior behavior) {
+	private void doProcessNodes(final ExecutionBehavior behavior, final Set<Node<T, R>> nodes) {
+		doExecute(nodes, behavior);
+		doWaitForExecution(behavior);	
+	}
+
+	private void doExecute(final Collection<Node<T, R>> nodes, final ExecutionBehavior behavior) {
 		for (Node<T, R> node : nodes) {
 			if (shouldProcess(node) ) {
 				nodesCount.incrementAndGet();
 				logger.debug("Going to schedule {} node", node.getValue());
-				completionService.submit(newWorker(node, behavior));
+				this.executionEngine.submit(newWorker(node, behavior));
 				
 			} else {
 				logger.debug("node {} depends on {}", node.getValue(), node.getInComingNodes());
@@ -162,7 +159,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	}
 
 	private boolean shouldProcess(final Node<T, R> node) {
-		return !this.executorService.isShutdown() && !isAlreadyProcessed(node) && allIncomingNodesProcessed(node);
+		return !this.executionEngine.isShutdown() && !isAlreadyProcessed(node) && allIncomingNodesProcessed(node);
 	}
 
 	private boolean allIncomingNodesProcessed(final Node<T, R> node) {
@@ -172,17 +169,16 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		return false;
 	}
 
-	private void doWaitForExecution(final CompletionService<Node<T, R>> completionService, final ExecutionBehavior behavior) {
+	private void doWaitForExecution(final ExecutionBehavior behavior) {
 		int cuurentCount = 0;
 		while (cuurentCount != nodesCount.get()) {
 			try {
-				Future<Node<T, R>> future = completionService.take();
+				Future<Node<T, R>> future = this.executionEngine.take();
 				Node<T, R> processedNode = future.get();
 				logger.debug("Processing of node {} done", processedNode.getValue());
 				cuurentCount++;
 				this.processedNodes.add(processedNode);
-				//logger.debug(this.executorService.toString());
-				doExecute(processedNode.getOutGoingNodes(), completionService, behavior);
+				doExecute(processedNode.getOutGoingNodes(), behavior);
 			} catch (Exception e) {
 				cuurentCount++;
 				logger.error("Task interrupted", e);

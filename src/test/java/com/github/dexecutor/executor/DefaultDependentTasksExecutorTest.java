@@ -27,8 +27,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -212,13 +210,18 @@ public class DefaultDependentTasksExecutorTest {
 		}
 	}
 
-	private static class MockedCompletionService extends MockUp<ExecutorCompletionService<Node<Integer, Integer>>> {
+	private static class MockedCompletionService extends MockUp<DefaultExecutionEngine<Integer, Integer>> {
 		List<Callable<Node<Integer, Integer>>> nodes = new ArrayList<Callable<Node<Integer, Integer>>>();
 		int index = 0;
 
 		@Mock
-		public void $init(Executor executor) {
+		public void $init(ExecutorService executor) {
 
+		}
+		
+		@Mock
+		public boolean isShutdown() {
+			return false;
 		}
 
 		@Mock
@@ -254,7 +257,11 @@ public class DefaultDependentTasksExecutorTest {
 				
 				private Node<Integer, Integer> doGet() {
 					try {
-						Node<Integer, Integer> call = nodes.get(index).call();
+						Callable<Node<Integer, Integer>> callable = nodes.get(index);
+						if (callable == null) {
+							throw new RuntimeException("Node is null");
+						}
+						Node<Integer, Integer> call = callable.call();
 						index++;
 						return call;
 					} catch (Exception e) {

@@ -4,9 +4,9 @@
 	<artifactId>dexecutor-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>Dependent Tasks Executor</name>
+	<name>Dependent Tasks Executor Core</name>
 	<description>Executing dependent/Independent tasks in a reliable way, is made so easy that even your grandma can do it.</description>
-	<url>https://github.com/dexecutor/dependent-tasks-executor</url>
+	<url>https://github.com/dexecutor/dexecutor-core</url>
 
 	<organization>
 		<url>https://github.com/dexecutor</url>
@@ -32,9 +32,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git://github.com/dexecutor/dependent-tasks-executor.git</connection>
-		<developerConnection>scm:git:git@github.com:dexecutor/dexecutor.git</developerConnection>
-		<url>https://github.com/dexecutor/dependent-tasks-executor</url>
+		<connection>scm:git:git://github.com/dexecutor/dexecutor-core.git</connection>
+		<developerConnection>scm:git:git@github.com:dexecutor/dexecutor-core.git</developerConnection>
+		<url>https://github.com/dexecutor/dexecutor-core</url>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -51,12 +51,12 @@
 
 	<issueManagement>
 		<system>Github</system>
-		<url>https://github.com/dexecutor/dependent-tasks-executor/issues</url>
+		<url>https://github.com/dexecutor/dexecutor-core/issues</url>
 	</issueManagement>
 
 	<ciManagement>
 		<system>Travis</system>
-		<url>https://travis-ci.org/dexecutor/dependent-tasks-executor</url>
+		<url>https://travis-ci.org/dexecutor/dexecutor-core</url>
 	</ciManagement>
 
 	<properties>

@@ -20,6 +20,7 @@ package com.github.dexecutor.executor;
 import java.io.StringWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -37,39 +38,49 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 
 	@Test
 	public void testDependentTaskExecution() {
+		ExecutorService executorService = newExecutor();
 
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor();
+		try {
+			DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(executorService);
 
-        executor.addDependency(1, 2);
-        executor.addDependency(1, 2);
-        executor.addDependency(1, 3);
-        executor.addDependency(3, 4);
-        executor.addDependency(3, 5);
-        executor.addDependency(3, 6);
-        //executor.addDependency(10, 2); // cycle
-        executor.addDependency(2, 7);
-        executor.addDependency(2, 9);
-        executor.addDependency(2, 8);
-        executor.addDependency(9, 10);
-        executor.addDependency(12, 13);
-        executor.addDependency(13, 4);
-        executor.addDependency(13, 14);
-        executor.addIndependent(11);
+			executor.addDependency(1, 2);
+			executor.addDependency(1, 2);
+			executor.addDependency(1, 3);
+			executor.addDependency(3, 4);
+			executor.addDependency(3, 5);
+			executor.addDependency(3, 6);
+			//executor.addDependency(10, 2); // cycle
+			executor.addDependency(2, 7);
+			executor.addDependency(2, 9);
+			executor.addDependency(2, 8);
+			executor.addDependency(9, 10);
+			executor.addDependency(12, 13);
+			executor.addDependency(13, 4);
+			executor.addDependency(13, 14);
+			executor.addIndependent(11);
 
-        StringWriter writer = new StringWriter();
-		executor.print(writer);
-		System.out.println(writer);
+			StringWriter writer = new StringWriter();
+			executor.print(writer);
+			System.out.println(writer);
 
-		executor.execute(ExecutionBehavior.RETRY_ONCE_TERMINATING);
-        System.out.println("*** Done ***");
-	}
-
-	private DefaultDependentTasksExecutor<Integer, Integer> newTaskExecutor() {
-		return new DefaultDependentTasksExecutor<Integer, Integer>(newExecutor(), new SleepyTaskProvider());
+			executor.execute(ExecutionBehavior.RETRY_ONCE_TERMINATING);
+			System.out.println("*** Done ***");
+		} finally {
+			try {
+				executorService.shutdownNow();
+				executorService.awaitTermination(1, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				
+			}
+		}
 	}
 
 	private ExecutorService newExecutor() {
 		return Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
+	}
+
+	private DefaultDependentTasksExecutor<Integer, Integer> newTaskExecutor(ExecutorService executorService) {
+		return new DefaultDependentTasksExecutor<Integer, Integer>(executorService, new SleepyTaskProvider());
 	}
 
 	private static class SleepyTaskProvider implements TaskProvider<Integer, Integer> {

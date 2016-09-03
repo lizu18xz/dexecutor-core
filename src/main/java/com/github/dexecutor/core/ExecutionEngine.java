@@ -20,7 +20,7 @@ package com.github.dexecutor.core;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import com.github.dexecutor.core.graph.Graph.Node;
+import com.github.dexecutor.core.graph.Dag.Node;
 /**
  * An Executor is the main execution engine, where in all the tasks are executed
  * 

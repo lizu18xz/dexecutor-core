@@ -28,7 +28,7 @@ import java.util.Set;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public interface Graph<T extends Comparable<T>, R> {
+public interface Dag<T extends Comparable<T>, R> {
 	/**
 	 * Should add the two nodes in the datastructure in such a way that {@code evalFirstValue} should be evaluated before {@code evalAfterValue}.
 	 * Nodes should be created only if it is not already added.
@@ -88,11 +88,11 @@ public interface Graph<T extends Comparable<T>, R> {
 		/**
 		 * incoming dependencies for this node
 		 */
-	    private Set<Node<T, R>> inComingEdges = new LinkedHashSet<Graph.Node<T, R>>();
+	    private Set<Node<T, R>> inComingEdges = new LinkedHashSet<Dag.Node<T, R>>();
 	    /**
 	     * outgoing dependencies for this node
 	     */
-	    private Set<Node<T, R>> outGoingEdges = new LinkedHashSet<Graph.Node<T, R>>();
+	    private Set<Node<T, R>> outGoingEdges = new LinkedHashSet<Dag.Node<T, R>>();
 	    /**
 	     * Constructs the node with the given node Id
 	     * @param val

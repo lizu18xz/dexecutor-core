@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-import com.github.dexecutor.core.graph.Graph.Node;
+import com.github.dexecutor.core.graph.Dag.Node;
 /**
  * Default Executor, which internally operates on @ExecutorService
  * 

@@ -28,7 +28,7 @@ public class CyclicValidatorTest {
 
 	@Test(expected= IllegalArgumentException.class)
 	public void vlidateExceptionThrown() {
-		Graph<Integer, Integer> graph = new DefaultGraph<Integer, Integer>();
+		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
 		graph.addDependency(1, 2);
 		graph.addDependency(2, 3);
 		graph.addDependency(1, 4);
@@ -40,7 +40,7 @@ public class CyclicValidatorTest {
 
 	@Test
 	public void vlidateNoExceptionThrown() {
-		Graph<Integer, Integer> graph = new DefaultGraph<Integer, Integer>();
+		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
 		graph.addDependency(1, 2);
 		graph.addDependency(2, 3);
 		graph.addDependency(1, 4);

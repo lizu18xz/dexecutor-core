@@ -31,9 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.TaskProvider.Task;
-import com.github.dexecutor.core.graph.DefaultGraph;
-import com.github.dexecutor.core.graph.Graph;
-import com.github.dexecutor.core.graph.Graph.Node;
+import com.github.dexecutor.core.graph.DefaultDag;
+import com.github.dexecutor.core.graph.Dag;
+import com.github.dexecutor.core.graph.Dag.Node;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.Validator;
 
@@ -55,7 +55,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	private TaskProvider<T, R> taskProvider;
 	private Validator<T, R> validator;
 	private Traversar<T, R> traversar;
-	private Graph<T, R> graph;
+	private Dag<T, R> graph;
 
 	private Collection<Node<T, R>> processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
 	private AtomicInteger nodesCount = new AtomicInteger(0);
@@ -77,7 +77,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		this.taskProvider = config.getTaskProvider();
 		this.validator = config.getValidator();
 		this.traversar = config.getTraversar();
-		this.graph = new DefaultGraph<T, R>();
+		this.graph = new DefaultDag<T, R>();
 	}
 
 	public void print(final Writer writer) {

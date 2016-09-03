@@ -33,7 +33,7 @@ import java.util.Set;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public final class DefaultGraph<T extends Comparable<T>, R> implements Graph<T, R> {
+public final class DefaultDag<T extends Comparable<T>, R> implements Dag<T, R> {
 
 	private Map<T, Node<T, R>> nodes = new HashMap<T, Node<T, R>>();
 
@@ -73,8 +73,8 @@ public final class DefaultGraph<T extends Comparable<T>, R> implements Graph<T, 
 
 	public Set<Node<T, R>> getInitialNodes() {
 		Set<Node<T, R>> initialNodes = new LinkedHashSet<Node<T, R>>();
-		for (Entry<T, Graph.Node<T, R>> entry : this.nodes.entrySet()) {
-			Graph.Node<T, R> node = entry.getValue();
+		for (Entry<T, Dag.Node<T, R>> entry : this.nodes.entrySet()) {
+			Dag.Node<T, R> node = entry.getValue();
 			if (node.getInComingNodes().isEmpty()) {				
 				initialNodes.add(node);
 			}
@@ -86,14 +86,14 @@ public final class DefaultGraph<T extends Comparable<T>, R> implements Graph<T, 
 		return this.nodes.size();
 	}
 
-	public Collection<Graph.Node<T, R>> allNodes() {
-		return new ArrayList<Graph.Node<T, R>>(this.nodes.values());
+	public Collection<Dag.Node<T, R>> allNodes() {
+		return new ArrayList<Dag.Node<T, R>>(this.nodes.values());
 	}
 
-	public Set<Graph.Node<T, R>> getLeafNodes() {
+	public Set<Dag.Node<T, R>> getLeafNodes() {
 		Set<Node<T, R>> leafNodes = new LinkedHashSet<Node<T, R>>();
-		for (Entry<T, Graph.Node<T, R>> entry : this.nodes.entrySet()) {
-			Graph.Node<T, R> node = entry.getValue();
+		for (Entry<T, Dag.Node<T, R>> entry : this.nodes.entrySet()) {
+			Dag.Node<T, R> node = entry.getValue();
 			if (node.getOutGoingNodes().isEmpty()) {				
 				leafNodes.add(node);
 			}

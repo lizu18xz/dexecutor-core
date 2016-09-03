@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import com.github.dexecutor.core.graph.Graph.Node;
+import com.github.dexecutor.core.graph.Dag.Node;
 
 /**
  * A Traversar which does level order traversal of the given graph
@@ -37,9 +37,9 @@ import com.github.dexecutor.core.graph.Graph.Node;
  */
 public class LevelOrderTraversar<T extends Comparable<T>, R> implements Traversar<T, R> {
 	
-	private List<Graph.Node<T, R>> processed = new ArrayList<Graph.Node<T, R>>();
+	private List<Dag.Node<T, R>> processed = new ArrayList<Dag.Node<T, R>>();
 	
-	public void traverse(final Graph<T, R> graph, final Writer writer) {
+	public void traverse(final Dag<T, R> graph, final Writer writer) {
 		List<List<List<Node<T, R>>>> levelOrderOfGraphs = traverseLevelOrder(graph);
 		int i = 0;
 		for (List<List<Node<T, R>>> levelOrderOfGraph : levelOrderOfGraphs) {
@@ -53,7 +53,7 @@ public class LevelOrderTraversar<T extends Comparable<T>, R> implements Traversa
 		}
 	}
 
-	private List<List<List<Node<T, R>>>> traverseLevelOrder(final Graph<T, R> graph) {
+	private List<List<List<Node<T, R>>>> traverseLevelOrder(final Dag<T, R> graph) {
 		List<List<List<Node<T, R>>>> result = new ArrayList<List<List<Node<T, R>>>>();
 		Set<Node<T, R>> initialNodes = graph.getInitialNodes();
 		for (Node<T, R> iNode : initialNodes) {

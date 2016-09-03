@@ -6,7 +6,7 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
-import com.github.dexecutor.core.graph.Graph.Node;
+import com.github.dexecutor.core.graph.Dag.Node;
 
 public class NodeTest {
 

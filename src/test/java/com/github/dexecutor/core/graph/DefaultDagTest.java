@@ -24,14 +24,14 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.github.dexecutor.core.graph.Graph.Node;
+import com.github.dexecutor.core.graph.Dag.Node;
 
 /**
  * 
  * @author Nadeem Mohammad
  *
  */
-public class DefaultGraphTest {
+public class DefaultDagTest {
 	
 	@Test
 	public void nodeTest() {
@@ -43,7 +43,7 @@ public class DefaultGraphTest {
 	
 	@Test
 	public void testAddSameDependency() {
-		Graph<Integer, Integer> graph = new DefaultGraph<Integer, Integer>();
+		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
 		
 		graph.addIndependent(1);		
 		graph.addDependency(1, 1);
@@ -55,7 +55,7 @@ public class DefaultGraphTest {
 
 	@Test
 	public void testGraphSize() {
-		Graph<Integer, Integer> graph = new DefaultGraph<Integer, Integer>();
+		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
 		
 		graph.addIndependent(1);		
 		graph.addDependency(1, 2);		
@@ -66,7 +66,7 @@ public class DefaultGraphTest {
 
 	@Test
 	public void testInitialNodes() {
-		Graph<Integer, Integer> graph = new DefaultGraph<Integer, Integer>();
+		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
 		
 		graph.addIndependent(1);		
 		graph.addDependency(1, 2);		
@@ -75,12 +75,12 @@ public class DefaultGraphTest {
 		Set<Node<Integer, Integer>> initialNodes = graph.getInitialNodes();
 		
 		assertThat(initialNodes.size()).isEqualTo(1);
-		assertThat(initialNodes).containsSequence(new Graph.Node<Integer, Integer>(1));
+		assertThat(initialNodes).containsSequence(new Dag.Node<Integer, Integer>(1));
 	}
 
 	@Test
 	public void testAllNodes() {
-		Graph<Integer, Integer> graph = new DefaultGraph<Integer, Integer>();
+		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
 		
 		graph.addIndependent(1);		
 		graph.addDependency(1, 2);		
@@ -89,12 +89,12 @@ public class DefaultGraphTest {
 		Collection<Node<Integer, Integer>> initialNodes = graph.allNodes();
 		
 		assertThat(initialNodes.size()).isEqualTo(3);
-		assertThat(initialNodes).containsSequence(new Graph.Node<Integer, Integer>(1), new Graph.Node<Integer, Integer>(2), new Graph.Node<Integer, Integer>(3));
+		assertThat(initialNodes).containsSequence(new Dag.Node<Integer, Integer>(1), new Dag.Node<Integer, Integer>(2), new Dag.Node<Integer, Integer>(3));
 	}
 
 	@Test
 	public void testLeafNodes() {
-		Graph<Integer, Integer> graph = new DefaultGraph<Integer, Integer>();
+		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
 		
 		graph.addIndependent(1);		
 		graph.addDependency(1, 2);		
@@ -103,6 +103,6 @@ public class DefaultGraphTest {
 		Collection<Node<Integer, Integer>> initialNodes = graph.getLeafNodes();
 		
 		assertThat(initialNodes.size()).isEqualTo(2);
-		assertThat(initialNodes).containsSequence(new Graph.Node<Integer, Integer>(2), new Graph.Node<Integer, Integer>(3));
+		assertThat(initialNodes).containsSequence(new Dag.Node<Integer, Integer>(2), new Dag.Node<Integer, Integer>(3));
 	}
 }

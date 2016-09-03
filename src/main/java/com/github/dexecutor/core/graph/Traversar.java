@@ -32,5 +32,5 @@ public interface Traversar <T extends Comparable<T>, R> {
 	 * @param graph
 	 * @param writer
 	 */
-	void traverse(final Graph<T, R> graph, final Writer writer);
+	void traverse(final Dag<T, R> graph, final Writer writer);
 }

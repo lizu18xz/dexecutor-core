@@ -59,9 +59,7 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 			executor.addDependency(13, 14);
 			executor.addIndependent(11);
 
-			StringWriter writer = new StringWriter();
-			executor.print(writer);
-			System.out.println(writer);
+			printGraph(executor);
 
 			executor.execute(ExecutionBehavior.RETRY_ONCE_TERMINATING);
 			System.out.println("*** Done ***");
@@ -73,6 +71,12 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 				
 			}
 		}
+	}
+
+	private void printGraph(DefaultDependentTasksExecutor<Integer, Integer> executor) {
+		StringWriter writer = new StringWriter();
+		executor.print(writer);
+		System.out.println(writer);
 	}
 
 	private ExecutorService newExecutor() {

@@ -55,7 +55,7 @@ As it is maven project, buidling is just a matter of executing the following in 
 
 	mvn package
 
-This will produce the dependent-tasks-executor-VERSION.jar file under the target directory.
+This will produce the dexecutor-core-VERSION.jar file under the target directory.
 
 ## Support
 If you need help using Dexecutor feel free to drop an email or create an issue in github.com (preferred)

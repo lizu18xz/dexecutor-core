@@ -38,7 +38,7 @@ import org.junit.runner.RunWith;
 
 import com.github.dexecutor.core.DependentTasksExecutor.ExecutionBehavior;
 import com.github.dexecutor.core.graph.Dag;
-import com.github.dexecutor.core.graph.Dag.Node;
+import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 
 import mockit.Deencapsulation;

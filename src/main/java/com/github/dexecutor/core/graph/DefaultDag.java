@@ -73,8 +73,8 @@ public final class DefaultDag<T extends Comparable<T>, R> implements Dag<T, R> {
 
 	public Set<Node<T, R>> getInitialNodes() {
 		Set<Node<T, R>> initialNodes = new LinkedHashSet<Node<T, R>>();
-		for (Entry<T, Dag.Node<T, R>> entry : this.nodes.entrySet()) {
-			Dag.Node<T, R> node = entry.getValue();
+		for (Entry<T, Node<T, R>> entry : this.nodes.entrySet()) {
+			Node<T, R> node = entry.getValue();
 			if (node.getInComingNodes().isEmpty()) {				
 				initialNodes.add(node);
 			}
@@ -86,14 +86,14 @@ public final class DefaultDag<T extends Comparable<T>, R> implements Dag<T, R> {
 		return this.nodes.size();
 	}
 
-	public Collection<Dag.Node<T, R>> allNodes() {
-		return new ArrayList<Dag.Node<T, R>>(this.nodes.values());
+	public Collection<Node<T, R>> allNodes() {
+		return new ArrayList<Node<T, R>>(this.nodes.values());
 	}
 
-	public Set<Dag.Node<T, R>> getLeafNodes() {
+	public Set<Node<T, R>> getLeafNodes() {
 		Set<Node<T, R>> leafNodes = new LinkedHashSet<Node<T, R>>();
-		for (Entry<T, Dag.Node<T, R>> entry : this.nodes.entrySet()) {
-			Dag.Node<T, R> node = entry.getValue();
+		for (Entry<T, Node<T, R>> entry : this.nodes.entrySet()) {
+			Node<T, R> node = entry.getValue();
 			if (node.getOutGoingNodes().isEmpty()) {				
 				leafNodes.add(node);
 			}

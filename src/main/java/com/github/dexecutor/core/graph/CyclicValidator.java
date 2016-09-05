@@ -20,8 +20,6 @@ package com.github.dexecutor.core.graph;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.github.dexecutor.core.graph.Dag.Node;
-
 /**
  * A {@code Validator} which does cyclic checks
  * @author Nadeem Mohammad
@@ -31,15 +29,15 @@ import com.github.dexecutor.core.graph.Dag.Node;
  */
 public class CyclicValidator<T extends Comparable<T>, R> implements Validator<T, R> {
 
-	private Collection<Dag.Node<T, R>> processedNodes = new ArrayList<Dag.Node<T, R>>();
-	private Collection<Dag.Node<T, R>> onStackNodes = new ArrayList<Dag.Node<T, R>>();
+	private Collection<Node<T, R>> processedNodes = new ArrayList<Node<T, R>>();
+	private Collection<Node<T, R>> onStackNodes = new ArrayList<Node<T, R>>();
 
 	public void validate(final Dag<T, R> graph) {
 		doProcess(graph.allNodes());
 	}
 
-	private void doProcess(final Collection<Dag.Node<T, R>> nodes) {
-		for (Dag.Node<T, R> node : nodes) {
+	private void doProcess(final Collection<Node<T, R>> nodes) {
+		for (Node<T, R> node : nodes) {
 			detectCycle(node);
 		}
 	}

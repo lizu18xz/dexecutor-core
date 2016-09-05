@@ -24,8 +24,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.github.dexecutor.core.graph.Dag.Node;
-
 /**
  * 
  * @author Nadeem Mohammad
@@ -64,6 +62,7 @@ public class DefaultDagTest {
 		assertThat(graph.size()).isEqualTo(3);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testInitialNodes() {
 		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
@@ -75,9 +74,10 @@ public class DefaultDagTest {
 		Set<Node<Integer, Integer>> initialNodes = graph.getInitialNodes();
 		
 		assertThat(initialNodes.size()).isEqualTo(1);
-		assertThat(initialNodes).containsSequence(new Dag.Node<Integer, Integer>(1));
+		assertThat(initialNodes).containsSequence(new Node<Integer, Integer>(1));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testAllNodes() {
 		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
@@ -89,9 +89,10 @@ public class DefaultDagTest {
 		Collection<Node<Integer, Integer>> initialNodes = graph.allNodes();
 		
 		assertThat(initialNodes.size()).isEqualTo(3);
-		assertThat(initialNodes).containsSequence(new Dag.Node<Integer, Integer>(1), new Dag.Node<Integer, Integer>(2), new Dag.Node<Integer, Integer>(3));
+		assertThat(initialNodes).containsSequence(new Node<Integer, Integer>(1), new Node<Integer, Integer>(2), new Node<Integer, Integer>(3));
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testLeafNodes() {
 		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
@@ -103,6 +104,6 @@ public class DefaultDagTest {
 		Collection<Node<Integer, Integer>> initialNodes = graph.getLeafNodes();
 		
 		assertThat(initialNodes.size()).isEqualTo(2);
-		assertThat(initialNodes).containsSequence(new Dag.Node<Integer, Integer>(2), new Dag.Node<Integer, Integer>(3));
+		assertThat(initialNodes).containsSequence(new Node<Integer, Integer>(2), new Node<Integer, Integer>(3));
 	}
 }

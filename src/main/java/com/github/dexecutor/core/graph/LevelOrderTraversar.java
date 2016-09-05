@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import com.github.dexecutor.core.graph.Dag.Node;
+import com.github.dexecutor.core.graph.Node;
 
 /**
  * A Traversar which does level order traversal of the given graph
@@ -37,7 +37,7 @@ import com.github.dexecutor.core.graph.Dag.Node;
  */
 public class LevelOrderTraversar<T extends Comparable<T>, R> implements Traversar<T, R> {
 	
-	private List<Dag.Node<T, R>> processed = new ArrayList<Dag.Node<T, R>>();
+	private List<Node<T, R>> processed = new ArrayList<Node<T, R>>();
 	
 	public void traverse(final Dag<T, R> graph, final Writer writer) {
 		List<List<List<Node<T, R>>>> levelOrderOfGraphs = traverseLevelOrder(graph);

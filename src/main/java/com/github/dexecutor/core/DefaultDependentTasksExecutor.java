@@ -21,7 +21,6 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -30,10 +29,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.dexecutor.core.TaskProvider.Task;
-import com.github.dexecutor.core.graph.DefaultDag;
 import com.github.dexecutor.core.graph.Dag;
-import com.github.dexecutor.core.graph.Dag.Node;
+import com.github.dexecutor.core.graph.DefaultDag;
+import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.Validator;
 
@@ -150,7 +148,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 			if (shouldProcess(node) ) {
 				nodesCount.incrementAndGet();
 				logger.debug("Going to schedule {} node", node.getValue());
-				this.executionEngine.submit(newWorker(node, behavior));
+				this.executionEngine.submit(WorkerFactory.newWorker(this.taskProvider, node, behavior));
 				
 			} else {
 				logger.debug("node {} depends on {}", node.getValue(), node.getInComingNodes());
@@ -183,150 +181,6 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 				cuurentCount++;
 				logger.error("Task interrupted", e);
 			}
-		}
-	}
-
-	private Callable<Node<T, R>> newWorker(final Node<T, R> graphNode, final ExecutionBehavior behavior) {
-		if (ExecutionBehavior.NON_TERMINATING.equals(behavior)) {
-			return new NonTerminatingTask(graphNode);
-		} else if (ExecutionBehavior.RETRY_ONCE_TERMINATING.equals(behavior)) { 
-			return new RetryOnceAndTerminateTask(graphNode);
-		} else {
-			return new TerminatingTask(graphNode);
-		}
-	}
-
-	private class TerminatingTask implements Callable<Node<T, R>> {
-		private Node<T, R> node;
-
-		public TerminatingTask(final Node<T, R> graphNode) {
-			this.node = graphNode;
-		}
-
-		public Node<T, R> call() throws Exception {
-			Task<T, R> task = newExecutorTask(this.node);
-			task.setConsiderExecutionError(true);
-			R result = task.execute();
-			this.node.setResult(result);
-			return this.node;
-		}		
-	}
-
-	private class NonTerminatingTask implements Callable<Node<T, R>> {
-		private Node<T, R> node;
-
-		public NonTerminatingTask(final Node<T, R> graphNode) {
-			this.node = graphNode;
-		}
-
-		public Node<T, R> call() throws Exception {
-			try {
-				Task<T, R> task = newExecutorTask(this.node);
-				task.setConsiderExecutionError(false);
-				task.execute();
-			} catch(Exception ex) {
-				logger.error("Exception caught, executing node # " + this.node.getValue(), ex);
-				this.node.setErrored();
-			}
-			return this.node;
-		}
-	}
-
-	private class RetryOnceAndTerminateTask implements Callable<Node<T, R>> {
-		private Node<T, R> node;
-
-		public RetryOnceAndTerminateTask(final Node<T, R> graphNode) {
-			this.node = graphNode;
-		}
-
-		public Node<T, R> call() throws Exception {
-			Task<T, R> task = newExecutorTask(this.node);
-			boolean retry = shouldRetry(this.node.getValue());
-			task.setConsiderExecutionError(!retry);
-			try {
-				task.execute();
-			} catch(Exception ex) {
-				logger.error("Exception caught, executing node # " + this.node.getValue() + " Retry would happen : " + getYesNo(retry), ex);
-				if (retry) {
-					task.setConsiderExecutionError(true);
-					task.execute();
-				}
-			}
-			return this.node;
-		}
-
-		private String getYesNo(boolean retry) {
-			return retry ? "Yes" : "No";
-		}	
-	}
-
-	protected boolean shouldRetry(final T node) {
-		return true;
-	}
-
-	private Task<T, R> newExecutorTask(final Node<T, R> node) {
-		return new ExecutorTask(node, this.taskProvider.provid(node.getValue()));
-	}
-
-	private class ExecutorTask extends Task<T, R> {
-		private final Task<T, R> task;
-		private final Node<T, R> node;
-		private int retryCount = 0;
-
-		public ExecutorTask(final Node<T, R> node, final Task<T, R> task) {
-			this.task = task;
-			this.node = node;
-		}
-
-		public R execute() {
-			R result = null;
-			if (shouldExecute(parentResults())) {
-				logger.debug("{} Node # {}", msg(this.retryCount), this.taskId());
-				this.retryCount ++;
-				result = this.task.execute();
-				this.node.setSuccess();
-				this.node.setResult(result);
-				logger.debug("Node # {}, Execution Done!", this.taskId());
-			} else {
-				logger.debug("Execution Skipped for node # {} ", this.taskId());
-				this.node.setSkipped();
-			}			
-			return result;
-		}
-
-		@Override
-		public boolean shouldExecute(final ExecutionResults<T, R> parentResults) {
-			return task.shouldExecute(parentResults);
-		}
-		
-		private ExecutionResults<T, R> parentResults() {
-			ExecutionResults<T, R> result = new ExecutionResults<T, R>();
-			for (Node<T, R> in : this.node.getInComingNodes()) {
-				result.add(new ExecutionResult<T, R>(in.getValue(), in.getResult(), status(in)));
-			}
-			return result;
-		}
-
-		private ExecutionStatus status(final Node<T, R> incomingNode) {
-			if (incomingNode.isSuccess()) {
-				return ExecutionStatus.SUCCESS;
-			} else if (incomingNode.isErrored()) {
-				return ExecutionStatus.ERRORED;
-			}
-			return ExecutionStatus.SKIPPED;
-		}
-
-		private T taskId() {
-			return this.node.getValue();
-		}
-
-		private String msg(int retryCount) {
-			return retryCount > 0 ? "Retrying(" + retryCount+ ") " : "Executing";
-		}
-
-		@Override
-		void setConsiderExecutionError(boolean considerExecutionError) {
-			this.task.setConsiderExecutionError(considerExecutionError);
 		}
 	}
 }

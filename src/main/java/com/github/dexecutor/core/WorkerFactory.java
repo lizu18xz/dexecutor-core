@@ -22,11 +22,12 @@ import java.util.concurrent.Callable;
 import com.github.dexecutor.core.DependentTasksExecutor.ExecutionBehavior;
 import com.github.dexecutor.core.graph.Node;
 /**
+ * A factory to create Worker task for dexecutor based on @ExecutionBehavior
  * 
- * @author nmohammad
+ * @author Nadeem Mohammad
  *
  */
-public class WorkerFactory {
+class WorkerFactory {
 
 	public static <T extends Comparable<T>, R> Callable<Node<T, R>> newWorker(final TaskProvider<T, R> taskProvider, final Node<T, R> graphNode, final ExecutionBehavior behavior) {
 		if (ExecutionBehavior.NON_TERMINATING.equals(behavior)) {

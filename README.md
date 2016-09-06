@@ -3,6 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/dexecutor/dexecutor-core/badge.svg?branch=master)](https://coveralls.io/github/dexecutor/dexecutor-core?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dexecutor-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.dexecutor/dexecutor-core)
 [![Dependency Status](https://www.versioneye.com/user/projects/57cafb94939fc6004abe4b21/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57cafb94939fc6004abe4b21)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Gitter](https://badges.gitter.im/dexecutor/dependent-tasks-executor.svg)](https://gitter.im/dexecutor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 

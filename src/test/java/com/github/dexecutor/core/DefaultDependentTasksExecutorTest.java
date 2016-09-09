@@ -27,6 +27,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -40,6 +42,10 @@ import com.github.dexecutor.core.DependentTasksExecutor.ExecutionBehavior;
 import com.github.dexecutor.core.graph.Dag;
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
+import com.github.dexecutor.core.task.ExecutionResult;
+import com.github.dexecutor.core.task.Task;
+import com.github.dexecutor.core.task.TaskExecutionException;
+import com.github.dexecutor.core.task.TaskProvider;
 
 import mockit.Deencapsulation;
 import mockit.Mock;
@@ -103,7 +109,7 @@ public class DefaultDependentTasksExecutorTest {
 		executor.addDependency(1, 2);
 		executor.execute(ExecutionBehavior.NON_TERMINATING);
 	}
-	
+
 	@Test
 	public void testDependentTaskExecutionOrder() {
 
@@ -175,8 +181,10 @@ public class DefaultDependentTasksExecutorTest {
 	}
 
 	private DefaultDependentTasksExecutor<Integer, Integer> newTaskExecutor(boolean throwEx) {
-		return new DefaultDependentTasksExecutor<Integer, Integer>(newExecutor(), new DummyTaskProvider(throwEx));
+		ExecutionEngine<Integer, Integer> engine = new DefaultExecutionEngine<Integer, Integer>(newExecutor());
+		return new DefaultDependentTasksExecutor<Integer, Integer>(engine, new DummyTaskProvider(throwEx));
 	}
+
 
 	private ExecutorService newExecutor() {
 		return Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
@@ -210,29 +218,24 @@ public class DefaultDependentTasksExecutorTest {
 		}
 	}
 
-	private static class MockedCompletionService extends MockUp<DefaultExecutionEngine<Integer, Integer>> {
-		List<Callable<Node<Integer, Integer>>> nodes = new ArrayList<Callable<Node<Integer, Integer>>>();
+	private static class MockedCompletionService extends MockUp<ExecutorCompletionService<ExecutionResult<Integer, Integer>>> {
+		List<Callable<ExecutionResult<Integer, Integer>>> nodes = new ArrayList<Callable<ExecutionResult<Integer, Integer>>>();
 		int index = 0;
 
 		@Mock
-		public void $init(ExecutorService executor) {
+		public void $init(Executor executor) {
 
 		}
 		
-		@Mock
-		public boolean isShutdown() {
-			return false;
-		}
 
 		@Mock
-		public Future<Node<Integer, Integer>> submit(Callable<Node<Integer, Integer>> task) {
+		public void submit(Callable<ExecutionResult<Integer, Integer>> task) {
 			nodes.add(task);
-			return null;
 		}
 
 		@Mock
-		public Future<Node<Integer, Integer>> take() throws InterruptedException {
-			return new Future<Node<Integer, Integer>>() {
+		public  Future<ExecutionResult<Integer, Integer>> take() throws InterruptedException {
+			return new Future<ExecutionResult<Integer, Integer>>() {
 
 				public boolean isDone() {
 					return false;
@@ -246,22 +249,22 @@ public class DefaultDependentTasksExecutorTest {
 					return false;
 				}
 
-				public Node<Integer, Integer> get(long timeout, TimeUnit unit)
+				public ExecutionResult<Integer, Integer> get(long timeout, TimeUnit unit)
 						throws InterruptedException, ExecutionException, TimeoutException {
 					return doGet();
 				}
 
-				public Node<Integer, Integer> get() throws InterruptedException, ExecutionException {
+				public ExecutionResult<Integer, Integer> get() throws InterruptedException, ExecutionException {
 					return doGet();
 				}
 				
-				private Node<Integer, Integer> doGet() {
+				private ExecutionResult<Integer, Integer> doGet() {
 					try {
-						Callable<Node<Integer, Integer>> callable = nodes.get(index);
+						Callable<ExecutionResult<Integer, Integer>> callable = nodes.get(index);
 						if (callable == null) {
 							throw new RuntimeException("Node is null");
 						}
-						Node<Integer, Integer> call = callable.call();
+						ExecutionResult<Integer, Integer> call = callable.call();
 						index++;
 						return call;
 					} catch (Exception e) {

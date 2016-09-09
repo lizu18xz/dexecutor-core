@@ -15,28 +15,33 @@
  * limitations under the License.
  */
 
-package com.github.dexecutor.core;
+package com.github.dexecutor.core.task;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+/**
+ * Tasks can throw this exception to report any issues encountered during task execution
+ * 
+ * @author Nadeem Mohammad
+ *
+ */
 
-import org.junit.Test;
+public class TaskExecutionException extends RuntimeException {
+	private static final long serialVersionUID = 1L;
 
-import com.github.dexecutor.core.task.TaskExecutionException;
-
-public class TaskExecutionExceptionTest {
-
-	@Test
-	public void testMsgShouldBeAsPassed() {
-		String msg = "MSG";
-		TaskExecutionException ex = new TaskExecutionException(msg);
-		assertThat(ex.getMessage(), equalTo(msg));
+	/**
+	 * Create a new TaskExecutionException.
+	 * @param msg the detail message
+	 */
+	public TaskExecutionException(final String msg) {
+		super(msg);
 	}
-	
-	@Test
-	public void testCauseShouldNotBeNull() {
-		String msg = "MSG";
-		TaskExecutionException ex = new TaskExecutionException(msg, new RuntimeException());
-		assertNotNull(ex.getCause());
+
+	/**
+	 * Create a new TaskExecutionException.
+	 * @param msg the detail message
+	 * @param cause the root cause
+	 */
+	public TaskExecutionException(final String msg, final Throwable cause) {
+		super(msg, cause);
 	}
+
 }

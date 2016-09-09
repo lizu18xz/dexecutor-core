@@ -15,8 +15,9 @@
  * limitations under the License.
  */
 
-package com.github.dexecutor.core;
+package com.github.dexecutor.core.task;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -28,8 +29,9 @@ import java.util.List;
  * @param <R> Type of Node/Task result
  */
 
-public final class ExecutionResults<T, R> {
+public final class ExecutionResults<T, R> implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private List<ExecutionResult<T, R>> results = new ArrayList<ExecutionResult<T, R>>();
 
 	/**

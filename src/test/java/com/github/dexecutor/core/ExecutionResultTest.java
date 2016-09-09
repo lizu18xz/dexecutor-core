@@ -22,41 +22,45 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
+import com.github.dexecutor.core.task.ExecutionResult;
+
 public class ExecutionResultTest {
 	
 	@Test
 	public void testExecutionResultIdShouldBeOne() {
-		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1, ExecutionStatus.SUCCESS);
+		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1);
 		assertThat(result.getId(), equalTo(1));
 	}
 	
 	@Test
 	public void testExecutionResultToBeOne() {
-		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1, ExecutionStatus.SUCCESS);
+		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1);
 		assertThat(result.getResult(), equalTo(1));
 	}
 
 	@Test
 	public void testExecutionResultToStringShouldNotBeNull() {
-		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1, ExecutionStatus.SUCCESS);
+		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1);
 		assertNotNull(result.toString());
 	}
 
 	@Test
 	public void testExecutionResultShouldBeSuccess() {
-		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1, ExecutionStatus.SUCCESS);
+		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1);
 		assertThat(result.isSuccess(), equalTo(true));
 	}
 	
 	@Test
 	public void testExecutionResultShouldBeErrored() {
-		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1, ExecutionStatus.ERRORED);
+		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1);
+		result.errored();
 		assertThat(result.isErrored(), equalTo(true));
 	}
 	
 	@Test
 	public void testExecutionResultShouldBeSkipped() {
-		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1, ExecutionStatus.SKIPPED);
+		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1);
+		result.skipped();
 		assertThat(result.isSkipped(), equalTo(true));
 	}
 

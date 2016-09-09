@@ -100,4 +100,9 @@ public final class DefaultDag<T extends Comparable<T>, R> implements Dag<T, R> {
 		}
 		return leafNodes;
 	}
+
+	@Override
+	public Node<T, R> get(final T id) {
+		return this.nodes.get(id);
+	}
 }

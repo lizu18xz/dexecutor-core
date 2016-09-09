@@ -25,7 +25,8 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-import com.github.dexecutor.core.graph.Node;
+import com.github.dexecutor.core.task.ExecutionResult;
+import com.github.dexecutor.core.task.Task;
 /**
  * Default Executor, which internally operates on @ExecutorService
  * 
@@ -34,10 +35,10 @@ import com.github.dexecutor.core.graph.Node;
  * @param <T>
  * @param <R>
  */
-public final class DefaultExecutionEngine<T, R> implements ExecutionEngine<T, R> {
+public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements ExecutionEngine<T, R> {
 
-	private final CompletionService<Node<T, R>> completionService;
 	private final ExecutorService executorService;
+	private final CompletionService<ExecutionResult<T, R>> completionService;
 	/**
 	 * Creates the default instance given @ExecutorService, internally it uses @CompletionService
 	 * @param executorService
@@ -45,24 +46,30 @@ public final class DefaultExecutionEngine<T, R> implements ExecutionEngine<T, R>
 	public DefaultExecutionEngine(final ExecutorService executorService) {
 		checkNotNull(executorService, "Executer Service should not be null");
 		this.executorService = executorService;
-		this.completionService = new ExecutorCompletionService<Node<T, R>>(executorService);
+		this.completionService = new ExecutorCompletionService<ExecutionResult<T, R>>(executorService);
 	}
 
 	@Override
-	public Future<Node<T, R>> submit(Callable<Node<T, R>> task) {
-		return this.completionService.submit(task);
-	}
-
-	@Override
-	public Future<Node<T, R>> take() throws InterruptedException {
+	public Future<ExecutionResult<T, R>> take() throws InterruptedException {
 		return this.completionService.take();
 	}
 
-	@Override
-	public boolean isShutdown() {
-		return this.executorService.isShutdown();
+	private Callable<ExecutionResult<T, R>> newCallable(final Task<T, R> task) {
+		return new Callable<ExecutionResult<T,R>>() {
+
+			@Override
+			public ExecutionResult<T, R> call() throws Exception {
+				R r = task.execute();
+				return new ExecutionResult<T, R>(task.getId(), r, task.getStatus());
+			}			
+		};
 	}
 
+	@Override
+	public void submit(Task<T, R> task) {
+		this.completionService.submit(newCallable(task));		
+	}
+	
 	@Override
 	public String toString() {
 		return this.executorService.toString();

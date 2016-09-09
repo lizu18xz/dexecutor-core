@@ -17,10 +17,10 @@
 
 package com.github.dexecutor.core;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import com.github.dexecutor.core.graph.Node;
+import com.github.dexecutor.core.task.ExecutionResult;
+import com.github.dexecutor.core.task.Task;
 /**
  * An Executor is the main execution engine, where in all the tasks are executed
  * 
@@ -29,34 +29,9 @@ import com.github.dexecutor.core.graph.Node;
  * @param <T>
  * @param <R>
  */
-public interface ExecutionEngine<T, R> {
+public interface ExecutionEngine<T extends Comparable<T>, R> {
 
-    /**
-     * Submits a value-returning task for execution and returns a Future
-     * representing the pending results of the task.  Upon completion,
-     * this task may be taken.
-     *
-     * @param task the task to submit
-     * @return a Future representing pending completion of the task
-     * @throws RejectedExecutionException if the task cannot be
-     *         scheduled for execution
-     * @throws NullPointerException if the task is null
-     */
-    Future<Node<T, R>> submit(Callable<Node<T, R>> task);
+    void submit(Task<T, R> task);
 
-    /**
-     * Retrieves and removes the Future representing the next
-     * completed task, waiting if none are yet present.
-     *
-     * @return the Future representing the next completed task
-     * @throws InterruptedException if interrupted while waiting
-     */
-    Future<Node<T, R>> take() throws InterruptedException;
-
-    /**
-     * Returns <tt>true</tt> if this executor has been shut down.
-     *
-     * @return <tt>true</tt> if this executor has been shut down
-     */
-    boolean isShutdown();
+    Future<ExecutionResult<T, R>> take() throws InterruptedException;
 }

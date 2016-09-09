@@ -14,17 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.dexecutor.core;
-
-import java.io.Serializable;
-import java.util.concurrent.Callable;
+package com.github.dexecutor.core.task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.github.dexecutor.core.TaskProvider;
-import com.github.dexecutor.core.TaskProvider.Task;
-import com.github.dexecutor.core.graph.Node;
 
 /**
  * A dexecutor task which terminates the graph execution after one retry 
@@ -34,27 +27,29 @@ import com.github.dexecutor.core.graph.Node;
  * @param <T> Node Id Type
  * @param <R> Result type
  */
-class RetryOnceAndTerminateTask<T extends Comparable<T>, R> implements Callable<Node<T, R>>, Serializable {
+class RetryOnceAndTerminateTask<T extends Comparable<T>, R> extends  AbstractDelegatingTask<T, R>  {
+
 	private static final long serialVersionUID = 1L;
+
 	private static final Logger logger = LoggerFactory.getLogger(RetryOnceAndTerminateTask.class);
-	private Node<T, R> node;
-	private TaskProvider<T, R> taskProvider;
 
-	public RetryOnceAndTerminateTask(final TaskProvider<T, R> taskProvider, final Node<T, R> graphNode) {
-		this.taskProvider = taskProvider;
-		this.node = graphNode;
+
+	public RetryOnceAndTerminateTask(final Task<T, R> task) {
+		super(task);
 	}
 
-	public Node<T, R> call() throws Exception {
-		Task<T, R> task = new ExecutorTask<T, R>(node, this.taskProvider.provid(node.getValue()));
-		task.setConsiderExecutionError(false);
+	@Override
+	public R execute() {
+		R result = null;
+		getTargetTask().setConsiderExecutionError(false);
 		try {
-			task.execute();
+			result = getTargetTask().execute();
 		} catch(Exception ex) {
-			logger.error("Exception caught, executing node # " + this.node.getValue() + " Retry would happen", ex);
-			task.setConsiderExecutionError(true);
-			task.execute();
+			logger.error("Exception caught, executing node # " + getId() + " Retry would happen", ex);
+			getTargetTask().setConsiderExecutionError(true);
+			getTargetTask().execute();
 		}
-		return this.node;
+		return result;
 	}
+
 }

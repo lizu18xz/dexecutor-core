@@ -63,4 +63,12 @@ public interface Dag<T extends Comparable<T>, R> {
 	 * @return total number of nodes in this graph
 	 */
 	int size();
+
+	/**
+	 * Returns the node with the given id
+	 * 
+	 * @param id
+	 * @return the @Node with the given id
+	 */
+	Node<T, R> get(final T id);
 }

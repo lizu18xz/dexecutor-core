@@ -25,6 +25,7 @@ import com.github.dexecutor.core.graph.CyclicValidator;
 import com.github.dexecutor.core.graph.LevelOrderTraversar;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.Validator;
+import com.github.dexecutor.core.task.TaskProvider;
 
 /**
  * <p>Configuration Object for Dexecutor framework. At a minimum it needs {@code ExecutorService} and {@code TaskProvider}, rest are optional and takes default values</p>
@@ -64,7 +65,7 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>, R> {
 		this.executionEngine = new DefaultExecutionEngine<>(executorService);
 		this.taskProvider = taskProvider;
 	}
-	
+
 	/**
 	 * Construct the object with mandatory params, rest are optional
 	 * @param executor  @ExecutionEngine

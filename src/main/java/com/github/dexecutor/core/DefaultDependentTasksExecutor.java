@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,6 +33,12 @@ import com.github.dexecutor.core.graph.DefaultDag;
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.Validator;
+import com.github.dexecutor.core.task.ExecutionResult;
+import com.github.dexecutor.core.task.ExecutionResults;
+import com.github.dexecutor.core.task.ExecutionStatus;
+import com.github.dexecutor.core.task.Task;
+import com.github.dexecutor.core.task.TaskProvider;
+import com.github.dexecutor.core.task.WorkerFactory;
 
 /**
  * Default implementation of @DependentTasksExecutor
@@ -48,23 +53,20 @@ import com.github.dexecutor.core.graph.Validator;
 public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> implements DependentTasksExecutor<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultDependentTasksExecutor.class);
-
-	private ExecutionEngine<T, R> executionEngine;
+	
 	private TaskProvider<T, R> taskProvider;
+	private ExecutionEngine<T, R> executionEngine;
 	private Validator<T, R> validator;
 	private Traversar<T, R> traversar;
 	private Dag<T, R> graph;
 
 	private Collection<Node<T, R>> processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
 	private AtomicInteger nodesCount = new AtomicInteger(0);
-	/**
-	 * Creates the Executor with bare minimum required params
-	 * @param executorService
-	 * @param taskProvider
-	 */
-	public DefaultDependentTasksExecutor(final ExecutorService executorService, final TaskProvider<T, R> taskProvider) {
-		this(new DependentTasksExecutorConfig<T, R>(executorService, taskProvider));
+
+	public DefaultDependentTasksExecutor(ExecutionEngine<T, R> executionEngine, TaskProvider<T, R> taskProvider) {
+		this(new DependentTasksExecutorConfig<>(executionEngine, taskProvider));
 	}
+
 	/**
 	 * Creates the Executor with Config
 	 * @param config
@@ -72,10 +74,10 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	public DefaultDependentTasksExecutor(final DependentTasksExecutorConfig<T, R> config) {
 		config.validate();
 		this.executionEngine = config.getExecutorEngine();
-		this.taskProvider = config.getTaskProvider();
 		this.validator = config.getValidator();
 		this.traversar = config.getTraversar();
 		this.graph = new DefaultDag<T, R>();
+		this.taskProvider = config.getTaskProvider();
 	}
 
 	public void print(final Writer writer) {
@@ -111,21 +113,13 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		}		
 	}
 
-	private boolean isAlreadyProcessed(final Node<T, R> node) {
-		return this.processedNodes.contains(node);
-	}
-
-	private boolean areAlreadyProcessed(final Set<Node<T, R>> nodes) {
-        return this.processedNodes.containsAll(nodes);
-    }
-
 	public void execute(final ExecutionBehavior behavior) {
 		validate();
 
 		Set<Node<T, R>> initialNodes = this.graph.getInitialNodes();
 
 		long start = new Date().getTime();
-		
+
 		doProcessNodes(behavior, initialNodes);
 
 		long end = new Date().getTime();
@@ -147,17 +141,37 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		for (Node<T, R> node : nodes) {
 			if (shouldProcess(node) ) {
 				nodesCount.incrementAndGet();
-				logger.debug("Going to schedule {} node", node.getValue());
-				this.executionEngine.submit(WorkerFactory.newWorker(this.taskProvider, node, behavior));
-				
+				Task<T, R> task = newTask(behavior, node);
+				if (shouldExecute(node, task)) {
+					logger.debug("Going to schedule {} node", node.getValue());
+					this.executionEngine.submit(task);
+				} else {
+					node.setSkipped();
+					task.skipped();
+					logger.debug("Execution Skipped for node # {} ", node.getValue());
+				}
 			} else {
 				logger.debug("node {} depends on {}", node.getValue(), node.getInComingNodes());
 			}
 		}		
 	}
 
+	private Task<T, R> newTask(final ExecutionBehavior behavior, Node<T, R> node) {
+		Task<T, R> task = this.taskProvider.provid(node.getValue());
+		task.setId(node.getValue());
+		task.setExecutionBehavior(behavior);
+		return WorkerFactory.newWorker(task);
+	}
+
+	private boolean shouldExecute(Node<T, R> node, Task<T, R> task) {
+		if (task.shouldExecute(parentResults(node))) {
+			return true;
+		}
+		return false;
+	}
+
 	private boolean shouldProcess(final Node<T, R> node) {
-		return !this.executionEngine.isShutdown() && !isAlreadyProcessed(node) && allIncomingNodesProcessed(node);
+		return !isAlreadyProcessed(node) && allIncomingNodesProcessed(node);
 	}
 
 	private boolean allIncomingNodesProcessed(final Node<T, R> node) {
@@ -167,20 +181,59 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		return false;
 	}
 
+	private boolean isAlreadyProcessed(final Node<T, R> node) {
+		return this.processedNodes.contains(node);
+	}
+
+	private boolean areAlreadyProcessed(final Set<Node<T, R>> nodes) {
+        return this.processedNodes.containsAll(nodes);
+    }
+
+	private ExecutionResults<T, R> parentResults(final Node<T, R> node) {
+		ExecutionResults<T, R> parentResult = new ExecutionResults<T, R>();
+		for (Node<T, R> pNode : node.getInComingNodes()) {
+			parentResult.add(new ExecutionResult<T, R>(pNode.getValue(), pNode.getResult(), status(pNode)));
+		}
+		return parentResult;
+	}
+
+	private ExecutionStatus status(final Node<T, R> node) {
+		ExecutionStatus status = ExecutionStatus.SUCCESS;
+		if (node.isErrored()) {
+			status = ExecutionStatus.ERRORED;
+		} else if (node.isSkipped()) {
+			status = ExecutionStatus.SKIPPED;
+		}
+		return status;
+	}
+
 	private void doWaitForExecution(final ExecutionBehavior behavior) {
 		int cuurentCount = 0;
 		while (cuurentCount != nodesCount.get()) {
 			try {
-				Future<Node<T, R>> future = this.executionEngine.take();
-				Node<T, R> processedNode = future.get();
-				logger.debug("Processing of node {} done", processedNode.getValue());
+				Future<ExecutionResult<T, R>> future = this.executionEngine.take();
+				ExecutionResult<T, R> executionResult = future.get();
+				logger.debug("Processing of node {} done", executionResult.getId());
 				cuurentCount++;
+				Node<T, R> processedNode = this.graph.get(executionResult.getId());
+				updateNode(executionResult, processedNode);
 				this.processedNodes.add(processedNode);
 				doExecute(processedNode.getOutGoingNodes(), behavior);
 			} catch (Exception e) {
 				cuurentCount++;
 				logger.error("Task interrupted", e);
 			}
+		}
+	}
+
+	private void updateNode(final ExecutionResult<T, R> executionResult, final Node<T, R> processedNode) {
+		processedNode.setResult(executionResult.getResult());
+		if(executionResult.isErrored()) {
+			processedNode.setErrored();
+		} else if(executionResult.isSkipped()) {
+			processedNode.setSkipped();
+		} else {
+			processedNode.setSuccess();
 		}
 	}
 }

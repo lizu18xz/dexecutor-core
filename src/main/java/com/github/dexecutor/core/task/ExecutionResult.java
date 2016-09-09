@@ -15,7 +15,10 @@
  * limitations under the License.
  */
 
-package com.github.dexecutor.core;
+package com.github.dexecutor.core.task;
+
+import java.io.Serializable;
+
 /**
  * Holds execution result of a node identified by id 
  * 
@@ -24,17 +27,27 @@ package com.github.dexecutor.core;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public class ExecutionResult <T, R> {
+public class ExecutionResult <T, R> implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private T id;
 	private R result;
-	private ExecutionStatus status;
+	private ExecutionStatus status = ExecutionStatus.SUCCESS;
 
-	public ExecutionResult(final T id, final R result, ExecutionStatus status) {
+	public ExecutionResult(final T id) {
+		this.id = id;
+	}
+
+	public ExecutionResult(final T id, final R result) {
+		this(id, result, ExecutionStatus.SUCCESS);
+	}
+
+	public ExecutionResult(final T id, final R result, final ExecutionStatus status) {
 		this.id = id;
 		this.result = result;
 		this.status = status;
 	}
+	
 	/**
 	 * 
 	 * @return the id of the executing node
@@ -49,6 +62,15 @@ public class ExecutionResult <T, R> {
 	public R getResult() {
 		return result;
 	}
+	
+	public void errored() {
+		this.status = ExecutionStatus.ERRORED;
+	}
+	
+	public void skipped() {
+		this.status = ExecutionStatus.SKIPPED;
+	}
+
 	/**
 	 * 
 	 * @return {@code true} if the result is success

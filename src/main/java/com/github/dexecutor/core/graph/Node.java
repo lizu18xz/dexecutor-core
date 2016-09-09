@@ -1,6 +1,5 @@
 package com.github.dexecutor.core.graph;
 
-import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -12,9 +11,8 @@ import java.util.Set;
  *
  * @param <T>
  */
-public final class Node<T, R> implements Serializable {
+public final class Node<T, R> {
 
-	private static final long serialVersionUID = 1L;
 	/**
 	 * Unique id of the node
 	 */
@@ -85,11 +83,11 @@ public final class Node<T, R> implements Serializable {
 	public void setResult(final R result) {
 		this.result = result;
 	}
-	
+
 	public boolean isSuccess() {
 		return NodeStatus.SUCCESS.equals(this.status);
 	}
-	
+
 	public boolean isErrored() {
 		return NodeStatus.ERRORED.equals(this.status);
 	}
@@ -105,7 +103,7 @@ public final class Node<T, R> implements Serializable {
 	public void setErrored() {
 		this.status = NodeStatus.ERRORED;
 	}
-	
+
 	public void setSkipped() {
 		this.status = NodeStatus.SKIPPED;
 	}
@@ -142,7 +140,7 @@ public final class Node<T, R> implements Serializable {
      * @author Nadeem Mohammad
      *
      */
-    public enum NodeStatus {
+    enum NodeStatus {
     	ERRORED,SKIPPED,SUCCESS;
     }
 }

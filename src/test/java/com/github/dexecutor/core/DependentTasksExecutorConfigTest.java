@@ -21,18 +21,22 @@ import java.util.concurrent.Executors;
 
 import org.junit.Test;
 
+import com.github.dexecutor.core.task.Task;
+import com.github.dexecutor.core.task.TaskProvider;
+
 public class DependentTasksExecutorConfigTest {
 
 	@Test(expected= IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWhenValidatorIsNull() {
-		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<>(Executors.newCachedThreadPool(), newTaskProvider());
+		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<String, String>(new DefaultExecutionEngine<String, String>(Executors.newCachedThreadPool()), newTaskProvider());
 		config.setValidator(null);
 		config.validate();
 	}
 
+
 	@Test(expected= IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWhenTraversarIsNull() {
-		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<>(Executors.newCachedThreadPool(), newTaskProvider());
+		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<String, String>(new DefaultExecutionEngine<String, String>(Executors.newCachedThreadPool()), newTaskProvider());
 		config.setTraversar(null);
 		config.validate();
 	}

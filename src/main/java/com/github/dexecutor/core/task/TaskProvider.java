@@ -15,13 +15,21 @@
  * limitations under the License.
  */
 
-package com.github.dexecutor.core;
+package com.github.dexecutor.core.task;
+
 /**
- * Represents Tasks Execution status
+ * A Task Provider provides Tasks to be executed, when it comes to execution
  * @author Nadeem Mohammad
  *
+ * @param <T> Type of Node/Task ID
+ * @param <R> Type of Node/Task result
  */
-
-public enum ExecutionStatus {
-	ERRORED, SKIPPED, SUCCESS;
+public interface TaskProvider <T extends Comparable<T>, R> {
+	/**
+	 * Given the node id, returns the task to be executed, while building graph only the node ids are required, when it comes to execution Task objects would be constructed
+	 * 
+	 * @param id
+	 * @return @Task
+	 */
+	public Task<T, R> provid(final T id);	
 }

@@ -22,26 +22,28 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.dexecutor.core.DependentTasksExecutor.ExecutionBehavior;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
+import com.github.dexecutor.core.task.Task;
+import com.github.dexecutor.core.task.TaskProvider;
 
 /**
  * 
  * @author Nadeem Mohammad
  *
  */
-@Ignore
+//@Ignore
 public class DefaultDependentTasksExecutorIntegrationTest {
 
 	@Test
 	public void testDependentTaskExecution() {
 		ExecutorService executorService = newExecutor();
+		ExecutionEngine<Integer, Integer> executionEngine = new DefaultExecutionEngine<>(executorService);
 
 		try {
-			DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(executorService);
+			DefaultDependentTasksExecutor<Integer, Integer> executor = new DefaultDependentTasksExecutor<Integer, Integer>(executionEngine, new SleepyTaskProvider());
 
 			executor.addDependency(1, 2);
 			executor.addDependency(1, 2);
@@ -81,10 +83,6 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 
 	private ExecutorService newExecutor() {
 		return Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
-	}
-
-	private DefaultDependentTasksExecutor<Integer, Integer> newTaskExecutor(ExecutorService executorService) {
-		return new DefaultDependentTasksExecutor<Integer, Integer>(executorService, new SleepyTaskProvider());
 	}
 
 	private static class SleepyTaskProvider implements TaskProvider<Integer, Integer> {

@@ -88,7 +88,7 @@ public interface DependentTasksExecutor<T extends Comparable<T>> {
 	 * @author Nadeem Mohammad
 	 *
 	 */
-	enum ExecutionBehavior {
+	public enum ExecutionBehavior {
 		TERMINATING, NON_TERMINATING, RETRY_ONCE_TERMINATING;
 	}
 }

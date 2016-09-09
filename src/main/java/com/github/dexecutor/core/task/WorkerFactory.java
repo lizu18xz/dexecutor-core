@@ -15,27 +15,25 @@
  * limitations under the License.
  */
 
-package com.github.dexecutor.core;
-
-import java.util.concurrent.Callable;
+package com.github.dexecutor.core.task;
 
 import com.github.dexecutor.core.DependentTasksExecutor.ExecutionBehavior;
-import com.github.dexecutor.core.graph.Node;
 /**
  * A factory to create Worker task for dexecutor based on @ExecutionBehavior
  * 
  * @author Nadeem Mohammad
  *
  */
-class WorkerFactory {
+public class WorkerFactory {
 
-	public static <T extends Comparable<T>, R> Callable<Node<T, R>> newWorker(final TaskProvider<T, R> taskProvider, final Node<T, R> graphNode, final ExecutionBehavior behavior) {
-		if (ExecutionBehavior.NON_TERMINATING.equals(behavior)) {
-			return new NonTerminatingTask<T, R>(taskProvider, graphNode);
-		} else if (ExecutionBehavior.RETRY_ONCE_TERMINATING.equals(behavior)) { 
-			return new RetryOnceAndTerminateTask<T,R>(taskProvider, graphNode);
-		} else {
-			return new TerminatingTask<T,R>(taskProvider, graphNode);
+	public static <T extends Comparable<T>, R> Task<T, R> newWorker(final Task<T, R> task) {
+		Task<T, R> result = task;
+
+		if (ExecutionBehavior.NON_TERMINATING.equals(task.getExecutionBehavior())) {
+			result =  new NonTerminatingTask<T, R>(task);
+		} else if (ExecutionBehavior.RETRY_ONCE_TERMINATING.equals(task.getExecutionBehavior())) { 
+			result = new RetryOnceAndTerminateTask<T,R>(task);
 		}
+		return result;
 	}
 }

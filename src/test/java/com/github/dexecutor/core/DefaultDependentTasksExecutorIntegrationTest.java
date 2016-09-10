@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.dexecutor.core.DependentTasksExecutor.ExecutionBehavior;
@@ -34,7 +35,7 @@ import com.github.dexecutor.core.task.TaskProvider;
  * @author Nadeem Mohammad
  *
  */
-//@Ignore
+@Ignore
 public class DefaultDependentTasksExecutorIntegrationTest {
 
 	@Test

@@ -44,7 +44,7 @@ class NonTerminatingTask <T extends Comparable<T>, R> extends AbstractDelegating
 			getTargetTask().setConsiderExecutionError(false);
 			result = getTargetTask().execute();
 		} catch(Exception ex) {
-			getTargetTask().errored();
+			getTargetTask().setErrored();
 			logger.error("Exception caught, executing Node # " + this.getId(), ex);
 		}
 		return result;

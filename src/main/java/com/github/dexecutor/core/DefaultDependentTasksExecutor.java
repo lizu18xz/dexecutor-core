@@ -147,7 +147,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 					this.executionEngine.submit(task);
 				} else {
 					node.setSkipped();
-					task.skipped();
+					task.setSkipped();
 					logger.debug("Execution Skipped for node # {} ", node.getValue());
 				}
 			} else {

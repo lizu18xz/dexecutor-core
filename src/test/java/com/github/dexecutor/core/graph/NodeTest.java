@@ -35,5 +35,19 @@ public class NodeTest {
 		node.setErrored();
 		assertThat(node.isSkipped(), equalTo(false));
 	}
+	
+	@Test
+	public void testNodeIsSuccess() {
+		Node<Integer, Integer> node = new  Node<Integer, Integer>(1);
+		node.setSuccess();
+		assertThat(node.isSuccess(), equalTo(true));
+	}
+	
+	@Test
+	public void testNodeIsNotSuccess() {
+		Node<Integer, Integer> node = new  Node<Integer, Integer>(1);
+		node.setErrored();
+		assertThat(node.isSuccess(), equalTo(false));
+	}
 
 }

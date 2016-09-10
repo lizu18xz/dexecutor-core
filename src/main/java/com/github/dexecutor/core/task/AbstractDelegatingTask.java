@@ -25,12 +25,12 @@ abstract class AbstractDelegatingTask <T extends Comparable<T>, R> extends Task<
 		return this.task.getId();
 	}
 
-	public void errored() {
-		this.task.errored();
+	public void setErrored() {
+		this.task.setErrored();
 	}
 
-	public void skipped() {
-		this.task.skipped();
+	public void setSkipped() {
+		this.task.setSkipped();
 	}
 
 	public ExecutionStatus getStatus() {

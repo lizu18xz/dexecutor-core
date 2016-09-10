@@ -44,11 +44,11 @@ public abstract class Task<T, R> implements Serializable {
 		return this.id;
 	}
 
-	public void errored() {
+	public void setErrored() {
 		this.status = ExecutionStatus.ERRORED;
 	}
 
-	public void skipped() {
+	public void setSkipped() {
 		this.status = ExecutionStatus.SKIPPED;
 	}
 

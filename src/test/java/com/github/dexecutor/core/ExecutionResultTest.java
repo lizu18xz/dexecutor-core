@@ -28,7 +28,7 @@ public class ExecutionResultTest {
 	
 	@Test
 	public void testExecutionResultIdShouldBeOne() {
-		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1, 1);
+		ExecutionResult<Integer, Integer> result = new ExecutionResult<Integer, Integer>(1);
 		assertThat(result.getId(), equalTo(1));
 	}
 	

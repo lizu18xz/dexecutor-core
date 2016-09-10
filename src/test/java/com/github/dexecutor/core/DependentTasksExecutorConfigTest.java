@@ -28,7 +28,7 @@ public class DependentTasksExecutorConfigTest {
 
 	@Test(expected= IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWhenValidatorIsNull() {
-		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<String, String>(new DefaultExecutionEngine<String, String>(Executors.newCachedThreadPool()), newTaskProvider());
+		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<String, String>(Executors.newCachedThreadPool(), newTaskProvider());
 		config.setValidator(null);
 		config.validate();
 	}

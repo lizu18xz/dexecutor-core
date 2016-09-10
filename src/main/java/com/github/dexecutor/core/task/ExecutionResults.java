@@ -65,6 +65,24 @@ public final class ExecutionResults<T, R> implements Serializable {
 			return true;
 		}
 	}
+	
+	/**
+	 * @return {@code true} If any parent is skipped
+	 * {@code false} if no parent is skipped
+	 * 
+	 * @return
+	 */
+	public boolean anyParentSkipped() {
+		boolean parentSkipped = false;
+		for (ExecutionResult<T, R> parent : results) {
+			if (parent.isSkipped()) {
+				parentSkipped = true;
+				break;
+			}
+		}
+		
+		return parentSkipped;
+	}
 	/**
 	 * 
 	 * @return all result in the collection

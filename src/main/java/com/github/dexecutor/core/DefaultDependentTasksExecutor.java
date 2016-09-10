@@ -37,8 +37,8 @@ import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.ExecutionStatus;
 import com.github.dexecutor.core.task.Task;
-import com.github.dexecutor.core.task.TaskProvider;
 import com.github.dexecutor.core.task.TaskFactory;
+import com.github.dexecutor.core.task.TaskProvider;
 
 /**
  * Default implementation of @DependentTasksExecutor
@@ -149,11 +149,13 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 					node.setSkipped();
 					task.setSkipped();
 					logger.debug("Execution Skipped for node # {} ", node.getValue());
+					this.processedNodes.add(node);
+					doExecute(node.getOutGoingNodes(), behavior);
 				}
 			} else {
 				logger.debug("node {} depends on {}", node.getValue(), node.getInComingNodes());
 			}
-		}		
+		}
 	}
 
 	private Task<T, R> newTask(final ExecutionBehavior behavior, Node<T, R> node) {

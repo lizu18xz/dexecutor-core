@@ -91,6 +91,8 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 
 			return new Task<Integer, Integer>() {
 
+				private static final long serialVersionUID = 1L;
+
 				public Integer execute() {
 					try {
 						Thread.sleep(500);

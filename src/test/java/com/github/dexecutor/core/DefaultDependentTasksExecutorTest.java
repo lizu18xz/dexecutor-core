@@ -201,6 +201,8 @@ public class DefaultDependentTasksExecutorTest {
 
 			return new Task<Integer, Integer>() {
 
+				private static final long serialVersionUID = 1L;
+
 				public Integer execute() {
 					shouldConsiderExecutionError();
 					doExecute(id);

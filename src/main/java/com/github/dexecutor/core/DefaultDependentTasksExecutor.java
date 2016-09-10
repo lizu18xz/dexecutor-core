@@ -38,7 +38,7 @@ import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.ExecutionStatus;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
-import com.github.dexecutor.core.task.WorkerFactory;
+import com.github.dexecutor.core.task.TaskFactory;
 
 /**
  * Default implementation of @DependentTasksExecutor
@@ -160,7 +160,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		Task<T, R> task = this.taskProvider.provid(node.getValue());
 		task.setId(node.getValue());
 		task.setExecutionBehavior(behavior);
-		return WorkerFactory.newWorker(task);
+		return TaskFactory.newWorker(task);
 	}
 
 	private boolean shouldExecute(Node<T, R> node, Task<T, R> task) {

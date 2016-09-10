@@ -33,7 +33,6 @@ class RetryOnceAndTerminateTask<T extends Comparable<T>, R> extends  AbstractDel
 
 	private static final Logger logger = LoggerFactory.getLogger(RetryOnceAndTerminateTask.class);
 
-
 	public RetryOnceAndTerminateTask(final Task<T, R> task) {
 		super(task);
 	}
@@ -51,5 +50,4 @@ class RetryOnceAndTerminateTask<T extends Comparable<T>, R> extends  AbstractDel
 		}
 		return result;
 	}
-
 }

@@ -51,9 +51,32 @@ public class AbstractDelegatingTaskTest {
 	
 	@Test
 	public void testSuccess() {
+		delegatingTask.setSuccess();
 		assertThat(this.task.getStatus(), equalTo(ExecutionStatus.SUCCESS));
 	}
 	
+	@Test
+	public void testGetStatus() {
+		delegatingTask.setErrored();
+		assertThat(this.delegatingTask.getStatus(), equalTo(this.delegatingTask.getTargetTask().getStatus()));
+	}
+	
+	@Test
+	public void testShouldConsiderExecutionError() {
+		assertThat(this.delegatingTask.shouldConsiderExecutionError(), equalTo(this.delegatingTask.getTargetTask().shouldConsiderExecutionError()));
+	}
+	
+	@Test
+	public void testShouldExecute() {
+		assertThat(this.delegatingTask.shouldExecute(null), equalTo(this.delegatingTask.getTargetTask().shouldExecute(null)));
+	}
+	
+	@Test
+	public void testGetExecutionBehavior() {
+		assertThat(this.delegatingTask.getExecutionBehavior(), equalTo(this.delegatingTask.getTargetTask().getExecutionBehavior()));
+	}
+
+
 	private static class DummyDelegatingTask extends AbstractDelegatingTask<Integer, Integer> {
 
 		private static final long serialVersionUID = 1L;

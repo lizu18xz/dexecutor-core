@@ -29,7 +29,7 @@ import com.github.dexecutor.core.DependentTasksExecutor.ExecutionBehavior;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public abstract class Task<T, R> implements Serializable {
+public abstract class Task<T extends Comparable<T>, R> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private T id;

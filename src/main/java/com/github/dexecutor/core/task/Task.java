@@ -51,6 +51,10 @@ public abstract class Task<T, R> implements Serializable {
 	public void setSkipped() {
 		this.status = ExecutionStatus.SKIPPED;
 	}
+	
+	public void setSuccess() {
+		this.status = ExecutionStatus.SUCCESS;
+	}
 
 	public ExecutionStatus getStatus() {
 		return status;

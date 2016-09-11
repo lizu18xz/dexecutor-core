@@ -32,6 +32,10 @@ abstract class AbstractDelegatingTask <T extends Comparable<T>, R> extends Task<
 	public void setSkipped() {
 		this.task.setSkipped();
 	}
+	
+	public void setSuccess() {
+		this.task.setSuccess();
+	}
 
 	public ExecutionStatus getStatus() {
 		return this.task.getStatus();

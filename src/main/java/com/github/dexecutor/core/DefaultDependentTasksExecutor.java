@@ -159,7 +159,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	}
 
 	private Task<T, R> newTask(final ExecutionBehavior behavior, Node<T, R> node) {
-		Task<T, R> task = this.taskProvider.provid(node.getValue());
+		Task<T, R> task = this.taskProvider.provideTask(node.getValue());
 		task.setId(node.getValue());
 		task.setExecutionBehavior(behavior);
 		return TaskFactory.newWorker(task);

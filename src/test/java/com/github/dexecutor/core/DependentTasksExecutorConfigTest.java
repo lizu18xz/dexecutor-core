@@ -45,7 +45,7 @@ public class DependentTasksExecutorConfigTest {
 		return new TaskProvider<String, String>() {
 			
 			@Override
-			public Task<String, String> provid(String id) {
+			public Task<String, String> provideTask(String id) {
 				return null;
 			}
 		};

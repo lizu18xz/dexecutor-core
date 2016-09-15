@@ -302,7 +302,7 @@ public class DefaultDependentTasksExecutorTest {
 		}
 
 
-		public Task<Integer, Integer> provid(final Integer id) {
+		public Task<Integer, Integer> provideTask(final Integer id) {
 
 			return new Task<Integer, Integer>() {
 

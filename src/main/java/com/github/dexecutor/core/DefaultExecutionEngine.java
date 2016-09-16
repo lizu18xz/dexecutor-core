@@ -32,8 +32,8 @@ import com.github.dexecutor.core.task.Task;
  * 
  * @author Nadeem Mohammad
  *
- * @param <T>
- * @param <R>
+ * @param <T> Type of Node/Task ID
+ * @param <R> Type of Node/Task result
  */
 public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements ExecutionEngine<T, R> {
 

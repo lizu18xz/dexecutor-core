@@ -18,6 +18,7 @@
 package com.github.dexecutor.core.support;
 
 /**
+ * Support class for thread pool size
  * 
  * @author Nadeem Mohammad
  *

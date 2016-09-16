@@ -28,7 +28,6 @@ import java.util.List;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-
 public final class ExecutionResults<T, R> implements Serializable {
 
 	private static final long serialVersionUID = 1L;

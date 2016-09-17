@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -213,8 +212,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		int cuurentCount = 0;
 		while (cuurentCount != nodesCount.get()) {
 			try {
-				Future<ExecutionResult<T, R>> future = this.executionEngine.take();
-				ExecutionResult<T, R> executionResult = future.get();
+				ExecutionResult<T, R> executionResult = this.executionEngine.processResult();
 				logger.debug("Processing of node {} done", executionResult.getId());
 				cuurentCount++;
 				Node<T, R> processedNode = this.graph.get(executionResult.getId());

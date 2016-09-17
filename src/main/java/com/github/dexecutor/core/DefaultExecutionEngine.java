@@ -21,12 +21,13 @@ import static com.github.dexecutor.core.support.Preconditions.checkNotNull;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 
 import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.Task;
+import com.github.dexecutor.core.task.TaskExecutionException;
 /**
  * Default Executor, which internally operates on @ExecutorService
  * 
@@ -50,8 +51,14 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 	}
 
 	@Override
-	public Future<ExecutionResult<T, R>> take() throws InterruptedException {
-		return this.completionService.take();
+	public ExecutionResult<T, R> processResult() {
+		try {
+			return this.completionService.take().get();
+		} catch (InterruptedException e) {
+			throw new TaskExecutionException("InterruptedException ", e);
+		} catch (ExecutionException e) {
+			throw new TaskExecutionException("ExecutionException", e);
+		}		
 	}
 
 	private Callable<ExecutionResult<T, R>> newCallable(final Task<T, R> task) {

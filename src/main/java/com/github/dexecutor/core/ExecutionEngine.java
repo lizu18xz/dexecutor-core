@@ -17,10 +17,9 @@
 
 package com.github.dexecutor.core;
 
-import java.util.concurrent.Future;
-
 import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.Task;
+import com.github.dexecutor.core.task.TaskExecutionException;
 /**
  * An Executor is the main execution engine, where in all the tasks are executed
  * 
@@ -30,8 +29,18 @@ import com.github.dexecutor.core.task.Task;
  * @param <R> Type of Node/Task result
  */
 public interface ExecutionEngine<T extends Comparable<T>, R> {
-
+	/**
+	 * Submits the task for execution, the method is expected to return immediately.
+	 * 
+	 * @param @Task to be submitted for execution 
+	 */
     void submit(Task<T, R> task);
-
-    Future<ExecutionResult<T, R>> take() throws InterruptedException;
+    
+    /**
+     * This method is expected to block, if there are no execution result, otherwise return the result immediately.
+     * 
+     * @return @ExecutionResult returns the execution result.     * 
+     * @throws TaskExecutionException
+     */    
+    ExecutionResult<T, R> processResult() throws TaskExecutionException;
 }

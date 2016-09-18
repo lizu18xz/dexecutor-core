@@ -81,4 +81,9 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 	public String toString() {
 		return this.executorService.toString();
 	}
+
+	@Override
+	public boolean isDistributed() {
+		return false;
+	}
 }

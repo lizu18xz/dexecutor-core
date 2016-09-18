@@ -43,4 +43,10 @@ public interface ExecutionEngine<T extends Comparable<T>, R> {
      * @throws TaskExecutionException
      */    
     ExecutionResult<T, R> processResult() throws TaskExecutionException;
+    /**
+	 * Hints dexecutor if the execution engine is distributed or not
+	 * @return {@code true} If this execution engine is a distributed
+	 * {@code false} it it is non distributed
+	 */
+    boolean isDistributed();
 }

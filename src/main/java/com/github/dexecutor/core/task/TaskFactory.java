@@ -17,7 +17,6 @@
 
 package com.github.dexecutor.core.task;
 
-import com.github.dexecutor.core.DependentTasksExecutor.ExecutionBehavior;
 /**
  * A factory to create Worker task for dexecutor based on @ExecutionBehavior
  * 
@@ -29,10 +28,10 @@ public class TaskFactory {
 	public static <T extends Comparable<T>, R> Task<T, R> newWorker(final Task<T, R> task) {
 		Task<T, R> result = new LoggerTask<T, R>(task);
 
-		if (ExecutionBehavior.NON_TERMINATING.equals(task.getExecutionBehavior())) {
+		if (task.getExecutionConfig().isNonTerminating()) {
 			result =  new NonTerminatingTask<T, R>(new LoggerTask<T, R>(task));
-		} else if (ExecutionBehavior.RETRY_ONCE_TERMINATING.equals(task.getExecutionBehavior())) { 
-			result = new RetryOnceAndTerminateTask<T,R>(new LoggerTask<T, R>(task));
+		} else if (task.getExecutionConfig().isRetrying()) { 
+			result = new RetryingTask<T,R>(new LoggerTask<T, R>(task));
 		}
 		return result;
 	}

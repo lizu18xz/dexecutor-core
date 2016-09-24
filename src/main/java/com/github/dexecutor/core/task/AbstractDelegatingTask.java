@@ -17,7 +17,7 @@
 
 package com.github.dexecutor.core.task;
 
-import com.github.dexecutor.core.DependentTasksExecutor.ExecutionBehavior;
+import com.github.dexecutor.core.ExecutionConfig;
 /**
  * Class to delegate responsibilities to underlying @Task
  * 
@@ -65,12 +65,12 @@ abstract class AbstractDelegatingTask <T extends Comparable<T>, R> extends Task<
 		return this.task.getStatus();
 	}
 
-	public ExecutionBehavior getExecutionBehavior() {
-		return this.task.getExecutionBehavior();
+	public ExecutionConfig getExecutionConfig() {
+		return this.task.getExecutionConfig();
 	}
 
-	public void setExecutionBehavior(ExecutionBehavior executionBehavior) {
-		this.task.setExecutionBehavior(executionBehavior);
+	public void setExecutionConfig(ExecutionConfig executionConfig) {
+		this.task.setExecutionConfig(executionConfig);
 	}
 
 	public  boolean shouldConsiderExecutionError() {

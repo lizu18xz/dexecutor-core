@@ -27,27 +27,30 @@ import org.slf4j.LoggerFactory;
  * @param <T> Node Id Type
  * @param <R> Result type
  */
-class RetryOnceAndTerminateTask<T extends Comparable<T>, R> extends  AbstractDelegatingTask<T, R>  {
+class RetryingTask<T extends Comparable<T>, R> extends  AbstractDelegatingTask<T, R>  {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(RetryOnceAndTerminateTask.class);
+	private static final Logger logger = LoggerFactory.getLogger(RetryingTask.class);
 
-	public RetryOnceAndTerminateTask(final Task<T, R> task) {
+	public RetryingTask(final Task<T, R> task) {
 		super(task);
 	}
 
 	@Override
 	public R execute() {
-		R result = null;
 		getTargetTask().setConsiderExecutionError(false);
-		try {
-			result = getTargetTask().execute();
-		} catch(Exception ex) {
-			logger.error("Exception caught, executing node # " + getId() + " Retry would happen", ex);
-			getTargetTask().setConsiderExecutionError(true);
-			getTargetTask().execute();
+		
+		int count = 1;
+		while(count <= getTargetTask().getRetryCount()) {
+			try {
+				return getTargetTask().execute();
+			} catch(Exception ex) {
+				logger.error("Exception caught, executing node # " + getId() + " Retry would happen", ex);
+			}
+			count++;
 		}
-		return result;
+		getTargetTask().setConsiderExecutionError(true);
+		throw new TaskExecutionException("Retried Task " + getId() + " " +  getTargetTask().getRetryCount() + " times");
 	}
 }

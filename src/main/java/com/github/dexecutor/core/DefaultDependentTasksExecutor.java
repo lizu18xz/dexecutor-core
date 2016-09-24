@@ -112,14 +112,14 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		}		
 	}
 
-	public void execute(final ExecutionBehavior behavior) {
+	public void execute(final ExecutionConfig config) {
 		validate();
 
 		Set<Node<T, R>> initialNodes = this.graph.getInitialNodes();
 
 		long start = new Date().getTime();
 
-		doProcessNodes(behavior, initialNodes);
+		doProcessNodes(config, initialNodes);
 
 		long end = new Date().getTime();
 
@@ -131,16 +131,16 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		this.validator.validate(this.graph);
 	}
 
-	private void doProcessNodes(final ExecutionBehavior behavior, final Set<Node<T, R>> nodes) {
-		doExecute(nodes, behavior);
-		doWaitForExecution(behavior);	
+	private void doProcessNodes(final ExecutionConfig config, final Set<Node<T, R>> nodes) {
+		doExecute(nodes, config);
+		doWaitForExecution(config);	
 	}
 
-	private void doExecute(final Collection<Node<T, R>> nodes, final ExecutionBehavior behavior) {
+	private void doExecute(final Collection<Node<T, R>> nodes, final ExecutionConfig config) {
 		for (Node<T, R> node : nodes) {
 			if (shouldProcess(node) ) {
 				nodesCount.incrementAndGet();
-				Task<T, R> task = newTask(behavior, node);
+				Task<T, R> task = newTask(config, node);
 				if (shouldExecute(node, task)) {
 					logger.debug("Going to schedule {} node", node.getValue());
 					this.executionEngine.submit(task);
@@ -149,7 +149,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 					task.setSkipped();
 					logger.debug("Execution Skipped for node # {} ", node.getValue());
 					this.processedNodes.add(node);
-					doExecute(node.getOutGoingNodes(), behavior);
+					doExecute(node.getOutGoingNodes(), config);
 				}
 			} else {
 				logger.debug("node {} depends on {}", node.getValue(), node.getInComingNodes());
@@ -157,10 +157,10 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		}
 	}
 
-	private Task<T, R> newTask(final ExecutionBehavior behavior, Node<T, R> node) {
+	private Task<T, R> newTask(final ExecutionConfig config, Node<T, R> node) {
 		Task<T, R> task = this.taskProvider.provideTask(node.getValue());
 		task.setId(node.getValue());
-		task.setExecutionBehavior(behavior);
+		task.setExecutionConfig(config);
 		return TaskFactory.newWorker(task);
 	}
 
@@ -208,7 +208,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		return status;
 	}
 
-	private void doWaitForExecution(final ExecutionBehavior behavior) {
+	private void doWaitForExecution(final ExecutionConfig config) {
 		int cuurentCount = 0;
 		while (cuurentCount != nodesCount.get()) {
 			try {
@@ -218,7 +218,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 				Node<T, R> processedNode = this.graph.get(executionResult.getId());
 				updateNode(executionResult, processedNode);
 				this.processedNodes.add(processedNode);
-				doExecute(processedNode.getOutGoingNodes(), behavior);
+				doExecute(processedNode.getOutGoingNodes(), config);
 			} catch (Exception e) {
 				cuurentCount++;
 				logger.error("Task interrupted", e);

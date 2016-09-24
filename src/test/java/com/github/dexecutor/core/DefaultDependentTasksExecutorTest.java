@@ -37,7 +37,6 @@ import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.github.dexecutor.core.DependentTasksExecutor.ExecutionBehavior;
 import com.github.dexecutor.core.graph.Dag;
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
@@ -99,7 +98,7 @@ public class DefaultDependentTasksExecutorTest {
 		new MockedCompletionService();
 		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
 		executor.addDependency(1, 2);
-		executor.execute(ExecutionBehavior.TERMINATING);
+		executor.execute(ExecutionConfig.TERMINATING);
 	}
 
 	@Test
@@ -107,7 +106,7 @@ public class DefaultDependentTasksExecutorTest {
 		new MockedCompletionService();
 		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
 		executor.addDependency(1, 2);
-		executor.execute(ExecutionBehavior.NON_TERMINATING);
+		executor.execute(ExecutionConfig.NON_TERMINATING);
 	}
 	
 	@Test
@@ -119,7 +118,7 @@ public class DefaultDependentTasksExecutorTest {
 
 		addDependencies(executor);
 
-		executor.execute(ExecutionBehavior.RETRY_ONCE_TERMINATING);
+		executor.execute(new ExecutionConfig().retrying(1));
 
 		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 
@@ -135,7 +134,7 @@ public class DefaultDependentTasksExecutorTest {
 
 		addDependencies(executor);
 
-		executor.execute(ExecutionBehavior.RETRY_ONCE_TERMINATING);
+		executor.execute(new ExecutionConfig().retrying(1));
 
 		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 
@@ -151,7 +150,7 @@ public class DefaultDependentTasksExecutorTest {
 
 		addDependencies(executor);
 
-		executor.execute(ExecutionBehavior.RETRY_ONCE_TERMINATING);
+		executor.execute(new ExecutionConfig().retrying(1));
 
 		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 
@@ -167,7 +166,7 @@ public class DefaultDependentTasksExecutorTest {
 
 		addDependencies(executor);
 
-		executor.execute(ExecutionBehavior.NON_TERMINATING);
+		executor.execute(ExecutionConfig.NON_TERMINATING);
 
 		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 
@@ -183,7 +182,7 @@ public class DefaultDependentTasksExecutorTest {
 
 		addDependencies(executor);
 
-		executor.execute(ExecutionBehavior.NON_TERMINATING);
+		executor.execute(ExecutionConfig.NON_TERMINATING);
 
 		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 
@@ -200,7 +199,7 @@ public class DefaultDependentTasksExecutorTest {
 
 		addDependencies(executor);
 
-		executor.execute(ExecutionBehavior.TERMINATING);
+		executor.execute(ExecutionConfig.TERMINATING);
 
 		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 

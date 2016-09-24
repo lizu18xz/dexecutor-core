@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.github.dexecutor.core.DependentTasksExecutor.ExecutionBehavior;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
@@ -64,7 +63,7 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 
 			printGraph(executor);
 
-			executor.execute(ExecutionBehavior.RETRY_ONCE_TERMINATING);
+			executor.execute(new ExecutionConfig().retrying(1));
 			System.out.println("*** Done ***");
 		} finally {
 			try {

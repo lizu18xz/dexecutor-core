@@ -90,6 +90,11 @@ public class AbstractDelegatingTaskTest {
 	public void testGetExecutionBehavior() {
 		assertThat(this.delegatingTask.getExecutionBehavior(), equalTo(this.delegatingTask.getTargetTask().getExecutionBehavior()));
 	}
+	
+	@Test
+	public void testGetExecutionConfig() {
+		assertThat(this.delegatingTask.getExecutionConfig(), equalTo(this.delegatingTask.getTargetTask().getExecutionConfig()));
+	}
 
 
 	private static class DummyDelegatingTask extends AbstractDelegatingTask<Integer, Integer> {

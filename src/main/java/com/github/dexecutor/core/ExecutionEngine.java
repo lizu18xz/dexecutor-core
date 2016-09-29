@@ -34,7 +34,7 @@ public interface ExecutionEngine<T extends Comparable<T>, R> {
 	 * 
 	 * @param @Task to be submitted for execution 
 	 */
-    void submit(Task<T, R> task);
+    void submit(final Task<T, R> task);
     
     /**
      * This method is expected to block, if there are no execution result, otherwise return the result immediately.

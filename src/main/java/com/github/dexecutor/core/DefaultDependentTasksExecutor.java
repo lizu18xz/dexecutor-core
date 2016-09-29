@@ -62,7 +62,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	private Collection<Node<T, R>> processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
 	private AtomicInteger nodesCount = new AtomicInteger(0);
 
-	public DefaultDependentTasksExecutor(ExecutionEngine<T, R> executionEngine, TaskProvider<T, R> taskProvider) {
+	public DefaultDependentTasksExecutor(final ExecutionEngine<T, R> executionEngine, final TaskProvider<T, R> taskProvider) {
 		this(new DependentTasksExecutorConfig<>(executionEngine, taskProvider));
 	}
 
@@ -164,7 +164,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		return TaskFactory.newWorker(task);
 	}
 
-	private boolean shouldExecute(Node<T, R> node, Task<T, R> task) {
+	private boolean shouldExecute(final Node<T, R> node, final Task<T, R> task) {
 		if (task.shouldExecute(parentResults(node))) {
 			return true;
 		}

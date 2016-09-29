@@ -73,7 +73,7 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 	}
 
 	@Override
-	public void submit(Task<T, R> task) {
+	public void submit(final Task<T, R> task) {
 		this.completionService.submit(newCallable(task));		
 	}
 	

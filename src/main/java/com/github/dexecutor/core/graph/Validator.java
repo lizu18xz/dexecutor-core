@@ -29,5 +29,5 @@ public interface Validator<T extends Comparable<T>, R> {
 	 * Called to figure out if a graph is valid or not, exception should be thrown if the graph is invalid
 	 * @param graph
 	 */
-	void validate(Dag<T, R> graph);
+	void validate(final Dag<T, R> graph);
 }

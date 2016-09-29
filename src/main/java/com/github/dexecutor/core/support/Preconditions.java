@@ -35,7 +35,7 @@ public final class Preconditions {
 	 * @param msg
 	 * @throws IllegalArgumentException if the reference is null
 	 */
-	public static <T> void checkNotNull(T reference, String msg) {
+	public static <T> void checkNotNull(final T reference, final String msg) {
 		if (reference == null) {
 			throw new IllegalArgumentException(msg);
 		}

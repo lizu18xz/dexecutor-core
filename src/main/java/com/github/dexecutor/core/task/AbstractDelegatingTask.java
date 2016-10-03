@@ -17,7 +17,6 @@
 
 package com.github.dexecutor.core.task;
 
-import com.github.dexecutor.core.ExecutionConfig;
 /**
  * Class to delegate responsibilities to underlying @Task
  * 
@@ -40,37 +39,12 @@ abstract class AbstractDelegatingTask <T extends Comparable<T>, R> extends Task<
 		return this.task;
 	}
 	
-	
 	public void setId(final T id) {
 		this.task.setId(id);
 	}
 
 	public T getId() {;
 		return this.task.getId();
-	}
-
-	public void setErrored() {
-		this.task.setErrored();
-	}
-
-	public void setSkipped() {
-		this.task.setSkipped();
-	}
-	
-	public void setSuccess() {
-		this.task.setSuccess();
-	}
-
-	public ExecutionStatus getStatus() {
-		return this.task.getStatus();
-	}
-
-	public ExecutionConfig getExecutionConfig() {
-		return this.task.getExecutionConfig();
-	}
-
-	public void setExecutionConfig(final ExecutionConfig executionConfig) {
-		this.task.setExecutionConfig(executionConfig);
 	}
 
 	public  boolean shouldConsiderExecutionError() {
@@ -80,7 +54,7 @@ abstract class AbstractDelegatingTask <T extends Comparable<T>, R> extends Task<
 	void setConsiderExecutionError(boolean considerExecutionError) {
 		this.task.setConsiderExecutionError(considerExecutionError);
 	}
-	
+
 	public boolean shouldExecute(final ExecutionResults<T, R> parentResults) {
 		return this.task.shouldExecute(parentResults);
 	}

@@ -156,7 +156,6 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 					this.executionEngine.submit(task);
 				} else {
 					node.setSkipped();
-					task.setSkipped();
 					logger.debug("Execution Skipped for node # {} ", node.getValue());
 					this.processedNodes.add(node);
 					doExecute(node.getOutGoingNodes(), config);
@@ -246,7 +245,6 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	private Task<T, R> newTask(final ExecutionConfig config, final Node<T, R> node) {
 		Task<T, R> task = this.taskProvider.provideTask(node.getValue());
 		task.setId(node.getValue());
-		task.setExecutionConfig(config);
 		return TaskFactory.newWorker(task);
 	}
 

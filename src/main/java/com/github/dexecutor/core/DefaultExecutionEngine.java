@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.task.ExecutionResult;
+import com.github.dexecutor.core.task.ExecutionStatus;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskExecutionException;
 /**
@@ -72,14 +73,15 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 			@Override
 			public ExecutionResult<T, R> call() throws Exception {
 				R r = null;
+				ExecutionStatus status = ExecutionStatus.SUCCESS;
 				try {
 					r = task.execute();
 				} catch (Exception e) {
-					task.setErrored();
 					errored.set(true);
+					status = ExecutionStatus.ERRORED;
 					logger.error("Error Execution Task # {}", task.getId(), e);
 				}
-				return new ExecutionResult<T, R>(task.getId(), r, task.getStatus());
+				return new ExecutionResult<T, R>(task.getId(), r, status);
 			}
 		};
 	}

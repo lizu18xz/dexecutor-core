@@ -39,19 +39,7 @@ public class AbstractDelegatingTaskTest {
 		delegatingTask.setId(1);
 		assertThat(this.task.getId(), equalTo(delegatingTask.getId()));
 	}
-	
-	@Test
-	public void testErrored() {
-		delegatingTask.setErrored();
-		assertThat(this.task.getStatus(), equalTo(ExecutionStatus.ERRORED));
-	}
-	
-	@Test
-	public void testSkipped() {
-		delegatingTask.setSkipped();
-		assertThat(this.task.getStatus(), equalTo(ExecutionStatus.SKIPPED));
-	}
-	
+
 	@Test
 	public void testExecutionBehavior() {
 		//delegatingTask.setExecutionBehavior(ExecutionBehavior.NON_TERMINATING);
@@ -64,17 +52,6 @@ public class AbstractDelegatingTaskTest {
 		assertThat(this.task.shouldConsiderExecutionError(), equalTo(true));
 	}
 	
-	@Test
-	public void testSuccess() {
-		delegatingTask.setSuccess();
-		assertThat(this.task.getStatus(), equalTo(ExecutionStatus.SUCCESS));
-	}
-	
-	@Test
-	public void testGetStatus() {
-		delegatingTask.setErrored();
-		assertThat(this.delegatingTask.getStatus(), equalTo(this.delegatingTask.getTargetTask().getStatus()));
-	}
 	
 	@Test
 	public void testShouldConsiderExecutionError() {
@@ -85,17 +62,6 @@ public class AbstractDelegatingTaskTest {
 	public void testShouldExecute() {
 		assertThat(this.delegatingTask.shouldExecute(null), equalTo(this.delegatingTask.getTargetTask().shouldExecute(null)));
 	}
-	
-	@Test
-	public void testGetExecutionBehavior() {
-		assertThat(this.delegatingTask.getExecutionBehavior(), equalTo(this.delegatingTask.getTargetTask().getExecutionBehavior()));
-	}
-	
-	@Test
-	public void testGetExecutionConfig() {
-		assertThat(this.delegatingTask.getExecutionConfig(), equalTo(this.delegatingTask.getTargetTask().getExecutionConfig()));
-	}
-
 
 	private static class DummyDelegatingTask extends AbstractDelegatingTask<Integer, Integer> {
 

@@ -26,13 +26,6 @@ package com.github.dexecutor.core.task;
 public class TaskFactory {
 
 	public static <T extends Comparable<T>, R> Task<T, R> newWorker(final Task<T, R> task) {
-		Task<T, R> result = new LoggerTask<T, R>(task);
-
-		/*if (task.getExecutionConfig().isNonTerminating()) {
-			result =  new NonTerminatingTask<T, R>(new LoggerTask<T, R>(task));
-		} else if (task.getExecutionConfig().isImmediatelyRetrying()) { 
-			result = new RetryingTask<T,R>(new LoggerTask<T, R>(task));
-		}*/
-		return result;
+		return new LoggerTask<T, R>(task);
 	}
 }

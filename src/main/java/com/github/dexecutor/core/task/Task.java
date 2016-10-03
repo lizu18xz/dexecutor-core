@@ -19,9 +19,6 @@ package com.github.dexecutor.core.task;
 
 import java.io.Serializable;
 
-import com.github.dexecutor.core.ExecutionBehavior;
-import com.github.dexecutor.core.ExecutionConfig;
-
 /**
  * Represent a unit of execution in Dexecutor framework
  * 
@@ -34,8 +31,6 @@ public abstract class Task<T extends Comparable<T>, R> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private T id;
-	private ExecutionStatus status = ExecutionStatus.SUCCESS;
-	private ExecutionConfig executionConfig = new ExecutionConfig().terminating();
 
 	public void setId(final T id) {
 		this.id = id;
@@ -43,38 +38,6 @@ public abstract class Task<T extends Comparable<T>, R> implements Serializable {
 
 	public T getId() {
 		return this.id;
-	}
-
-	public void setErrored() {
-		this.status = ExecutionStatus.ERRORED;
-	}
-
-	public void setSkipped() {
-		this.status = ExecutionStatus.SKIPPED;
-	}
-	
-	public void setSuccess() {
-		this.status = ExecutionStatus.SUCCESS;
-	}
-
-	public ExecutionStatus getStatus() {
-		return status;
-	}
-
-	public ExecutionConfig getExecutionConfig() {
-		return executionConfig;
-	}
-
-	public void setExecutionConfig(ExecutionConfig executionConfig) {
-		this.executionConfig = executionConfig;
-	}
-	
-	public ExecutionBehavior getExecutionBehavior() {
-		return this.getExecutionConfig().getExecutionBehavior();
-	}
-
-	public int getRetryCount() {
-		return this.getExecutionConfig().getRetryCount();
 	}
 	
 	/**

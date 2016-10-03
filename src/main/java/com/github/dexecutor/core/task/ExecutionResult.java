@@ -20,14 +20,16 @@ package com.github.dexecutor.core.task;
 import java.io.Serializable;
 
 /**
- * Holds execution result of a node identified by id 
+ * Holds execution result of a node identified by id
  * 
  * @author Nadeem Mohammad
  *
- * @param <T> Type of Node/Task ID
- * @param <R> Type of Node/Task result
+ * @param <T>
+ *            Type of Node/Task ID
+ * @param <R>
+ *            Type of Node/Task result
  */
-public class ExecutionResult <T, R> implements Serializable {
+public class ExecutionResult<T, R> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private T id;
@@ -47,7 +49,7 @@ public class ExecutionResult <T, R> implements Serializable {
 		this.result = result;
 		this.status = status;
 	}
-	
+
 	/**
 	 * 
 	 * @return the id of the executing node
@@ -55,6 +57,7 @@ public class ExecutionResult <T, R> implements Serializable {
 	public T getId() {
 		return id;
 	}
+
 	/**
 	 * 
 	 * @return result of execution
@@ -62,35 +65,50 @@ public class ExecutionResult <T, R> implements Serializable {
 	public R getResult() {
 		return result;
 	}
-	
+
+	/**
+	 * @return the status of the execution
+	 */
+	public ExecutionStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * Marks the execution result as errored
+	 */
 	public void errored() {
 		this.status = ExecutionStatus.ERRORED;
 	}
-	
+
+	/**
+	 * Marks the execution result as skipped
+	 */
 	public void skipped() {
 		this.status = ExecutionStatus.SKIPPED;
 	}
 
 	/**
 	 * 
-	 * @return {@code true} if the result is success
-	 * {@code false} if the result is not success
+	 * @return {@code true} if the result is success {@code false} if the result
+	 *         is not success
 	 */
 	public boolean isSuccess() {
 		return ExecutionStatus.SUCCESS.equals(this.status);
 	}
+
 	/**
 	 * 
-	 * @return {@code true} if the result is error
-	 * {@code false} if the result is not error
+	 * @return {@code true} if the result is error {@code false} if the result
+	 *         is not error
 	 */
 	public boolean isErrored() {
 		return ExecutionStatus.ERRORED.equals(this.status);
 	}
+
 	/**
 	 * 
-	 * @return {@code true} if the result is skipped
-	 * {@code false} if the result is not skipped
+	 * @return {@code true} if the result is skipped {@code false} if the result
+	 *         is not skipped
 	 */
 	public boolean isSkipped() {
 		return ExecutionStatus.SKIPPED.equals(this.status);
@@ -99,5 +117,5 @@ public class ExecutionResult <T, R> implements Serializable {
 	@Override
 	public String toString() {
 		return "ExecutionResult [id=" + id + ", result=" + result + ", status=" + status + "]";
-	}	
+	}
 }

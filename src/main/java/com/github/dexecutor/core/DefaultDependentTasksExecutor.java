@@ -22,6 +22,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -52,7 +56,7 @@ import com.github.dexecutor.core.task.TaskProvider;
 public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> implements DependentTasksExecutor<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultDependentTasksExecutor.class);
-	
+
 	private TaskProvider<T, R> taskProvider;
 	private ExecutionEngine<T, R> executionEngine;
 	private Validator<T, R> validator;
@@ -61,6 +65,8 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private Collection<Node<T, R>> processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
 	private AtomicInteger nodesCount = new AtomicInteger(0);
+	private ExecutorService immediatelyRetryExecutor;
+	private ScheduledExecutorService scheduledRetryExecutor;
 
 	public DefaultDependentTasksExecutor(final ExecutionEngine<T, R> executionEngine, final TaskProvider<T, R> taskProvider) {
 		this(new DependentTasksExecutorConfig<>(executionEngine, taskProvider));
@@ -72,6 +78,10 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	 */
 	public DefaultDependentTasksExecutor(final DependentTasksExecutorConfig<T, R> config) {
 		config.validate();
+
+		this.immediatelyRetryExecutor = Executors.newFixedThreadPool(config.getImmediateRetryPoolThreadsCount());
+		this.scheduledRetryExecutor = Executors.newScheduledThreadPool(config.getScheduledRetryPoolThreadsCount());
+
 		this.executionEngine = config.getExecutorEngine();
 		this.validator = config.getValidator();
 		this.traversar = config.getTraversar();
@@ -138,10 +148,10 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private void doExecute(final Collection<Node<T, R>> nodes, final ExecutionConfig config) {
 		for (Node<T, R> node : nodes) {
-			if (shouldProcess(node) ) {
-				nodesCount.incrementAndGet();
+			if (shouldProcess(node)) {				
 				Task<T, R> task = newTask(config, node);
 				if (shouldExecute(node, task)) {
+					nodesCount.incrementAndGet();
 					logger.debug("Going to schedule {} node", node.getValue());
 					this.executionEngine.submit(task);
 				} else {
@@ -157,22 +167,12 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		}
 	}
 
-	private Task<T, R> newTask(final ExecutionConfig config, Node<T, R> node) {
-		Task<T, R> task = this.taskProvider.provideTask(node.getValue());
-		task.setId(node.getValue());
-		task.setExecutionConfig(config);
-		return TaskFactory.newWorker(task);
-	}
-
-	private boolean shouldExecute(final Node<T, R> node, final Task<T, R> task) {
-		if (task.shouldExecute(parentResults(node))) {
-			return true;
-		}
-		return false;
-	}
-
 	private boolean shouldProcess(final Node<T, R> node) {
 		return !isAlreadyProcessed(node) && allIncomingNodesProcessed(node);
+	}
+
+	private boolean isAlreadyProcessed(final Node<T, R> node) {
+		return this.processedNodes.contains(node);
 	}
 
 	private boolean allIncomingNodesProcessed(final Node<T, R> node) {
@@ -182,13 +182,16 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		return false;
 	}
 
-	private boolean isAlreadyProcessed(final Node<T, R> node) {
-		return this.processedNodes.contains(node);
-	}
-
 	private boolean areAlreadyProcessed(final Set<Node<T, R>> nodes) {
         return this.processedNodes.containsAll(nodes);
     }
+
+	private boolean shouldExecute(final Node<T, R> node, final Task<T, R> task) {
+		if (task.shouldExecute(parentResults(node))) {
+			return true;
+		}
+		return false;
+	}
 
 	private ExecutionResults<T, R> parentResults(final Node<T, R> node) {
 		ExecutionResults<T, R> parentResult = new ExecutionResults<T, R>();
@@ -209,24 +212,71 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	}
 
 	private void doWaitForExecution(final ExecutionConfig config) {
-		int cuurentCount = 0;
-		while (cuurentCount != nodesCount.get()) {
-			try {
-				ExecutionResult<T, R> executionResult = this.executionEngine.processResult();
-				logger.debug("Processing of node {} done", executionResult.getId());
-				cuurentCount++;
-				Node<T, R> processedNode = this.graph.get(executionResult.getId());
-				updateNode(executionResult, processedNode);
-				this.processedNodes.add(processedNode);
-				doExecute(processedNode.getOutGoingNodes(), config);
-			} catch (Exception e) {
-				cuurentCount++;
-				logger.error("Task interrupted", e);
+		while (nodesCount.get() > 0) {
+			ExecutionResult<T, R> executionResult = this.executionEngine.processResult();
+			nodesCount.decrementAndGet();
+			logger.debug("Processing of node {} done, with status {}", executionResult.getId(), executionResult.getStatus());
+
+			final Node<T, R> processedNode = this.graph.get(executionResult.getId());
+			updateNode(executionResult, processedNode);
+			this.processedNodes.add(processedNode);
+
+			if (config.isNonTerminating() ||  (!this.executionEngine.isAnyTaskInError())) {
+				doExecute(processedNode.getOutGoingNodes(), config);				
+			} else if (executionResult.isErrored() && config.isImmediatelyRetrying() && config.shouldRetry(getExecutionCount(processedNode))) {
+				logger.debug("Submitting for Immediate retry, node {}", executionResult.getId());
+				submitForImmediateRetry(config, processedNode);
+			} else if (executionResult.isErrored() && config.isScheduledRetrying() && config.shouldRetry(getExecutionCount(processedNode))) {
+				logger.debug("Submitting for Scheduled retry, node {}", executionResult.getId());
+				submitForScheduledRetry(config, processedNode);
 			}
 		}
 	}
 
+	private void submitForImmediateRetry(final ExecutionConfig config, final Node<T, R> node) {
+		Task<T, R> task = newTask(config, node);
+		immediatelyRetryExecutor.submit(retryingTask(config, task));
+	}
+
+	private void submitForScheduledRetry(ExecutionConfig config, Node<T, R> node) {
+		Task<T, R> task = newTask(config, node);
+		scheduledRetryExecutor.schedule(retryingTask(config, task), config.getRetryDelayInMillis(), TimeUnit.MILLISECONDS);		
+	}
+
+	private Task<T, R> newTask(final ExecutionConfig config, final Node<T, R> node) {
+		Task<T, R> task = this.taskProvider.provideTask(node.getValue());
+		task.setId(node.getValue());
+		task.setExecutionConfig(config);
+		return TaskFactory.newWorker(task);
+	}
+
+	private Runnable retryingTask(final ExecutionConfig config, final Task<T, R> task) {
+		return new Runnable() {
+
+			@Override
+			public void run() {
+				nodesCount.incrementAndGet();
+				executionEngine.submit(task);
+			}
+		};
+	}
+
+	private void updateExecutionCount(final Node<T, R> node) {
+		Integer count = getExecutionCount(node);
+		if (count == null) {
+			count = 0;
+		} else {
+			count++;
+		}
+		node.setData(count);
+	}
+
+	private Integer getExecutionCount(final Node<T, R> node) {
+		return (Integer) node.getData();
+	}
+
 	private void updateNode(final ExecutionResult<T, R> executionResult, final Node<T, R> processedNode) {
+		updateExecutionCount(processedNode);
 		processedNode.setResult(executionResult.getResult());
 		if(executionResult.isErrored()) {
 			processedNode.setErrored();

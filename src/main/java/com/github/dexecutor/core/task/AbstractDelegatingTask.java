@@ -69,7 +69,7 @@ abstract class AbstractDelegatingTask <T extends Comparable<T>, R> extends Task<
 		return this.task.getExecutionConfig();
 	}
 
-	public void setExecutionConfig(ExecutionConfig executionConfig) {
+	public void setExecutionConfig(final ExecutionConfig executionConfig) {
 		this.task.setExecutionConfig(executionConfig);
 	}
 

@@ -49,4 +49,6 @@ public interface ExecutionEngine<T extends Comparable<T>, R> {
 	 * {@code false} it it is non distributed
 	 */
     boolean isDistributed();
+    
+    boolean isAnyTaskInError();
 }

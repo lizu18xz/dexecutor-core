@@ -43,6 +43,10 @@ public final class Node<T, R> {
 	 */
 	private NodeStatus status;
 	/**
+	 * Arbitray data of this node
+	 */
+	private Object data;
+	/**
 	 * incoming dependencies for this node
 	 */
     private Set<Node<T, R>> inComingEdges = new LinkedHashSet<Node<T, R>>();
@@ -123,6 +127,14 @@ public final class Node<T, R> {
 
 	public void setSkipped() {
 		this.status = NodeStatus.SKIPPED;
+	}
+	
+	public Object getData() {
+		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
 	}
 
 	@Override

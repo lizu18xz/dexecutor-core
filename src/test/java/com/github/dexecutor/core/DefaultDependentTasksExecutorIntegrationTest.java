@@ -63,7 +63,7 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 
 			printGraph(executor);
 
-			executor.execute(new ExecutionConfig().retrying(1));
+			executor.execute(new ExecutionConfig().immediateRetrying(1));
 			System.out.println("*** Done ***");
 		} finally {
 			try {

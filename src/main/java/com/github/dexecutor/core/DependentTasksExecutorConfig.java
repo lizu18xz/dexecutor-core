@@ -37,6 +37,17 @@ import com.github.dexecutor.core.task.TaskProvider;
  * @param <R> Type of Node/Task result
  */
 public class DependentTasksExecutorConfig<T extends Comparable<T>, R> {
+	
+	/**
+	 * Number of threads that should handle the immediate retry.
+	 */
+	private int immediateRetryPoolThreadsCount = 1;
+	
+	/**
+	 * Number of threads that should handle the immediate retry.
+	 */
+	private int scheduledRetryPoolThreadsCount = 1;
+
 	/**
 	 * executor is the main platform on which tasks are executed
 	 */
@@ -111,4 +122,21 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>, R> {
 	public void setTraversar(final Traversar<T, R> traversar) {
 		this.traversar = traversar;
 	}
+
+	public int getImmediateRetryPoolThreadsCount() {
+		return immediateRetryPoolThreadsCount;
+	}
+
+	public void setImmediateRetryPoolThreadsCount(int immediateRetryPoolThreadsCount) {
+		this.immediateRetryPoolThreadsCount = immediateRetryPoolThreadsCount;
+	}
+
+	public int getScheduledRetryPoolThreadsCount() {
+		return scheduledRetryPoolThreadsCount;
+	}
+
+	public void setScheduledRetryPoolThreadsCount(int scheduledRetryPoolThreadsCount) {
+		this.scheduledRetryPoolThreadsCount = scheduledRetryPoolThreadsCount;
+	}
+	
 }

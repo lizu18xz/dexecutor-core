@@ -222,14 +222,24 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 			if (config.isNonTerminating() ||  (!this.executionEngine.isAnyTaskInError())) {
 				doExecute(processedNode.getOutGoingNodes(), config);				
-			} else if (executionResult.isErrored() && config.isImmediatelyRetrying() && config.shouldRetry(getExecutionCount(processedNode))) {
+			} else if (shouldDoImmediateRetry(config, executionResult, processedNode)) {
 				logger.debug("Submitting for Immediate retry, node {}", executionResult.getId());
 				submitForImmediateRetry(config, processedNode);
-			} else if (executionResult.isErrored() && config.isScheduledRetrying() && config.shouldRetry(getExecutionCount(processedNode))) {
+			} else if (shouldScheduleRetry(config, executionResult, processedNode)) {
 				logger.debug("Submitting for Scheduled retry, node {}", executionResult.getId());
 				submitForScheduledRetry(config, processedNode);
 			}
 		}
+	}
+
+	private boolean shouldScheduleRetry(final ExecutionConfig config, final ExecutionResult<T, R> executionResult,
+			final Node<T, R> processedNode) {
+		return executionResult.isErrored() && config.isScheduledRetrying() && config.shouldRetry(getExecutionCount(processedNode));
+	}
+
+	private boolean shouldDoImmediateRetry(final ExecutionConfig config, final ExecutionResult<T, R> executionResult,
+			final Node<T, R> processedNode) {
+		return executionResult.isErrored() && config.isImmediatelyRetrying() && config.shouldRetry(getExecutionCount(processedNode));
 	}
 
 	private void submitForImmediateRetry(final ExecutionConfig config, final Node<T, R> node) {

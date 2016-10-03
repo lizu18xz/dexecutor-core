@@ -94,22 +94,6 @@ public class DefaultDependentTasksExecutorTest {
 	}
 
 	@Test
-	public void testTerminatingTask() {
-		new MockedCompletionService();
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(true);
-		addDependencies(executor);
-		executor.execute(ExecutionConfig.TERMINATING);
-	}
-
-	@Test
-	public void testNonTerminatingTask() {
-		new MockedCompletionService();
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
-		executor.addDependency(1, 2);
-		executor.execute(ExecutionConfig.NON_TERMINATING);
-	}
-	
-	@Test
 	public void testDependentTaskExecutionWithSkipLogic() {
 
 		new MockedCompletionService();
@@ -210,6 +194,29 @@ public class DefaultDependentTasksExecutorTest {
 		//assertThat(processedNodesOrder, equalTo(executionOrderExpectedResultWhithEx()));
 	}
 
+	@Test
+	public void testTerminatingTask() {
+		new MockedCompletionService();
+		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(true);
+		addDependencies(executor);
+		executor.execute(ExecutionConfig.TERMINATING);
+	}
+	
+	@Test
+	public void testScheduledRetryTerminatingTask() {
+		new MockedCompletionService();
+		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(true);
+		addDependencies(executor);
+		executor.execute(new ExecutionConfig().scheduledRetrying(1, 1));
+	}
+
+	@Test
+	public void testNonTerminatingTask() {
+		new MockedCompletionService();
+		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
+		executor.addDependency(1, 2);
+		executor.execute(ExecutionConfig.NON_TERMINATING);
+	}
 
 	private void addDependencies(DefaultDependentTasksExecutor<Integer, Integer> executor) {
 		executor.addDependency(1, 2);

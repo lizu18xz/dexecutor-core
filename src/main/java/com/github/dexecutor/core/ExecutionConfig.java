@@ -60,7 +60,7 @@ public class ExecutionConfig {
 		return ExecutionBehavior.SCHEDULED_RETRY_TERMINATING.equals(this.executionBehavior);
 	}
 
-	public boolean shouldRetry(Integer executionCount) {
-		return this.retryCount > executionCount;
+	public boolean shouldRetry(int currentCount) {
+		return this.retryCount != 0 && this.retryCount > currentCount;
 	}
 }

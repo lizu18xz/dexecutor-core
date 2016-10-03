@@ -234,12 +234,12 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private void submitForImmediateRetry(final ExecutionConfig config, final Node<T, R> node) {
 		Task<T, R> task = newTask(config, node);
-		immediatelyRetryExecutor.submit(retryingTask(config, task));
+		this.immediatelyRetryExecutor.submit(retryingTask(config, task));
 	}
 
 	private void submitForScheduledRetry(ExecutionConfig config, Node<T, R> node) {
 		Task<T, R> task = newTask(config, node);
-		scheduledRetryExecutor.schedule(retryingTask(config, task), config.getRetryDelayInMillis(), TimeUnit.MILLISECONDS);		
+		this.scheduledRetryExecutor.schedule(retryingTask(config, task), config.getRetryDelayInMillis(), TimeUnit.MILLISECONDS);		
 	}
 
 	private Task<T, R> newTask(final ExecutionConfig config, final Node<T, R> node) {

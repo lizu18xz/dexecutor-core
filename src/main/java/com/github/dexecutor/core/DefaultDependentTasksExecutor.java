@@ -18,9 +18,9 @@
 package com.github.dexecutor.core;
 
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -253,20 +253,20 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 			this.processedNodes.add(processedNode);
 
 			if (executionResult.isSuccess() && !this.executionEngine.isAnyTaskInError() && !this.continueAfterRecovery.isEmpty()) {
-				Collection<Node<T, R>> recover = new ArrayList<>(this.continueAfterRecovery);	
+				Collection<Node<T, R>> recover = new HashSet<>(this.continueAfterRecovery);	
 				this.continueAfterRecovery.clear();
 				doExecute(recover, config);
 			}
 
 			if (config.isNonTerminating() ||  (!this.executionEngine.isAnyTaskInError())) {
 				doExecute(processedNode.getOutGoingNodes(), config);				
+			} else if (this.executionEngine.isAnyTaskInError() && executionResult.isSuccess()) { 
+				this.continueAfterRecovery.addAll(processedNode.getOutGoingNodes());
 			} else if (shouldDoImmediateRetry(config, executionResult, processedNode)) {
 				logger.debug("Submitting for Immediate retry, node {}", executionResult.getId());
-				this.continueAfterRecovery.addAll(processedNode.getOutGoingNodes());
 				submitForImmediateRetry(config, processedNode);
 			} else if (shouldScheduleRetry(config, executionResult, processedNode)) {
 				logger.debug("Submitting for Scheduled retry, node {}", executionResult.getId());
-				this.continueAfterRecovery.addAll(processedNode.getOutGoingNodes());
 				submitForScheduledRetry(config, processedNode);
 			}
 		}

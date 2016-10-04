@@ -96,43 +96,76 @@ public final class Node<T, R> {
 	public T getValue() {
 		return this.value;
 	}
-
+	 /**
+     * 
+     * @return the node's execution result
+     */
 	public R getResult() {
 		return result;
 	}
-
+	/**
+     * 
+     * sets the node's execution result to a new value
+     */
 	public void setResult(final R result) {
 		this.result = result;
 	}
-
+	/**
+     * 
+     * @return {@true} if the node's execution result us SUCCESS
+     * 			{@false} otherwise
+     */
 	public boolean isSuccess() {
 		return NodeStatus.SUCCESS.equals(this.status);
 	}
-
+	/**
+     * 
+     * @return {@true} if the node's execution result us ERRORED
+     * 			{@false} otherwise
+     */
 	public boolean isErrored() {
 		return NodeStatus.ERRORED.equals(this.status);
 	}
-
+	/**
+     * 
+     * @return {@true} if the node's execution result us SKIPPED
+     * 			{@false} otherwise
+     */
 	public boolean isSkipped() {
 		return NodeStatus.SKIPPED.equals(this.status);
 	}
-
+	
+	/**
+	 * Sets the node's execution result to SUCCESS
+	 */
 	public void setSuccess() {
 		this.status = NodeStatus.SUCCESS;
 	}
-	
+	/**
+	 * Sets the node's execution result to ERRORED
+	 */
 	public void setErrored() {
 		this.status = NodeStatus.ERRORED;
 	}
-
+	
+	/**
+	 * Sets the node's execution result to SKIPPED
+	 */
 	public void setSkipped() {
 		this.status = NodeStatus.SKIPPED;
 	}
 	
+	 /**
+     * 
+     * @return the node's data
+     */
 	public Object getData() {
 		return data;
 	}
-
+	
+	/**
+	 * Sets the node's data to a new value
+	 */
 	public void setData(Object data) {
 		this.data = data;
 	}
@@ -165,6 +198,11 @@ public final class Node<T, R> {
     }
     /**
      * Represents node's execution status
+     * <ul>
+     * 		<li> <code> ERRORED:</code> Node's execution was in error</li>
+     * 		<li> <code> SKIPPED:</code>Node's  execution was skipped</li>
+     * 		<li> <code> SUCCESS:</code>Node's  execution was success</li>
+     * </ul>
      * 
      * @author Nadeem Mohammad
      *

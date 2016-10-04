@@ -122,19 +122,31 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>, R> {
 	public void setTraversar(final Traversar<T, R> traversar) {
 		this.traversar = traversar;
 	}
-
+	/**
+	 * 
+	 * @return the immediate retry thread pool count
+	 */
 	public int getImmediateRetryPoolThreadsCount() {
 		return immediateRetryPoolThreadsCount;
 	}
-
+	/**
+	 * sets the immediate retry thread pool size to that of specified
+	 * @param immediateRetryPoolThreadsCount
+	 */
 	public void setImmediateRetryPoolThreadsCount(int immediateRetryPoolThreadsCount) {
 		this.immediateRetryPoolThreadsCount = immediateRetryPoolThreadsCount;
 	}
-
+	/**
+	 * 
+	 * @return the scheduled retry thread pool size
+	 */
 	public int getScheduledRetryPoolThreadsCount() {
 		return scheduledRetryPoolThreadsCount;
 	}
-
+	/**
+	 * sets the scheduled thread pool size to that of specified
+	 * @param scheduledRetryPoolThreadsCount
+	 */
 	public void setScheduledRetryPoolThreadsCount(int scheduledRetryPoolThreadsCount) {
 		this.scheduledRetryPoolThreadsCount = scheduledRetryPoolThreadsCount;
 	}

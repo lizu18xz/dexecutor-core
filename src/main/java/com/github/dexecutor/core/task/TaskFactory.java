@@ -24,7 +24,12 @@ package com.github.dexecutor.core.task;
  *
  */
 public class TaskFactory {
-
+	
+	/**
+	 * 
+	 * @param task
+	 * @return the new worker task wrapped with {@LoggerTask}
+	 */
 	public static <T extends Comparable<T>, R> Task<T, R> newWorker(final Task<T, R> task) {
 		return new LoggerTask<T, R>(task);
 	}

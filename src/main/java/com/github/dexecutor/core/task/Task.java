@@ -30,12 +30,21 @@ import java.io.Serializable;
 public abstract class Task<T extends Comparable<T>, R> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	/**
+	 * id of the task, this would be same as that of {@Node} id
+	 */
 	private T id;
-
+	/**
+	 * Sets the new id
+	 * @param id
+	 */
 	public void setId(final T id) {
 		this.id = id;
 	}
-
+	/**
+	 * 
+	 * @return id of the task
+	 */
 	public T getId() {
 		return this.id;
 	}
@@ -57,6 +66,7 @@ public abstract class Task<T extends Comparable<T>, R> implements Serializable {
 		return this.considerExecutionError;
 	}
 	/**
+	 * sets whether execution errors should be considered or not?
 	 * 
 	 * @param considerExecutionError
 	 */

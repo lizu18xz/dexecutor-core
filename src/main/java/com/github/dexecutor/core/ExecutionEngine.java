@@ -35,7 +35,7 @@ public interface ExecutionEngine<T extends Comparable<T>, R> {
 	 * @param @Task to be submitted for execution 
 	 */
     void submit(final Task<T, R> task);
-    
+
     /**
      * This method is expected to block, if there are no execution result, otherwise return the result immediately.
      * 
@@ -49,6 +49,10 @@ public interface ExecutionEngine<T extends Comparable<T>, R> {
 	 * {@code false} it it is non distributed
 	 */
     boolean isDistributed();
-    
+    /**
+     * 
+     * @return {@code true} if there are any task errors identified till that instance of time
+     * 		 {@code false} otherwise.
+     */
     boolean isAnyTaskInError();
 }

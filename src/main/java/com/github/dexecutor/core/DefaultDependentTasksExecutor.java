@@ -25,7 +25,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -67,6 +66,8 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	private AtomicInteger nodesCount = new AtomicInteger(0);
 	private ExecutorService immediatelyRetryExecutor;
 	private ScheduledExecutorService scheduledRetryExecutor;
+	
+	private Phase currentPhase = Phase.BUILDING;
 
 	public DefaultDependentTasksExecutor(final ExecutionEngine<T, R> executionEngine, final TaskProvider<T, R> taskProvider) {
 		this(new DependentTasksExecutorConfig<>(executionEngine, taskProvider));
@@ -94,14 +95,17 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	}
 
 	public void addIndependent(final T nodeValue) {
+		checkValidPhase();
 		this.graph.addIndependent(nodeValue);
 	}
 
 	public void addDependency(final T evalFirstNode, final T evalLaterNode) {
+		checkValidPhase();
 		this.graph.addDependency(evalFirstNode, evalLaterNode);
 	}
 
 	public void addAsDependentOnAllLeafNodes(final T nodeValue) {
+		checkValidPhase();
 		if (this.graph.size() == 0) {
 			addIndependent(nodeValue);
 		} else {
@@ -113,6 +117,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	@Override
 	public void addAsDependencyToAllInitialNodes(final T nodeValue) {
+		checkValidPhase();
 		if (this.graph.size() == 0) {
 			addIndependent(nodeValue);
 		} else {
@@ -123,7 +128,9 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	}
 
 	public void execute(final ExecutionConfig config) {
-		validate();
+		validate(config);
+
+		this.currentPhase = Phase.RUNNING;
 
 		Set<Node<T, R>> initialNodes = this.graph.getInitialNodes();
 
@@ -132,13 +139,34 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		doProcessNodes(config, initialNodes);
 
 		long end = new Date().getTime();
+		
+		this.currentPhase = Phase.TERMINATED;
 
 		logger.debug("Total Time taken to process {} jobs is {} ms.", graph.size(), end - start);
 		logger.debug("Processed Nodes Ordering {}", this.processedNodes);
 	}
 
-	private void validate() {
+	private void validate(ExecutionConfig config) {
+		checkValidPhase();
+		config.validate();
 		this.validator.validate(this.graph);
+	}
+
+	private void checkValidPhase() {
+		throwExceptionIfTerminated();
+		throwExceptionIfRunning();
+	}
+
+	private void throwExceptionIfRunning() {
+		if (Phase.RUNNING.equals(this.currentPhase)) {
+			throw new IllegalArgumentException("Dexecutor is already running!");
+		}
+	}
+
+	private void throwExceptionIfTerminated() {
+		if (Phase.TERMINATED.equals(this.currentPhase)) {
+			throw new IllegalArgumentException("Dexecutor has been terminated!");
+		}
 	}
 
 	private void doProcessNodes(final ExecutionConfig config, final Set<Node<T, R>> nodes) {
@@ -249,7 +277,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private void submitForScheduledRetry(ExecutionConfig config, Node<T, R> node) {
 		Task<T, R> task = newTask(config, node);
-		this.scheduledRetryExecutor.schedule(retryingTask(config, task), config.getRetryDelayInMillis(), TimeUnit.MILLISECONDS);		
+		this.scheduledRetryExecutor.schedule(retryingTask(config, task), config.getRetryDelay().getDuration(), config.getRetryDelay().getTimeUnit());		
 	}
 
 	private Task<T, R> newTask(final ExecutionConfig config, final Node<T, R> node) {
@@ -293,5 +321,9 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		} else {
 			processedNode.setSuccess();
 		}
+	}
+
+	private static enum Phase {
+		BUILDING, RUNNING, TERMINATED;
 	}
 }

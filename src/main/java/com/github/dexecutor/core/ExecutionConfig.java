@@ -1,10 +1,12 @@
 package com.github.dexecutor.core;
 
+import static com.github.dexecutor.core.support.Preconditions.*;
+
 public class ExecutionConfig {
 
 	private ExecutionBehavior executionBehavior;
 	private int retryCount = 0;
-	private long retryDelayInMillis = 0;
+	private Duration retryDelay = Duration.MINIMAL_DURATION; 
 
 	public static final ExecutionConfig TERMINATING = new ExecutionConfig().terminating();
 	public static final ExecutionConfig NON_TERMINATING = new ExecutionConfig().nonTerminating();
@@ -41,10 +43,10 @@ public class ExecutionConfig {
 	 * 
 	 * @return {@ ExecutionConfig} representing scheduled retry terminating execution behaivor
 	 */
-	public ExecutionConfig scheduledRetrying(int count, long retryDelayInMillis) {
+	public ExecutionConfig scheduledRetrying(int count, Duration delay) {
 		this.executionBehavior = ExecutionBehavior.SCHEDULED_RETRY_TERMINATING;
 		this.retryCount = count;
-		this.retryDelayInMillis = retryDelayInMillis;
+		this.retryDelay = delay;
 		return this;
 	}
 	/**
@@ -63,11 +65,12 @@ public class ExecutionConfig {
 	}
 	/**
 	 * 
-	 * @return retry delay in millis
+	 * @return the retry delay
 	 */
-	public long getRetryDelayInMillis() {
-		return retryDelayInMillis;
+	public Duration getRetryDelay() {
+		return retryDelay;
 	}
+
 	/**
 	 * 
 	 * @return {@true} if the {@ExecutionBehavior} is TERMINATING
@@ -109,5 +112,12 @@ public class ExecutionConfig {
 	 */
 	public boolean shouldRetry(int currentCount) {
 		return this.retryCount != 0 && this.retryCount > currentCount;
+	}
+
+	public void validate() {
+		if (isScheduledRetrying()) {
+			checkNotNull(this.retryDelay, "retryDelay should be specified for " + ExecutionBehavior.SCHEDULED_RETRY_TERMINATING);
+			checkArgument(this.getRetryDelay().getDuration() > 0, "Retry delay duration should be greater than ZERO");
+		}
 	}
 }

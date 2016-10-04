@@ -19,7 +19,7 @@ package com.github.dexecutor.core.support;
 
 /**
  * Support class to check for preconditions
- *  
+ * 
  * @author Nadeem Mohammad
  *
  */
@@ -30,14 +30,34 @@ public final class Preconditions {
 	}
 
 	/**
-	 * Checks if the reference is null, and if that is the case throws IllegalArgumentException
+	 * Checks if the reference is null, and if that is the case throws
+	 * IllegalArgumentException
+	 * 
 	 * @param reference
 	 * @param msg
-	 * @throws IllegalArgumentException if the reference is null
+	 * @throws IllegalArgumentException
+	 *             if the reference is null
 	 */
 	public static <T> void checkNotNull(final T reference, final String msg) {
 		if (reference == null) {
 			throw new IllegalArgumentException(msg);
+		}
+	}
+
+	/**
+	 * Ensures the truth of an expression involving one or more parameters to
+	 * the calling method.
+	 *
+	 * @param expression
+	 *            a boolean expression
+	 * @param errorMessage
+	 *            the exception message to use if the check fails;
+	 * @throws IllegalArgumentException
+	 *             if {@code expression} is false
+	 */
+	public static void checkArgument(boolean expression, String errorMessage) {
+		if (!expression) {
+			throw new IllegalArgumentException(String.valueOf(errorMessage));
 		}
 	}
 }

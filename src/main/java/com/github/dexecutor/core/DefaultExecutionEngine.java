@@ -19,11 +19,12 @@ package com.github.dexecutor.core;
 
 import static com.github.dexecutor.core.support.Preconditions.checkNotNull;
 
+import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultExecutionEngine.class);
 
-	private AtomicBoolean errored = new AtomicBoolean(false);
+	private Collection<T> erroredTasks = new CopyOnWriteArraySet<T>();
 
 	private final ExecutorService executorService;
 	private final CompletionService<ExecutionResult<T, R>> completionService;
@@ -76,8 +77,9 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 				ExecutionStatus status = ExecutionStatus.SUCCESS;
 				try {
 					r = task.execute();
+					erroredTasks.remove(task.getId());
 				} catch (Exception e) {
-					errored.set(true);
+					erroredTasks.add(task.getId());
 					status = ExecutionStatus.ERRORED;
 					logger.error("Error Execution Task # {}", task.getId(), e);
 				}
@@ -88,12 +90,8 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 
 	@Override
 	public void submit(final Task<T, R> task) {
+		logger.debug("Received Task {} ", task.getId());
 		this.completionService.submit(newCallable(task));		
-	}
-
-	@Override
-	public String toString() {
-		return this.executorService.toString();
 	}
 
 	@Override
@@ -103,6 +101,11 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 
 	@Override
 	public boolean isAnyTaskInError() {
-		return this.errored.get();
+		return !this.erroredTasks.isEmpty();
+	}
+
+	@Override
+	public String toString() {
+		return this.executorService.toString();
 	}
 }

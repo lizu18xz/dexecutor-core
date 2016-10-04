@@ -18,10 +18,12 @@
 package com.github.dexecutor.core;
 
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -63,10 +65,12 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	private Dag<T, R> graph;
 
 	private Collection<Node<T, R>> processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
+	private Collection<Node<T, R>> continueAfterRecovery = new CopyOnWriteArraySet<Node<T, R>>();
+	
 	private AtomicInteger nodesCount = new AtomicInteger(0);
 	private ExecutorService immediatelyRetryExecutor;
 	private ScheduledExecutorService scheduledRetryExecutor;
-	
+
 	private Phase currentPhase = Phase.BUILDING;
 
 	public DefaultDependentTasksExecutor(final ExecutionEngine<T, R> executionEngine, final TaskProvider<T, R> taskProvider) {
@@ -137,7 +141,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		long start = new Date().getTime();
 
 		doProcessNodes(config, initialNodes);
-
+		
 		long end = new Date().getTime();
 		
 		this.currentPhase = Phase.TERMINATED;
@@ -248,13 +252,21 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 			updateNode(executionResult, processedNode);
 			this.processedNodes.add(processedNode);
 
+			if (executionResult.isSuccess() && !this.executionEngine.isAnyTaskInError() && !this.continueAfterRecovery.isEmpty()) {
+				Collection<Node<T, R>> recover = new ArrayList<>(this.continueAfterRecovery);	
+				this.continueAfterRecovery.clear();
+				doExecute(recover, config);
+			}
+
 			if (config.isNonTerminating() ||  (!this.executionEngine.isAnyTaskInError())) {
 				doExecute(processedNode.getOutGoingNodes(), config);				
 			} else if (shouldDoImmediateRetry(config, executionResult, processedNode)) {
 				logger.debug("Submitting for Immediate retry, node {}", executionResult.getId());
+				this.continueAfterRecovery.addAll(processedNode.getOutGoingNodes());
 				submitForImmediateRetry(config, processedNode);
 			} else if (shouldScheduleRetry(config, executionResult, processedNode)) {
 				logger.debug("Submitting for Scheduled retry, node {}", executionResult.getId());
+				this.continueAfterRecovery.addAll(processedNode.getOutGoingNodes());
 				submitForScheduledRetry(config, processedNode);
 			}
 		}
@@ -287,11 +299,10 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	}
 
 	private Runnable retryingTask(final ExecutionConfig config, final Task<T, R> task) {
+		nodesCount.incrementAndGet();
 		return new Runnable() {
-
 			@Override
 			public void run() {
-				nodesCount.incrementAndGet();
 				executionEngine.submit(task);
 			}
 		};

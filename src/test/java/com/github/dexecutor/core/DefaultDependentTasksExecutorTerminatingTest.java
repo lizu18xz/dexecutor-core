@@ -17,26 +17,31 @@
 
 package com.github.dexecutor.core;
 
-import java.io.StringWriter;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
+import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
+
+import mockit.Deencapsulation;
 
 /**
  * 
  * @author Nadeem Mohammad
  *
  */
-@Ignore
-public class DefaultDependentTasksExecutorIntegrationTest {
-
+public class DefaultDependentTasksExecutorTerminatingTest {
+	
 	@Test
 	public void testDependentTaskExecution() {
 		ExecutorService executorService = newExecutor();
@@ -51,7 +56,6 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 			executor.addDependency(3, 4);
 			executor.addDependency(3, 5);
 			executor.addDependency(3, 6);
-			//executor.addDependency(10, 2); // cycle
 			executor.addDependency(2, 7);
 			executor.addDependency(2, 9);
 			executor.addDependency(2, 8);
@@ -61,10 +65,12 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 			executor.addDependency(13, 14);
 			executor.addIndependent(11);
 
-			printGraph(executor);
-
-			executor.execute(new ExecutionConfig().immediateRetrying(1));
-			System.out.println("*** Done ***");
+			executor.execute(ExecutionConfig.TERMINATING);
+			
+			Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
+			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
+			assertThat(processedNodesOrder).size().isGreaterThanOrEqualTo(4);
+			
 		} finally {
 			try {
 				executorService.shutdownNow();
@@ -75,18 +81,20 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 		}
 	}
 
-	private void printGraph(DefaultDependentTasksExecutor<Integer, Integer> executor) {
-		StringWriter writer = new StringWriter();
-		executor.print(writer);
-		System.out.println(writer);
+	private Collection<Node<Integer, Integer>> executionOrderExpectedResult() {
+		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();
+		result.add(new Node<Integer, Integer>(1));
+		result.add(new Node<Integer, Integer>(2));
+		result.add(new Node<Integer, Integer>(11));
+		result.add(new Node<Integer, Integer>(12));
+		return result;
 	}
-
 	private ExecutorService newExecutor() {
 		return Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
 	}
 
 	private static class SleepyTaskProvider implements TaskProvider<Integer, Integer> {
-
+		
 		public Task<Integer, Integer> provideTask(final Integer id) {
 
 			return new Task<Integer, Integer>() {
@@ -94,11 +102,9 @@ public class DefaultDependentTasksExecutorIntegrationTest {
 				private static final long serialVersionUID = 1L;
 
 				public Integer execute() {
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+					if (id == 2) {
+						throw new IllegalArgumentException("Invalid task");
+					}					
 					return id;
 				}
 			};			

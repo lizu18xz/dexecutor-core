@@ -65,7 +65,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	private Dag<T, R> graph;
 
 	private Collection<Node<T, R>> processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
-	private Collection<Node<T, R>> continueAfterRecovery = new CopyOnWriteArraySet<Node<T, R>>();
+	private Collection<Node<T, R>> continueAfterSuccess = new CopyOnWriteArraySet<Node<T, R>>();
 	
 	private AtomicInteger nodesCount = new AtomicInteger(0);
 	private ExecutorService immediatelyRetryExecutor;
@@ -141,9 +141,9 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		long start = new Date().getTime();
 
 		doProcessNodes(config, initialNodes);
-		
+
 		long end = new Date().getTime();
-		
+
 		this.currentPhase = Phase.TERMINATED;
 
 		logger.debug("Total Time taken to process {} jobs is {} ms.", graph.size(), end - start);
@@ -252,16 +252,16 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 			updateNode(executionResult, processedNode);
 			this.processedNodes.add(processedNode);
 
-			if (executionResult.isSuccess() && !this.executionEngine.isAnyTaskInError() && !this.continueAfterRecovery.isEmpty()) {
-				Collection<Node<T, R>> recover = new HashSet<>(this.continueAfterRecovery);	
-				this.continueAfterRecovery.clear();
+			if (executionResult.isSuccess() && !this.executionEngine.isAnyTaskInError() && !this.continueAfterSuccess.isEmpty()) {
+				Collection<Node<T, R>> recover = new HashSet<>(this.continueAfterSuccess);	
+				this.continueAfterSuccess.clear();
 				doExecute(recover, config);
 			}
 
 			if (config.isNonTerminating() ||  (!this.executionEngine.isAnyTaskInError())) {
 				doExecute(processedNode.getOutGoingNodes(), config);				
 			} else if (this.executionEngine.isAnyTaskInError() && executionResult.isSuccess()) { 
-				this.continueAfterRecovery.addAll(processedNode.getOutGoingNodes());
+				this.continueAfterSuccess.addAll(processedNode.getOutGoingNodes());
 			} else if (shouldDoImmediateRetry(config, executionResult, processedNode)) {
 				logger.debug("Submitting for Immediate retry, node {}", executionResult.getId());
 				submitForImmediateRetry(config, processedNode);

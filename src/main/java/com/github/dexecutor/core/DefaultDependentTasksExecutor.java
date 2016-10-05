@@ -163,13 +163,13 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private void throwExceptionIfRunning() {
 		if (Phase.RUNNING.equals(this.currentPhase)) {
-			throw new IllegalArgumentException("Dexecutor is already running!");
+			throw new IllegalStateException("Dexecutor is already running!");
 		}
 	}
 
 	private void throwExceptionIfTerminated() {
 		if (Phase.TERMINATED.equals(this.currentPhase)) {
-			throw new IllegalArgumentException("Dexecutor has been terminated!");
+			throw new IllegalStateException("Dexecutor has been terminated!");
 		}
 	}
 

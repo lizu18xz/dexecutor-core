@@ -58,7 +58,7 @@ import mockit.integration.junit4.JMockit;
  */
 @RunWith(JMockit.class)
 public class DefaultDependentTasksExecutorTest {
-	
+
 	@Test
 	public void testAddAsDependencyToAllInitialNodes() {
 		new MockedCompletionService();
@@ -70,7 +70,7 @@ public class DefaultDependentTasksExecutorTest {
 		executor.addAsDependencyToAllInitialNodes(1);
 		assertThat(graph.size(), equalTo(2));
 	}
-	
+
 	@Test
 	public void testAddAsDependentOnAllLeafNodes() {
 		new MockedCompletionService();
@@ -82,7 +82,7 @@ public class DefaultDependentTasksExecutorTest {
 		executor.addAsDependentOnAllLeafNodes(1);
 		assertThat(graph.size(), equalTo(2));
 	}
-	
+
 	@Test
 	public void testPrint() {
 		new MockedCompletionService();
@@ -125,7 +125,6 @@ public class DefaultDependentTasksExecutorTest {
 		assertThat(processedNodesOrder, equalTo(executionOrderExpectedResult()));
 	}
 
-
 	@Test
 	public void testNonTerminatingDependentTaskExecutionOrderWithOutException() {
 
@@ -156,6 +155,19 @@ public class DefaultDependentTasksExecutorTest {
 		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 
 		assertThat(processedNodesOrder, equalTo(executionOrderExpectedResult()));
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void shouldThrowExectionRunningTeminatedExecutor() {
+
+		new MockedCompletionService();
+
+		final DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
+
+		addDependencies(executor);
+
+		executor.execute(new ExecutionConfig().scheduledRetrying(3, new Duration(1, TimeUnit.SECONDS)));
+		executor.execute(ExecutionConfig.TERMINATING);
 	}
 
 	private void addDependencies(DefaultDependentTasksExecutor<Integer, Integer> executor) {
@@ -193,7 +205,7 @@ public class DefaultDependentTasksExecutorTest {
 		result.add(new Node<Integer, Integer>(10));
 		return result;
 	}
-	
+
 	private Collection<Node<Integer, Integer>> skippedExecutionOrderExpectedResult() {
 		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();
 		result.add(new Node<Integer, Integer>(1));
@@ -217,13 +229,11 @@ public class DefaultDependentTasksExecutorTest {
 		ExecutionEngine<Integer, Integer> engine = new DefaultExecutionEngine<Integer, Integer>(newExecutor());
 		return new DefaultDependentTasksExecutor<Integer, Integer>(engine, new DummyTaskProvider(throwEx));
 	}
-	
-	
+
 	private DefaultDependentTasksExecutor<Integer, Integer> newTaskExecutorWithSkipLogic(boolean throwEx) {
 		ExecutionEngine<Integer, Integer> engine = new DefaultExecutionEngine<Integer, Integer>(newExecutor());
 		return new DefaultDependentTasksExecutor<Integer, Integer>(engine, new DummyTaskProvider(throwEx, true));
 	}
-
 
 	private ExecutorService newExecutor() {
 		return Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
@@ -232,17 +242,15 @@ public class DefaultDependentTasksExecutorTest {
 	private static class DummyTaskProvider implements TaskProvider<Integer, Integer> {
 		private boolean throwEx;
 		private boolean shouldSkip = false;
-		
-		
+
 		public DummyTaskProvider(boolean throwEx) {
 			this.throwEx = throwEx;
 		}
-		
+
 		public DummyTaskProvider(boolean throwEx, boolean shouldSkip) {
 			this.throwEx = throwEx;
 			this.shouldSkip = shouldSkip;
 		}
-
 
 		public Task<Integer, Integer> provideTask(final Integer id) {
 
@@ -258,11 +266,12 @@ public class DefaultDependentTasksExecutorTest {
 
 				private void doExecute(final Integer id) {
 					if (throwEx) {
-						if (id ==  2) {
+						if (id == 2) {
 							throw new TaskExecutionException("Error Executing task " + id);
 						}
 					}
 				}
+
 				@Override
 				public boolean shouldExecute(ExecutionResults<Integer, Integer> parentResults) {
 					if (shouldSkip && id == 2) {
@@ -276,7 +285,8 @@ public class DefaultDependentTasksExecutorTest {
 		}
 	}
 
-	private static class MockedCompletionService extends MockUp<ExecutorCompletionService<ExecutionResult<Integer, Integer>>> {
+	private static class MockedCompletionService
+			extends MockUp<ExecutorCompletionService<ExecutionResult<Integer, Integer>>> {
 		List<Callable<ExecutionResult<Integer, Integer>>> nodes = new ArrayList<Callable<ExecutionResult<Integer, Integer>>>();
 		int index = 0;
 
@@ -284,7 +294,6 @@ public class DefaultDependentTasksExecutorTest {
 		public void $init(Executor executor) {
 
 		}
-		
 
 		@Mock
 		public void submit(Callable<ExecutionResult<Integer, Integer>> task) {
@@ -292,7 +301,7 @@ public class DefaultDependentTasksExecutorTest {
 		}
 
 		@Mock
-		public  Future<ExecutionResult<Integer, Integer>> take() throws InterruptedException {
+		public Future<ExecutionResult<Integer, Integer>> take() throws InterruptedException {
 			return new Future<ExecutionResult<Integer, Integer>>() {
 
 				public boolean isDone() {
@@ -315,7 +324,7 @@ public class DefaultDependentTasksExecutorTest {
 				public ExecutionResult<Integer, Integer> get() throws InterruptedException, ExecutionException {
 					return doGet();
 				}
-				
+
 				private ExecutionResult<Integer, Integer> doGet() {
 					try {
 						Callable<ExecutionResult<Integer, Integer>> callable = nodes.get(index);

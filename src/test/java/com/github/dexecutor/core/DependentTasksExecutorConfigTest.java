@@ -17,6 +17,9 @@
 
 package com.github.dexecutor.core;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+
 import java.util.concurrent.Executors;
 
 import org.junit.Test;
@@ -25,6 +28,21 @@ import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 
 public class DependentTasksExecutorConfigTest {
+	
+	
+	@Test
+	public void immediateRetryPoolThreadsCountIsOne() {
+		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<String, String>(Executors.newCachedThreadPool(), newTaskProvider());
+		config.setImmediateRetryPoolThreadsCount(1);
+		assertThat(config.getImmediateRetryPoolThreadsCount(), equalTo(1));
+	}
+	
+	@Test
+	public void scheduledRetryPoolThreadsCount() {
+		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<String, String>(Executors.newCachedThreadPool(), newTaskProvider());
+		config.setScheduledRetryPoolThreadsCount(1);;
+		assertThat(config.getScheduledRetryPoolThreadsCount(), equalTo(1));
+	}
 
 	@Test(expected= IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWhenValidatorIsNull() {

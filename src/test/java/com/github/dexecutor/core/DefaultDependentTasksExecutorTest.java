@@ -125,7 +125,7 @@ public class DefaultDependentTasksExecutorTest {
 		assertThat(processedNodesOrder, equalTo(executionOrderExpectedResult()));
 	}
 
-	//@Test
+	/*@Test
 	public void testRetryingDependentTaskExecutionOrderWithException() {
 
 		new MockedCompletionService();
@@ -141,7 +141,7 @@ public class DefaultDependentTasksExecutorTest {
 		org.assertj.core.api.Assertions.assertThat(processedNodesOrder).containsAll(executionOrderExpectedResultWhithEx());
 
 		//assertThat(processedNodesOrder, equalTo(executionOrderExpectedResultWhithEx()));
-	}
+	}*/
 	
 	@Test
 	public void testNonTerminatingDependentTaskExecutionOrderWithOutException() {

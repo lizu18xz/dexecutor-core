@@ -125,24 +125,7 @@ public class DefaultDependentTasksExecutorTest {
 		assertThat(processedNodesOrder, equalTo(executionOrderExpectedResult()));
 	}
 
-	/*@Test
-	public void testRetryingDependentTaskExecutionOrderWithException() {
 
-		new MockedCompletionService();
-
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(true);
-
-		addDependencies(executor);
-
-		executor.execute(new ExecutionConfig().immediateRetrying(1));
-
-		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
-		
-		org.assertj.core.api.Assertions.assertThat(processedNodesOrder).containsAll(executionOrderExpectedResultWhithEx());
-
-		//assertThat(processedNodesOrder, equalTo(executionOrderExpectedResultWhithEx()));
-	}*/
-	
 	@Test
 	public void testNonTerminatingDependentTaskExecutionOrderWithOutException() {
 
@@ -173,49 +156,6 @@ public class DefaultDependentTasksExecutorTest {
 		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 
 		assertThat(processedNodesOrder, equalTo(executionOrderExpectedResult()));
-	}
-
-	
-	@Test
-	public void testDependentTaskExecutionOrderWithException() {
-
-		new MockedCompletionService();
-
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(true);
-
-		addDependencies(executor);
-
-		executor.execute(ExecutionConfig.TERMINATING);
-
-		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
-
-		org.assertj.core.api.Assertions.assertThat(processedNodesOrder).containsAll(executionOrderExpectedResultWhithEx());
-
-		//assertThat(processedNodesOrder, equalTo(executionOrderExpectedResultWhithEx()));
-	}
-
-	@Test
-	public void testTerminatingTask() {
-		new MockedCompletionService();
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(true);
-		addDependencies(executor);
-		executor.execute(ExecutionConfig.TERMINATING);
-	}
-	
-	/*@Test
-	public void testScheduledRetryTerminatingTask() {
-		new MockedCompletionService();
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(true);
-		addDependencies(executor);
-		executor.execute(new ExecutionConfig().scheduledRetrying(1, new Duration(1, TimeUnit.NANOSECONDS)));
-	}*/
-
-	@Test
-	public void testNonTerminatingTask() {
-		new MockedCompletionService();
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
-		executor.addDependency(1, 2);
-		executor.execute(ExecutionConfig.NON_TERMINATING);
 	}
 
 	private void addDependencies(DefaultDependentTasksExecutor<Integer, Integer> executor) {
@@ -270,16 +210,6 @@ public class DefaultDependentTasksExecutorTest {
 		result.add(new Node<Integer, Integer>(6));
 		result.add(new Node<Integer, Integer>(4));
 		result.add(new Node<Integer, Integer>(14));
-		return result;
-	}
-	
-	private Collection<Node<Integer, Integer>> executionOrderExpectedResultWhithEx() {
-		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();
-		result.add(new Node<Integer, Integer>(1));
-		result.add(new Node<Integer, Integer>(11));
-		result.add(new Node<Integer, Integer>(12));
-		//result.add(new Node<Integer, Integer>(2));
-		
 		return result;
 	}
 

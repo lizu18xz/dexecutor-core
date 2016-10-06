@@ -18,6 +18,18 @@
 package com.github.dexecutor.core.task;
 /**
  * Represents Tasks Execution status
+ *   <ul>
+ * 	   <li>
+ * 			<code>ERRORED </code> : Task Execution was in error
+ * 	   </li>
+ * 		<li>
+ * 			<code>SKIPPED</code> : Task Execution was skipped
+ * 		</li>
+ * 		<li>
+ * 			<code>SUCCESS</code> : Task Execution was successful
+ * 		</li>
+ * 
+ * </ul>
  * @author Nadeem Mohammad
  *
  */

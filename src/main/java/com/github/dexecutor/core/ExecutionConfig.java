@@ -113,7 +113,9 @@ public class ExecutionConfig {
 	public boolean shouldRetry(int currentCount) {
 		return this.retryCount != 0 && this.retryCount > currentCount;
 	}
-
+	/**
+	 * Does basic validation to make sure object is valid
+	 */
 	public void validate() {
 		if (isScheduledRetrying()) {
 			checkNotNull(this.retryDelay, "retryDelay should be specified for " + ExecutionBehavior.SCHEDULED_RETRY_TERMINATING);

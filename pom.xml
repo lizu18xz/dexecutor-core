@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.dexecutor</groupId>
 	<artifactId>dexecutor-core</artifactId>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 
 	<name>Dependent Tasks Executor Core</name>
 	<description>Executing dependent/Independent tasks in a reliable way, is made so easy that even your grandma can do it.</description>
@@ -78,7 +78,7 @@
 		<version.maven-release-plugin>2.5.3</version.maven-release-plugin>
 		<version.maven-scm-provider-gitexe>1.9.5</version.maven-scm-provider-gitexe>
 		<version.jacoco-maven-plugin>0.7.7.201606060606</version.jacoco-maven-plugin>
-		<version.coveralls-maven-plugin>4.2.0</version.coveralls-maven-plugin>
+		<version.coveralls-maven-plugin>4.3.0</version.coveralls-maven-plugin>
 		<version.maven-site-plugin>3.5.1</version.maven-site-plugin>
 		<version.reflow-velocity-tools>1.1.1</version.reflow-velocity-tools>
 		<version.maven-pmd-plugin>3.0.1</version.maven-pmd-plugin>

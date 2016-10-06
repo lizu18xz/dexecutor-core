@@ -27,6 +27,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -66,7 +67,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private Collection<Node<T, R>> processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
 	private Collection<Node<T, R>> continueAfterSuccess = new CopyOnWriteArraySet<Node<T, R>>();
-	
+
 	private AtomicInteger nodesCount = new AtomicInteger(0);
 	private ExecutorService immediatelyRetryExecutor;
 	private ScheduledExecutorService scheduledRetryExecutor;
@@ -141,6 +142,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		long start = new Date().getTime();
 
 		doProcessNodes(config, initialNodes);
+		shutdownExecutors();
 
 		long end = new Date().getTime();
 
@@ -148,6 +150,17 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 		logger.debug("Total Time taken to process {} jobs is {} ms.", graph.size(), end - start);
 		logger.debug("Processed Nodes Ordering {}", this.processedNodes);
+	}
+
+	private void shutdownExecutors() {
+		this.immediatelyRetryExecutor.shutdown();
+		this.scheduledRetryExecutor.shutdown();
+		try {
+			this.immediatelyRetryExecutor.awaitTermination(1, TimeUnit.NANOSECONDS);
+			this.scheduledRetryExecutor.awaitTermination(1, TimeUnit.NANOSECONDS);
+		} catch (InterruptedException e) {
+			logger.error("Error Shuting down Executor", e);
+		}		
 	}
 
 	private void validate(ExecutionConfig config) {

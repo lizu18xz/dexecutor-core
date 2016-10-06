@@ -8,20 +8,22 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.assertj.core.api.Condition;
 import org.junit.Test;
 
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
+import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 
 import mockit.Deencapsulation;
 
-public class DefaultDependentTasksExecutorImmediateRetryingTerminatingTest {
-	
-	Condition<Node<Integer, Integer>> nodeTwoCondition = new Condition<Node<Integer, Integer>>() {
+public class DefaultDependentTasksExecutorSkippLogicTest {
+
+	Condition<Node<Integer, Integer>> nodeTwo = new Condition<Node<Integer, Integer>>() {
 		@Override
 		public boolean matches(Node<Integer, Integer> value) {
 			return value.getValue() == 2;
@@ -54,12 +56,12 @@ public class DefaultDependentTasksExecutorImmediateRetryingTerminatingTest {
 			executor.addDependency(13, 14);
 			executor.addIndependent(11);
 
-			executor.execute(new ExecutionConfig().immediateRetrying(2));
+			executor.execute(ExecutionConfig.NON_TERMINATING);
 
 			Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
-			assertThat(processedNodesOrder).size().isGreaterThan(5);
-			assertThat(processedNodesOrder).areExactly(3, nodeTwoCondition);
+			assertThat(processedNodesOrder).size().isEqualTo(14);
+			assertThat(processedNodesOrder).areExactly(1, nodeTwo);
 			
 		} finally {
 			try {
@@ -75,9 +77,18 @@ public class DefaultDependentTasksExecutorImmediateRetryingTerminatingTest {
 		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();
 		result.add(new Node<Integer, Integer>(1));
 		result.add(new Node<Integer, Integer>(2));
+		result.add(new Node<Integer, Integer>(7));
+		result.add(new Node<Integer, Integer>(9));
+		result.add(new Node<Integer, Integer>(10));
+		result.add(new Node<Integer, Integer>(8));
 		result.add(new Node<Integer, Integer>(11));
 		result.add(new Node<Integer, Integer>(12));
 		result.add(new Node<Integer, Integer>(3));
+		result.add(new Node<Integer, Integer>(13));
+		result.add(new Node<Integer, Integer>(5));
+		result.add(new Node<Integer, Integer>(6));
+		result.add(new Node<Integer, Integer>(4));
+		result.add(new Node<Integer, Integer>(14));
 		return result;
 	}
 
@@ -86,6 +97,8 @@ public class DefaultDependentTasksExecutorImmediateRetryingTerminatingTest {
 	}
 
 	private static class SleepyTaskProvider implements TaskProvider<Integer, Integer> {
+		
+		private AtomicInteger count = new AtomicInteger(0);
 
 		public Task<Integer, Integer> provideTask(final Integer id) {
 
@@ -94,10 +107,24 @@ public class DefaultDependentTasksExecutorImmediateRetryingTerminatingTest {
 				private static final long serialVersionUID = 1L;
 
 				public Integer execute() {
+					shouldConsiderExecutionError();
 					if (id == 2) {
-						throw new IllegalArgumentException("Invalid task");
+						count.incrementAndGet();
+						if (count.get() < 3) {							
+							throw new IllegalArgumentException("Invalid task");
+						}						
 					}
 					return id;
+				}
+
+				@Override
+				public boolean shouldExecute(ExecutionResults<Integer, Integer> parentResults) {
+					if (id == 2) {
+						return false;
+					} else if (parentResults.anyParentSkipped()) {
+						return false;
+					}
+					return true;
 				}
 			};
 		}

@@ -21,8 +21,6 @@ import mockit.Deencapsulation;
 
 public class DefaultDependentTasksExecutorScheduledRetryingTerminatingTest {
 	
-	Node<Integer, Integer> nodeTwo = new Node<Integer, Integer>(2);
-
 	Condition<Node<Integer, Integer>> nodeTwoCondition = new Condition<Node<Integer, Integer>>() {
 		@Override
 		public boolean matches(Node<Integer, Integer> value) {
@@ -30,7 +28,6 @@ public class DefaultDependentTasksExecutorScheduledRetryingTerminatingTest {
 		}
 	};
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testDependentTaskExecution() {
 
@@ -62,7 +59,7 @@ public class DefaultDependentTasksExecutorScheduledRetryingTerminatingTest {
 			Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
 			assertThat(processedNodesOrder).size().isGreaterThan(8);
-			assertThat(processedNodesOrder).contains(nodeTwo).areExactly(5, nodeTwoCondition);
+			assertThat(processedNodesOrder).areExactly(5, nodeTwoCondition);
 			
 		} finally {
 			try {

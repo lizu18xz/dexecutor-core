@@ -41,7 +41,6 @@ import com.github.dexecutor.core.graph.Dag;
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.ExecutionResult;
-import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskExecutionException;
 import com.github.dexecutor.core.task.TaskProvider;
@@ -91,22 +90,6 @@ public class DefaultDependentTasksExecutorTest {
 		StringWriter writer = new StringWriter();
 		executor.print(writer);
 		assertThat(writer.toString(), equalTo("Path #0\n1[] \n2[1] \n\n"));
-	}
-
-	@Test
-	public void testDependentTaskExecutionWithSkipLogic() {
-
-		new MockedCompletionService();
-
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutorWithSkipLogic(false);
-
-		addDependencies(executor);
-
-		executor.execute(new ExecutionConfig().immediateRetrying(1));
-
-		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
-
-		assertThat(processedNodesOrder, equalTo(skippedExecutionOrderExpectedResult()));
 	}
 
 	@Test
@@ -206,33 +189,9 @@ public class DefaultDependentTasksExecutorTest {
 		return result;
 	}
 
-	private Collection<Node<Integer, Integer>> skippedExecutionOrderExpectedResult() {
-		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();
-		result.add(new Node<Integer, Integer>(1));
-		result.add(new Node<Integer, Integer>(2));
-		result.add(new Node<Integer, Integer>(7));
-		result.add(new Node<Integer, Integer>(9));
-		result.add(new Node<Integer, Integer>(10));
-		result.add(new Node<Integer, Integer>(8));
-		result.add(new Node<Integer, Integer>(11));
-		result.add(new Node<Integer, Integer>(12));
-		result.add(new Node<Integer, Integer>(3));
-		result.add(new Node<Integer, Integer>(13));
-		result.add(new Node<Integer, Integer>(5));
-		result.add(new Node<Integer, Integer>(6));
-		result.add(new Node<Integer, Integer>(4));
-		result.add(new Node<Integer, Integer>(14));
-		return result;
-	}
-
 	private DefaultDependentTasksExecutor<Integer, Integer> newTaskExecutor(boolean throwEx) {
 		ExecutionEngine<Integer, Integer> engine = new DefaultExecutionEngine<Integer, Integer>(newExecutor());
 		return new DefaultDependentTasksExecutor<Integer, Integer>(engine, new DummyTaskProvider(throwEx));
-	}
-
-	private DefaultDependentTasksExecutor<Integer, Integer> newTaskExecutorWithSkipLogic(boolean throwEx) {
-		ExecutionEngine<Integer, Integer> engine = new DefaultExecutionEngine<Integer, Integer>(newExecutor());
-		return new DefaultDependentTasksExecutor<Integer, Integer>(engine, new DummyTaskProvider(throwEx, true));
 	}
 
 	private ExecutorService newExecutor() {
@@ -241,15 +200,9 @@ public class DefaultDependentTasksExecutorTest {
 
 	private static class DummyTaskProvider implements TaskProvider<Integer, Integer> {
 		private boolean throwEx;
-		private boolean shouldSkip = false;
 
 		public DummyTaskProvider(boolean throwEx) {
 			this.throwEx = throwEx;
-		}
-
-		public DummyTaskProvider(boolean throwEx, boolean shouldSkip) {
-			this.throwEx = throwEx;
-			this.shouldSkip = shouldSkip;
 		}
 
 		public Task<Integer, Integer> provideTask(final Integer id) {
@@ -271,16 +224,7 @@ public class DefaultDependentTasksExecutorTest {
 						}
 					}
 				}
-
-				@Override
-				public boolean shouldExecute(ExecutionResults<Integer, Integer> parentResults) {
-					if (shouldSkip && id == 2) {
-						return false;
-					} else if (parentResults.anyParentSkipped()) {
-						return false;
-					}
-					return true;
-				}
+				
 			};
 		}
 	}

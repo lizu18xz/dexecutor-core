@@ -22,16 +22,13 @@ import mockit.Deencapsulation;
 
 public class DefaultDependentTasksExecutorScheduledRetryingTest {
 
-	Node<Integer, Integer> nodeTwo = new Node<Integer, Integer>(2);
-
-	Condition<Node<Integer, Integer>> nodeTwoCondition = new Condition<Node<Integer, Integer>>() {
+	Condition<Node<Integer, Integer>> nodeTwo = new Condition<Node<Integer, Integer>>() {
 		@Override
 		public boolean matches(Node<Integer, Integer> value) {
 			return value.getValue() == 2;
 		}
 	};
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testDependentTaskExecution() {
 
@@ -63,7 +60,7 @@ public class DefaultDependentTasksExecutorScheduledRetryingTest {
 			Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
 			assertThat(processedNodesOrder).size().isEqualTo(16);
-			assertThat(processedNodesOrder).contains(nodeTwo).areExactly(3, nodeTwoCondition);
+			assertThat(processedNodesOrder).areExactly(3, nodeTwo);
 			
 		} finally {
 			try {

@@ -70,7 +70,7 @@ public abstract class Task<T extends Comparable<T>, R> implements Serializable {
 	 * 
 	 * @param considerExecutionError
 	 */
-	void setConsiderExecutionError(boolean considerExecutionError) {
+	public void setConsiderExecutionError(boolean considerExecutionError) {
 		this.considerExecutionError = considerExecutionError;
 	}
 	/**

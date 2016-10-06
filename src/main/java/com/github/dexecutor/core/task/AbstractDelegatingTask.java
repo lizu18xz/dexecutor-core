@@ -47,11 +47,11 @@ abstract class AbstractDelegatingTask <T extends Comparable<T>, R> extends Task<
 		return this.task.getId();
 	}
 
-	public  boolean shouldConsiderExecutionError() {
+	public boolean shouldConsiderExecutionError() {
 		return this.task.shouldConsiderExecutionError();
 	}
 
-	void setConsiderExecutionError(boolean considerExecutionError) {
+	public void setConsiderExecutionError(boolean considerExecutionError) {
 		this.task.setConsiderExecutionError(considerExecutionError);
 	}
 

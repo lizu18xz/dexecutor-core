@@ -195,7 +195,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		for (Node<T, R> node : nodes) {
 			if (shouldProcess(node)) {				
 				Task<T, R> task = newTask(config, node);
-				if (shouldExecute(node, task)) {
+				if (shouldExecute(node, task)) {					
 					nodesCount.incrementAndGet();
 					logger.debug("Going to schedule {} node", node.getValue());
 					this.executionEngine.submit(task);
@@ -257,6 +257,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private void doWaitForExecution(final ExecutionConfig config) {
 		while (nodesCount.get() > 0) {
+			
 			ExecutionResult<T, R> executionResult = this.executionEngine.processResult();
 			nodesCount.decrementAndGet();
 			logger.debug("Processing of node {} done, with status {}", executionResult.getId(), executionResult.getStatus());
@@ -308,7 +309,20 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	private Task<T, R> newTask(final ExecutionConfig config, final Node<T, R> node) {
 		Task<T, R> task = this.taskProvider.provideTask(node.getValue());
 		task.setId(node.getValue());
+		updateConsiderExecutionStatus(config, task);
 		return TaskFactory.newWorker(task);
+	}
+
+	private void updateConsiderExecutionStatus(final ExecutionConfig config, final Task<T, R> task) {
+		if (config.isImmediatelyRetrying() || config.isScheduledRetrying()) {
+			Node<T, R> node = this.graph.get(task.getId());
+			Integer currentCount = getExecutionCount(node);
+			if (currentCount < config.getRetryCount()) {
+				task.setConsiderExecutionError(false);
+			} else {
+				task.setConsiderExecutionError(true);
+			}
+		}
 	}
 
 	private Runnable retryingTask(final ExecutionConfig config, final Task<T, R> task) {
@@ -323,16 +337,16 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private void updateExecutionCount(final Node<T, R> node) {
 		Integer count = getExecutionCount(node);
-		if (count == null) {
-			count = 0;
-		} else {
-			count++;
-		}
+		count++;
 		node.setData(count);
 	}
 
 	private Integer getExecutionCount(final Node<T, R> node) {
-		return (Integer) node.getData();
+		Integer count = (Integer) node.getData();
+		if (count == null) {
+			count = 0;
+		}
+		return count;
 	}
 
 	private void updateNode(final ExecutionResult<T, R> executionResult, final Node<T, R> processedNode) {

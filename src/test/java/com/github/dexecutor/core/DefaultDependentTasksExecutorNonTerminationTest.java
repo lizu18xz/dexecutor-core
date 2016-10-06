@@ -36,7 +36,6 @@ public class DefaultDependentTasksExecutorNonTerminationTest {
 			executor.addDependency(3, 4);
 			executor.addDependency(3, 5);
 			executor.addDependency(3, 6);
-			// executor.addDependency(10, 2); // cycle
 			executor.addDependency(2, 7);
 			executor.addDependency(2, 9);
 			executor.addDependency(2, 8);

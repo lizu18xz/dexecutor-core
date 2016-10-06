@@ -111,7 +111,7 @@ public class ExecutionConfig {
 	 * 			{@false} otherwise
 	 */
 	public boolean shouldRetry(int currentCount) {
-		return this.retryCount != 0 && this.retryCount > currentCount;
+		return this.retryCount != 0 && this.retryCount >= currentCount;
 	}
 	/**
 	 * Does basic validation to make sure object is valid

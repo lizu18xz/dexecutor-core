@@ -22,7 +22,6 @@ import static org.junit.Assert.assertThat;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -38,7 +37,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.github.dexecutor.core.graph.Dag;
-import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.Task;
@@ -92,54 +90,6 @@ public class DefaultDependentTasksExecutorTest {
 		assertThat(writer.toString(), equalTo("Path #0\n1[] \n2[1] \n\n"));
 	}
 
-	@Test
-	public void testDependentTaskExecutionOrderWithOutException() {
-
-		new MockedCompletionService();
-
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
-
-		addDependencies(executor);
-
-		executor.execute(new ExecutionConfig().immediateRetrying(1));
-
-		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
-
-		assertThat(processedNodesOrder, equalTo(executionOrderExpectedResult()));
-	}
-
-	@Test
-	public void testNonTerminatingDependentTaskExecutionOrderWithOutException() {
-
-		new MockedCompletionService();
-
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
-
-		addDependencies(executor);
-
-		executor.execute(ExecutionConfig.NON_TERMINATING);
-
-		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
-
-		assertThat(processedNodesOrder, equalTo(executionOrderExpectedResult()));
-	}
-
-	@Test
-	public void testNotTerminatingRetryingDependentTaskExecutionOrderWithException() {
-
-		new MockedCompletionService();
-
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(true);
-
-		addDependencies(executor);
-
-		executor.execute(ExecutionConfig.NON_TERMINATING);
-
-		Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
-
-		assertThat(processedNodesOrder, equalTo(executionOrderExpectedResult()));
-	}
-
 	@Test(expected = IllegalStateException.class)
 	public void shouldThrowExectionRunningTeminatedExecutor() {
 
@@ -168,25 +118,6 @@ public class DefaultDependentTasksExecutorTest {
 		executor.addDependency(13, 4);
 		executor.addDependency(13, 14);
 		executor.addIndependent(11);
-	}
-
-	private Collection<Node<Integer, Integer>> executionOrderExpectedResult() {
-		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();
-		result.add(new Node<Integer, Integer>(1));
-		result.add(new Node<Integer, Integer>(11));
-		result.add(new Node<Integer, Integer>(12));
-		result.add(new Node<Integer, Integer>(2));
-		result.add(new Node<Integer, Integer>(3));
-		result.add(new Node<Integer, Integer>(13));
-		result.add(new Node<Integer, Integer>(7));
-		result.add(new Node<Integer, Integer>(9));
-		result.add(new Node<Integer, Integer>(8));
-		result.add(new Node<Integer, Integer>(5));
-		result.add(new Node<Integer, Integer>(6));
-		result.add(new Node<Integer, Integer>(4));
-		result.add(new Node<Integer, Integer>(14));
-		result.add(new Node<Integer, Integer>(10));
-		return result;
 	}
 
 	private DefaultDependentTasksExecutor<Integer, Integer> newTaskExecutor(boolean throwEx) {

@@ -21,16 +21,28 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import com.github.dexecutor.core.task.ExecutionResult;
+import com.github.dexecutor.core.task.TaskExecutionException;
+
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.integration.junit4.JMockit;
+
+@RunWith(JMockit.class)
 public class DefaultExecutionEngineTest {
-	
+
 	private ExecutionEngine<Integer, Integer> executionEngine;
-	
-	@Before	
+
+	@Before
 	public void doBeforeEachTestCase() {
 		this.executionEngine = new DefaultExecutionEngine<Integer, Integer>(Executors.newCachedThreadPool());
 	}
@@ -39,9 +51,30 @@ public class DefaultExecutionEngineTest {
 	public void itIsNotDistributed() {
 		assertThat(this.executionEngine.isDistributed(), equalTo(false));
 	}
-	
+
 	@Test
 	public void toStringIsNotNull() {
 		assertNotNull(this.executionEngine.toString());
+	}
+
+	@Test(expected = TaskExecutionException.class)
+	public void processResult() throws InterruptedException {
+		new MockedCompletionService();
+
+		assertNotNull(this.executionEngine.processResult());
+	}
+
+	private static class MockedCompletionService
+			extends MockUp<ExecutorCompletionService<ExecutionResult<Integer, Integer>>> {
+	
+		@Mock
+		public void $init(Executor executor) {
+
+		}
+	
+		@Mock
+		public Future<ExecutionResult<Integer, Integer>> take() throws InterruptedException {
+			throw new InterruptedException();
+		}
 	}
 }

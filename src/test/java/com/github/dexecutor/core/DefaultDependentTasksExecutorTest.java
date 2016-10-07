@@ -21,7 +21,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import java.io.StringWriter;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -89,7 +88,7 @@ public class DefaultDependentTasksExecutorTest {
 		executor.execute(ExecutionConfig.TERMINATING);
 	}
 	
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void shouldThrowExectionAwaitingTermination() {
 		new MockedExecutionService();
 		
@@ -140,17 +139,17 @@ public class DefaultDependentTasksExecutorTest {
 
 	private static class MockedExecutionService extends MockUp<ThreadPoolExecutor> {
 
-		@Mock
+		/*@Mock
 		public void $init(int corePoolSize,
                 int maximumPoolSize,
                 long keepAliveTime,
                 TimeUnit unit,
                 BlockingQueue<Runnable> workQueue) {
-		}
+		}*/
 
 		@Mock
-		public void shutdown()  {
-			throw new IllegalStateException();
+		public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException  {
+			throw new InterruptedException();
 		}
 	}
 }

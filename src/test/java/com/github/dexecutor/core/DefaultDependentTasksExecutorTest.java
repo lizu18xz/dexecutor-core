@@ -21,24 +21,17 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.github.dexecutor.core.graph.Dag;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
-import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskExecutionException;
 import com.github.dexecutor.core.task.TaskProvider;
@@ -58,7 +51,6 @@ public class DefaultDependentTasksExecutorTest {
 
 	@Test
 	public void testAddAsDependencyToAllInitialNodes() {
-		new MockedCompletionService();
 		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
 		executor.addAsDependencyToAllInitialNodes(1);
 		Dag<Integer, Integer> graph = Deencapsulation.getField(executor, "graph");
@@ -70,7 +62,6 @@ public class DefaultDependentTasksExecutorTest {
 
 	@Test
 	public void testAddAsDependentOnAllLeafNodes() {
-		new MockedCompletionService();
 		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
 		executor.addAsDependentOnAllLeafNodes(1);
 		Dag<Integer, Integer> graph = Deencapsulation.getField(executor, "graph");
@@ -82,7 +73,6 @@ public class DefaultDependentTasksExecutorTest {
 
 	@Test
 	public void testPrint() {
-		new MockedCompletionService();
 		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
 		executor.addDependency(1, 2);
 		StringWriter writer = new StringWriter();
@@ -93,31 +83,19 @@ public class DefaultDependentTasksExecutorTest {
 	@Test(expected = IllegalStateException.class)
 	public void shouldThrowExectionRunningTeminatedExecutor() {
 
-		new MockedCompletionService();
-
-		final DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
-
-		addDependencies(executor);
+		final DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);		
 
 		executor.execute(new ExecutionConfig().scheduledRetrying(3, new Duration(1, TimeUnit.SECONDS)));
 		executor.execute(ExecutionConfig.TERMINATING);
 	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void shouldThrowExectionAwaitingTermination() {
+		new MockedExecutionService();
+		
+		final DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);		
 
-	private void addDependencies(DefaultDependentTasksExecutor<Integer, Integer> executor) {
-		executor.addDependency(1, 2);
-		executor.addDependency(1, 2);
-		executor.addDependency(1, 3);
-		executor.addDependency(3, 4);
-		executor.addDependency(3, 5);
-		executor.addDependency(3, 6);
-		executor.addDependency(2, 7);
-		executor.addDependency(2, 9);
-		executor.addDependency(2, 8);
-		executor.addDependency(9, 10);
-		executor.addDependency(12, 13);
-		executor.addDependency(13, 4);
-		executor.addDependency(13, 14);
-		executor.addIndependent(11);
+		executor.execute(ExecutionConfig.TERMINATING);
 	}
 
 	private DefaultDependentTasksExecutor<Integer, Integer> newTaskExecutor(boolean throwEx) {
@@ -160,61 +138,19 @@ public class DefaultDependentTasksExecutorTest {
 		}
 	}
 
-	private static class MockedCompletionService
-			extends MockUp<ExecutorCompletionService<ExecutionResult<Integer, Integer>>> {
-		List<Callable<ExecutionResult<Integer, Integer>>> nodes = new ArrayList<Callable<ExecutionResult<Integer, Integer>>>();
-		int index = 0;
+	private static class MockedExecutionService extends MockUp<ThreadPoolExecutor> {
 
 		@Mock
-		public void $init(Executor executor) {
-
+		public void $init(int corePoolSize,
+                int maximumPoolSize,
+                long keepAliveTime,
+                TimeUnit unit,
+                BlockingQueue<Runnable> workQueue) {
 		}
 
 		@Mock
-		public void submit(Callable<ExecutionResult<Integer, Integer>> task) {
-			nodes.add(task);
-		}
-
-		@Mock
-		public Future<ExecutionResult<Integer, Integer>> take() throws InterruptedException {
-			return new Future<ExecutionResult<Integer, Integer>>() {
-
-				public boolean isDone() {
-					return false;
-				}
-
-				public boolean isCancelled() {
-					return false;
-				}
-
-				public boolean cancel(boolean mayInterruptIfRunning) {
-					return false;
-				}
-
-				public ExecutionResult<Integer, Integer> get(long timeout, TimeUnit unit)
-						throws InterruptedException, ExecutionException, TimeoutException {
-					return doGet();
-				}
-
-				public ExecutionResult<Integer, Integer> get() throws InterruptedException, ExecutionException {
-					return doGet();
-				}
-
-				private ExecutionResult<Integer, Integer> doGet() {
-					try {
-						Callable<ExecutionResult<Integer, Integer>> callable = nodes.get(index);
-						if (callable == null) {
-							throw new RuntimeException("Node is null");
-						}
-						ExecutionResult<Integer, Integer> call = callable.call();
-						index++;
-						return call;
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				}
-
-			};
+		public void shutdown()  {
+			throw new IllegalStateException();
 		}
 	}
 }

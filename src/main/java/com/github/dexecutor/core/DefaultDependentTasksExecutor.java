@@ -354,9 +354,9 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		processedNode.setResult(executionResult.getResult());
 		if(executionResult.isErrored()) {
 			processedNode.setErrored();
-		} else if(executionResult.isSkipped()) {
+		}/* else if(executionResult.isSkipped()) {
 			processedNode.setSkipped();
-		} else {
+		}*/ else {
 			processedNode.setSuccess();
 		}
 	}

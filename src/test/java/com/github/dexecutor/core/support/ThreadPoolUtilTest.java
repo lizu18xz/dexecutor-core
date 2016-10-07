@@ -17,10 +17,12 @@
 
 package com.github.dexecutor.core.support;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
+
+import mockit.Deencapsulation;
 
 public class ThreadPoolUtilTest {
 
@@ -31,6 +33,11 @@ public class ThreadPoolUtilTest {
 		int expectedPoolSize = (int) (numberOfCores / (1 - blockingCoefficient));
 		
 		assertThat(ThreadPoolUtil.ioIntesivePoolSize(), equalTo(expectedPoolSize));
+	}
+	
+	@Test
+	public void createInstance() {
+		Deencapsulation.newInstance(ThreadPoolUtil.class);
 	}
 
 }

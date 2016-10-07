@@ -19,10 +19,17 @@ package com.github.dexecutor.core.support;
 
 import org.junit.Test;
 
-public class PreconditionsTest {
+import mockit.Deencapsulation;
 
+public class PreconditionsTest {
+	
+	@Test
+	public void createInstance() {
+		Deencapsulation.newInstance(Preconditions.class);
+	}
+	
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowIllegalArgumentException() {
+	public void shouldThrowIllegalArgumentException() {		 
 		Preconditions.checkNotNull(null, "");
 	}
 	
@@ -30,5 +37,14 @@ public class PreconditionsTest {
 	public void shouldNotThrowIllegalArgumentException() {
 		Preconditions.checkNotNull(new Object(), "");
 	}
-
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowIllegalArgumentExceptionCheckArgument() {
+		Preconditions.checkArgument(false, "");
+	}
+	
+	@Test
+	public void shouldNotThrowIllegalArgumentExceptionCheckArgument() {
+		Preconditions.checkArgument(true, "");
+	}
 }

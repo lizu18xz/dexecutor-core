@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import com.github.dexecutor.core.graph.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A Traversar which does level order traversal of the given graph
@@ -36,6 +37,8 @@ import com.github.dexecutor.core.graph.Node;
  * @param <R> Type of Node/Task result
  */
 public class LevelOrderTraversar<T extends Comparable<T>, R> implements Traversar<T, R> {
+	
+	private static final Logger logger = LoggerFactory.getLogger(LevelOrderTraversar.class);
 	
 	private List<Node<T, R>> processed = new ArrayList<Node<T, R>>();
 	
@@ -48,7 +51,7 @@ public class LevelOrderTraversar<T extends Comparable<T>, R> implements Traversa
 				printGraph(levelOrderOfGraph, writer);
 				writer.write("\n");
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error Writing ", e);
 			}
 		}
 	}
@@ -97,7 +100,7 @@ public class LevelOrderTraversar<T extends Comparable<T>, R> implements Traversa
 				}
 				writer.write("\n");
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error Writing ", e);
 			}
 		}
 	}

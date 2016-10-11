@@ -32,23 +32,70 @@ import com.github.dexecutor.core.graph.Validator;
  * @param <R> Type of Node/Task result
  */
 public interface DexecutorState<T extends Comparable<T>, R> {
-
+	
+	/**
+	 * Initialize the Dexecutor state, either to new or existing state
+	 */
 	void initState();
-
+	
+	/**
+	 * Add a node as independent, it does not require any dependent node
+	 * 
+	 * @param nodeValue
+	 */
 	void addIndependent(final T nodeValue);
+	/**
+	 * <p>Add Two dependent nodes into the graph, creating the nodes if not already present </p>
+	 * <p><code>evalFirstValue </code> would be executed first and then <code> evalAfterValue </code> </p>
+	 * 
+	 * @param evalFirstValue
+	 * @param evalAfterValue
+	 */
 	void addDependency(final T evalFirstValue, final T evalAfterValue);
+	/**
+	 * Adds the node as dependent on all leaf nodes (at the time of adding), meaning all leaf nodes would be evaluated first and then the given node
+	 * 
+	 * @param nodeValue
+	 */
 	void addAsDependentOnAllLeafNodes(final T nodeValue);
+	/**
+	 * Adds the node as dependency to all initial nodes (at the time of adding), meaning this given node would be evaluated first and then all initial nodes would run in parallel
+	 * 
+	 * @param nodeValue
+	 */
 	void addAsDependencyToAllInitialNodes(final T nodeValue);
+	/**
+	 * Returns the Set of nodes for which there is no incoming dependencies.
+	 * @return set of initial nodes
+	 */
 	Set<Node<T, R>> getInitialNodes();
+	/**
+	 * Returns the node with the given id
+	 * 
+	 * @param id
+	 * @return the @Node with the given id
+	 */
 	Node<T, R> getGraphNode(final T id);
+	/**
+	 * Returns the total number of nodes in this graph
+	 * 
+	 * @return total number of nodes in this graph
+	 */
 	int graphSize();
-
+	/**
+	 * sets the phase to that of provided
+	 * @param currentPhase
+	 */
 	void setCurrentPhase(final Phase currentPhase);
+	/**
+	 * 
+	 * @return the current phase of execution
+	 */
 	Phase getCurrentPhase();
 
-	int getNodesCount();
-	int incrementNodesCount();
-	int decrementNodesCount();
+	int getUnProcessedNodesCount();
+	int incrementUnProcessedNodesCount();
+	int decrementUnProcessedNodesCount();
 
 	boolean shouldProcess(final Node<T, R> node);
 	void processingDone(Node<T, R> node);
@@ -57,7 +104,18 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	Collection<Node<T, R>> getContinueAfterSuccessNodes();
 	void clearContinueAfterSuccessNodes();
 	void processAfterSuccess(final Collection<Node<T, R>> nodes);
-
+	
+	/**
+	 * Prints the graph into the writer using the Traversar
+	 * 
+	 * @param traversar
+	 * @param writer
+	 */
 	void print(final Traversar<T, R> traversar, final Writer writer);
+	/**
+	 * validates the graph using the validator
+	 * 
+	 * @param validator
+	 */
 	void validate(final Validator<T, R> validator);
 }

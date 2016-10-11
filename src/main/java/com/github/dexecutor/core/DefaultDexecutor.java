@@ -174,7 +174,7 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 			if (this.state.shouldProcess(node)) {				
 				Task<T, R> task = newTask(config, node);
 				if (shouldExecute(node, task)) {					
-					state.incrementNodesCount();
+					state.incrementUnProcessedNodesCount();
 					logger.debug("Going to schedule {} node", node.getValue());
 					this.executionEngine.submit(task);
 				} else {
@@ -215,10 +215,10 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 	}
 
 	private void doWaitForExecution(final ExecutionConfig config) {
-		while (state.getNodesCount() > 0) {
+		while (state.getUnProcessedNodesCount() > 0) {
 
 			ExecutionResult<T, R> executionResult = this.executionEngine.processResult();
-			state.decrementNodesCount();
+			state.decrementUnProcessedNodesCount();
 			logger.debug("Processing of node {} done, with status {}", executionResult.getId(), executionResult.getStatus());
 
 			final Node<T, R> processedNode = this.state.getGraphNode(executionResult.getId());
@@ -285,7 +285,7 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 	}
 
 	private Runnable retryingTask(final ExecutionConfig config, final Task<T, R> task) {
-		this.state.incrementNodesCount();
+		this.state.incrementUnProcessedNodesCount();
 		return new Runnable() {
 			@Override
 			public void run() {

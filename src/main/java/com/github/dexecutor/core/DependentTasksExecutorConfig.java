@@ -65,6 +65,8 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>, R> {
 	 * Traversar used to traverse the graph while printing it on a Writer
 	 */
 	private Traversar<T, R> traversar = new LevelOrderTraversar<T, R>();
+	
+	private DexecutorState<T, R> dexecutorState = new DefaultDexecutorState<T, R>();
 	/**
 	 * Construct the object with mandatory params, rest are optional
 	 * @param executorService @ExecutorService
@@ -92,6 +94,8 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>, R> {
 		checkNotNull(this.taskProvider, "Task Provider should not be null");
 		checkNotNull(this.validator, "Validator should not be null");
 		checkNotNull(this.traversar, "Traversar should not be null");
+		checkNotNull(this.dexecutorState, "Dexecutor State should not be null");
+		
 	}
 
 	ExecutionEngine<T, R> getExecutorEngine() {
@@ -150,5 +154,12 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>, R> {
 	public void setScheduledRetryPoolThreadsCount(int scheduledRetryPoolThreadsCount) {
 		this.scheduledRetryPoolThreadsCount = scheduledRetryPoolThreadsCount;
 	}
-	
+
+	public DexecutorState<T, R> getDexecutorState() {
+		return this.dexecutorState;
+	}
+
+	public void setDexecutorState(DexecutorState<T, R> dexecutorState) {
+		this.dexecutorState = dexecutorState;
+	}
 }

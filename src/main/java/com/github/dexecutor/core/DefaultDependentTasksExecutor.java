@@ -22,19 +22,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.dexecutor.core.graph.Dag;
-import com.github.dexecutor.core.graph.DefaultDag;
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.Validator;
@@ -59,20 +54,14 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultDependentTasksExecutor.class);
 
-	private TaskProvider<T, R> taskProvider;
-	private ExecutionEngine<T, R> executionEngine;
 	private Validator<T, R> validator;
 	private Traversar<T, R> traversar;
-	private Dag<T, R> graph;
-
-	private Collection<Node<T, R>> processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
-	private Collection<Node<T, R>> continueAfterSuccess = new CopyOnWriteArraySet<Node<T, R>>();
-
-	private AtomicInteger nodesCount = new AtomicInteger(0);
+	private TaskProvider<T, R> taskProvider;
+	private ExecutionEngine<T, R> executionEngine;
 	private ExecutorService immediatelyRetryExecutor;
 	private ScheduledExecutorService scheduledRetryExecutor;
 
-	private Phase currentPhase = Phase.BUILDING;
+	private DexecutorState<T, R> state;
 
 	public DefaultDependentTasksExecutor(final ExecutionEngine<T, R> executionEngine, final TaskProvider<T, R> taskProvider) {
 		this(new DependentTasksExecutorConfig<>(executionEngine, taskProvider));
@@ -91,53 +80,43 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		this.executionEngine = config.getExecutorEngine();
 		this.validator = config.getValidator();
 		this.traversar = config.getTraversar();
-		this.graph = new DefaultDag<T, R>();
 		this.taskProvider = config.getTaskProvider();
+		this.state = config.getDexecutorState();
+
+		this.state.initState();
 	}
 
 	public void print(final Writer writer) {
-		this.traversar.traverse(this.graph, writer);
+		this.state.print(this.traversar, writer);
 	}
 
 	public void addIndependent(final T nodeValue) {
 		checkValidPhase();
-		this.graph.addIndependent(nodeValue);
+		this.state.addIndependent(nodeValue);
 	}
 
 	public void addDependency(final T evalFirstNode, final T evalLaterNode) {
 		checkValidPhase();
-		this.graph.addDependency(evalFirstNode, evalLaterNode);
+		this.state.addDependency(evalFirstNode, evalLaterNode);
 	}
 
 	public void addAsDependentOnAllLeafNodes(final T nodeValue) {
 		checkValidPhase();
-		if (this.graph.size() == 0) {
-			addIndependent(nodeValue);
-		} else {
-			for (Node<T, R> node : this.graph.getLeafNodes()) {
-				addDependency(node.getValue(), nodeValue);
-			}
-		}
+		this.state.addAsDependentOnAllLeafNodes(nodeValue);		
 	}
 
 	@Override
 	public void addAsDependencyToAllInitialNodes(final T nodeValue) {
 		checkValidPhase();
-		if (this.graph.size() == 0) {
-			addIndependent(nodeValue);
-		} else {
-			for (Node<T, R> node : this.graph.getInitialNodes()) {
-				addDependency(nodeValue, node.getValue());
-			}
-		}		
+		this.state.addAsDependencyToAllInitialNodes(nodeValue);				
 	}
 
 	public void execute(final ExecutionConfig config) {
 		validate(config);
 
-		this.currentPhase = Phase.RUNNING;
+		this.state.setCurrentPhase(Phase.RUNNING);
 
-		Set<Node<T, R>> initialNodes = this.graph.getInitialNodes();
+		Set<Node<T, R>> initialNodes = this.state.getInitialNodes();
 
 		long start = new Date().getTime();
 
@@ -146,10 +125,9 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 		long end = new Date().getTime();
 
-		this.currentPhase = Phase.TERMINATED;
+		this.state.setCurrentPhase(Phase.TERMINATED);
 
-		logger.debug("Total Time taken to process {} jobs is {} ms.", graph.size(), end - start);
-		logger.debug("Processed Nodes Ordering {}", this.processedNodes);
+		logger.debug("Total Time taken to process {} jobs is {} ms.", state.graphSize(), end - start);
 	}
 
 	private void shutdownExecutors() {
@@ -163,10 +141,10 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		}		
 	}
 
-	private void validate(ExecutionConfig config) {
+	private void validate(final ExecutionConfig config) {
 		checkValidPhase();
 		config.validate();
-		this.validator.validate(this.graph);
+		this.state.validate(this.validator);
 	}
 
 	private void checkValidPhase() {
@@ -175,13 +153,13 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	}
 
 	private void throwExceptionIfRunning() {
-		if (Phase.RUNNING.equals(this.currentPhase)) {
+		if (Phase.RUNNING.equals(this.state.getCurrentPhase())) {
 			throw new IllegalStateException("Dexecutor is already running!");
 		}
 	}
 
 	private void throwExceptionIfTerminated() {
-		if (Phase.TERMINATED.equals(this.currentPhase)) {
+		if (Phase.TERMINATED.equals(this.state.getCurrentPhase())) {
 			throw new IllegalStateException("Dexecutor has been terminated!");
 		}
 	}
@@ -193,16 +171,16 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private void doExecute(final Collection<Node<T, R>> nodes, final ExecutionConfig config) {
 		for (Node<T, R> node : nodes) {
-			if (shouldProcess(node)) {				
+			if (this.state.shouldProcess(node)) {				
 				Task<T, R> task = newTask(config, node);
 				if (shouldExecute(node, task)) {					
-					nodesCount.incrementAndGet();
+					state.incrementNodesCount();
 					logger.debug("Going to schedule {} node", node.getValue());
 					this.executionEngine.submit(task);
 				} else {
 					node.setSkipped();
 					logger.debug("Execution Skipped for node # {} ", node.getValue());
-					this.processedNodes.add(node);
+					this.state.processingDone(node);
 					doExecute(node.getOutGoingNodes(), config);
 				}
 			} else {
@@ -210,25 +188,6 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 			}
 		}
 	}
-
-	private boolean shouldProcess(final Node<T, R> node) {
-		return !isAlreadyProcessed(node) && allIncomingNodesProcessed(node);
-	}
-
-	private boolean isAlreadyProcessed(final Node<T, R> node) {
-		return this.processedNodes.contains(node);
-	}
-
-	private boolean allIncomingNodesProcessed(final Node<T, R> node) {
-		if (node.getInComingNodes().isEmpty() || areAlreadyProcessed(node.getInComingNodes())) {
-			return true;
-		}
-		return false;
-	}
-
-	private boolean areAlreadyProcessed(final Set<Node<T, R>> nodes) {
-        return this.processedNodes.containsAll(nodes);
-    }
 
 	private boolean shouldExecute(final Node<T, R> node, final Task<T, R> task) {
 		if (task.shouldExecute(parentResults(node))) {
@@ -256,26 +215,26 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	}
 
 	private void doWaitForExecution(final ExecutionConfig config) {
-		while (nodesCount.get() > 0) {
-			
+		while (state.getNodesCount() > 0) {
+
 			ExecutionResult<T, R> executionResult = this.executionEngine.processResult();
-			nodesCount.decrementAndGet();
+			state.decrementNodesCount();
 			logger.debug("Processing of node {} done, with status {}", executionResult.getId(), executionResult.getStatus());
 
-			final Node<T, R> processedNode = this.graph.get(executionResult.getId());
+			final Node<T, R> processedNode = this.state.getGraphNode(executionResult.getId());
 			updateNode(executionResult, processedNode);
-			this.processedNodes.add(processedNode);
+			this.state.processingDone(processedNode);
 
-			if (executionResult.isSuccess() && !this.executionEngine.isAnyTaskInError() && !this.continueAfterSuccess.isEmpty()) {
-				Collection<Node<T, R>> recover = new HashSet<>(this.continueAfterSuccess);	
-				this.continueAfterSuccess.clear();
+			if (executionResult.isSuccess() && !this.executionEngine.isAnyTaskInError() && this.state.isContinueAfterSuccessNodesNotEmpty()) {
+				Collection<Node<T, R>> recover = new HashSet<>(this.state.getContinueAfterSuccessNodes());	
+				this.state.clearContinueAfterSuccessNodes();
 				doExecute(recover, config);
 			}
 
 			if (config.isNonTerminating() ||  (!this.executionEngine.isAnyTaskInError())) {
 				doExecute(processedNode.getOutGoingNodes(), config);				
 			} else if (this.executionEngine.isAnyTaskInError() && executionResult.isSuccess()) { 
-				this.continueAfterSuccess.addAll(processedNode.getOutGoingNodes());
+				this.state.processAfterSuccess(processedNode.getOutGoingNodes());
 			} else if (shouldDoImmediateRetry(config, executionResult, processedNode)) {
 				logger.debug("Submitting for Immediate retry, node {}", executionResult.getId());
 				submitForImmediateRetry(config, processedNode);
@@ -315,7 +274,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private void updateConsiderExecutionStatus(final ExecutionConfig config, final Task<T, R> task) {
 		if (config.isImmediatelyRetrying() || config.isScheduledRetrying()) {
-			Node<T, R> node = this.graph.get(task.getId());
+			Node<T, R> node = this.state.getGraphNode(task.getId());
 			Integer currentCount = getExecutionCount(node);
 			if (currentCount < config.getRetryCount()) {
 				task.setConsiderExecutionError(false);
@@ -326,7 +285,7 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 	}
 
 	private Runnable retryingTask(final ExecutionConfig config, final Task<T, R> task) {
-		nodesCount.incrementAndGet();
+		this.state.incrementNodesCount();
 		return new Runnable() {
 			@Override
 			public void run() {
@@ -354,14 +313,8 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 		processedNode.setResult(executionResult.getResult());
 		if(executionResult.isErrored()) {
 			processedNode.setErrored();
-		}/* else if(executionResult.isSkipped()) {
-			processedNode.setSkipped();
-		}*/ else {
+		} else {
 			processedNode.setSuccess();
 		}
-	}
-
-	private static enum Phase {
-		BUILDING, RUNNING, TERMINATED;
 	}
 }

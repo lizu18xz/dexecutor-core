@@ -30,12 +30,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.github.dexecutor.core.graph.Dag;
+import com.github.dexecutor.core.support.TestUtil;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskExecutionException;
 import com.github.dexecutor.core.task.TaskProvider;
 
-import mockit.Deencapsulation;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.integration.junit4.JMockit;
@@ -52,7 +52,7 @@ public class DefaultDependentTasksExecutorTest {
 	public void testAddAsDependencyToAllInitialNodes() {
 		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
 		executor.addAsDependencyToAllInitialNodes(1);
-		Dag<Integer, Integer> graph = Deencapsulation.getField(executor, "graph");
+		Dag<Integer, Integer> graph = TestUtil.getGraph(executor);
 		assertThat(graph.size(), equalTo(1));
 		executor.addDependency(1, 2);
 		executor.addAsDependencyToAllInitialNodes(1);
@@ -63,12 +63,15 @@ public class DefaultDependentTasksExecutorTest {
 	public void testAddAsDependentOnAllLeafNodes() {
 		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
 		executor.addAsDependentOnAllLeafNodes(1);
-		Dag<Integer, Integer> graph = Deencapsulation.getField(executor, "graph");
+		Dag<Integer, Integer> graph = TestUtil.getGraph(executor);
 		assertThat(graph.size(), equalTo(1));
 		executor.addDependency(1, 2);
 		executor.addAsDependentOnAllLeafNodes(1);
 		assertThat(graph.size(), equalTo(2));
+		
+		
 	}
+
 
 	@Test
 	public void testPrint() {

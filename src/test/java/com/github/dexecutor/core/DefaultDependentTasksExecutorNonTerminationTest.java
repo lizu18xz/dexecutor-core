@@ -12,11 +12,10 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 import com.github.dexecutor.core.graph.Node;
+import com.github.dexecutor.core.support.TestUtil;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
-
-import mockit.Deencapsulation;
 
 public class DefaultDependentTasksExecutorNonTerminationTest {
 
@@ -47,7 +46,7 @@ public class DefaultDependentTasksExecutorNonTerminationTest {
 
 			executor.execute(ExecutionConfig.NON_TERMINATING);
 			
-			Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
+			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
 			assertThat(processedNodesOrder).size().isEqualTo(14);
 			

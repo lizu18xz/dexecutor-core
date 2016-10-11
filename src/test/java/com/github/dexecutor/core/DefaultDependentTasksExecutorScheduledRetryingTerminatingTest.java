@@ -13,11 +13,10 @@ import org.assertj.core.api.Condition;
 import org.junit.Test;
 
 import com.github.dexecutor.core.graph.Node;
+import com.github.dexecutor.core.support.TestUtil;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
-
-import mockit.Deencapsulation;
 
 public class DefaultDependentTasksExecutorScheduledRetryingTerminatingTest {
 	
@@ -56,7 +55,7 @@ public class DefaultDependentTasksExecutorScheduledRetryingTerminatingTest {
 
 			executor.execute(new ExecutionConfig().scheduledRetrying(4, new Duration(1, TimeUnit.NANOSECONDS)));
 
-			Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
+			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
 			assertThat(processedNodesOrder).size().isGreaterThan(8);
 			assertThat(processedNodesOrder).areExactly(5, nodeTwoCondition);

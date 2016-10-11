@@ -15,11 +15,10 @@ import org.assertj.core.api.Condition;
 import org.junit.Test;
 
 import com.github.dexecutor.core.graph.Node;
+import com.github.dexecutor.core.support.TestUtil;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
-
-import mockit.Deencapsulation;
 
 public class DefaultDependentTasksExecutorImmediateRetryingTest {
 
@@ -58,7 +57,7 @@ public class DefaultDependentTasksExecutorImmediateRetryingTest {
 
 			executor.execute(new ExecutionConfig().immediateRetrying(3));
 
-			Collection<Node<Integer, Integer>> processedNodesOrder = Deencapsulation.getField(executor, "processedNodes");
+			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
 			assertThat(processedNodesOrder).size().isEqualTo(16);
 			assertThat(processedNodesOrder).areExactly(3, nodeTwoCondition);
@@ -72,6 +71,8 @@ public class DefaultDependentTasksExecutorImmediateRetryingTest {
 			}
 		}
 	}
+	
+
 	
 	private Collection<Node<Integer, Integer>> executionOrderExpectedResult() {
 		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();

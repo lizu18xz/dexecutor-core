@@ -41,7 +41,7 @@ import com.github.dexecutor.core.task.TaskFactory;
 import com.github.dexecutor.core.task.TaskProvider;
 
 /**
- * Default implementation of @DependentTasksExecutor
+ * Default implementation of @Dexecutor
  * 
  * @author Nadeem Mohammad
  * 

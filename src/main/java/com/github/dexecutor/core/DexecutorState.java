@@ -23,7 +23,14 @@ import java.util.Set;
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.Validator;
-
+/**
+ * Represents Dexecutor state at any given moment of time,
+ * 
+ * @author Nadeem Mohammad
+ *
+ * @param <T> Type of Node/Task ID
+ * @param <R> Type of Node/Task result
+ */
 public interface DexecutorState<T extends Comparable<T>, R> {
 
 	void initState();

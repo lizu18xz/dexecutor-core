@@ -36,7 +36,7 @@ import com.github.dexecutor.core.task.TaskProvider;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public class DependentTasksExecutorConfig<T extends Comparable<T>, R> {
+public class DexecutorConfig<T extends Comparable<T>, R> {
 	
 	/**
 	 * Number of threads that should handle the immediate retry.
@@ -72,7 +72,7 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>, R> {
 	 * @param executorService @ExecutorService
 	 * @param taskProvider @TaskProvider
 	 */
-	public DependentTasksExecutorConfig(final ExecutorService executorService, final TaskProvider<T, R> taskProvider) {
+	public DexecutorConfig(final ExecutorService executorService, final TaskProvider<T, R> taskProvider) {
 		checkNotNull(executorService, "Executer Service should not be null");
 		checkNotNull(taskProvider, "Task Provider should not be null");
 		this.executionEngine = new DefaultExecutionEngine<>(executorService);
@@ -84,7 +84,7 @@ public class DependentTasksExecutorConfig<T extends Comparable<T>, R> {
 	 * @param executor  @ExecutionEngine
 	 * @param taskProvider @TaskProvider
 	 */
-	public DependentTasksExecutorConfig(final ExecutionEngine<T, R> executor, final TaskProvider<T, R> taskProvider) {
+	public DexecutorConfig(final ExecutionEngine<T, R> executor, final TaskProvider<T, R> taskProvider) {
 		this.executionEngine = executor;
 		this.taskProvider = taskProvider;
 	}

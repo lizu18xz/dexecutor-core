@@ -32,21 +32,21 @@ public class DependentTasksExecutorConfigTest {
 	
 	@Test
 	public void immediateRetryPoolThreadsCountIsOne() {
-		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<String, String>(Executors.newCachedThreadPool(), newTaskProvider());
+		DexecutorConfig<String, String> config = new DexecutorConfig<String, String>(Executors.newCachedThreadPool(), newTaskProvider());
 		config.setImmediateRetryPoolThreadsCount(1);
 		assertThat(config.getImmediateRetryPoolThreadsCount(), equalTo(1));
 	}
 	
 	@Test
 	public void scheduledRetryPoolThreadsCount() {
-		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<String, String>(Executors.newCachedThreadPool(), newTaskProvider());
+		DexecutorConfig<String, String> config = new DexecutorConfig<String, String>(Executors.newCachedThreadPool(), newTaskProvider());
 		config.setScheduledRetryPoolThreadsCount(1);;
 		assertThat(config.getScheduledRetryPoolThreadsCount(), equalTo(1));
 	}
 
 	@Test(expected= IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWhenValidatorIsNull() {
-		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<String, String>(Executors.newCachedThreadPool(), newTaskProvider());
+		DexecutorConfig<String, String> config = new DexecutorConfig<String, String>(Executors.newCachedThreadPool(), newTaskProvider());
 		config.setValidator(null);
 		config.validate();
 	}
@@ -54,7 +54,7 @@ public class DependentTasksExecutorConfigTest {
 
 	@Test(expected= IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWhenTraversarIsNull() {
-		DependentTasksExecutorConfig<String, String> config = new DependentTasksExecutorConfig<String, String>(new DefaultExecutionEngine<String, String>(Executors.newCachedThreadPool()), newTaskProvider());
+		DexecutorConfig<String, String> config = new DexecutorConfig<String, String>(new DefaultExecutionEngine<String, String>(Executors.newCachedThreadPool()), newTaskProvider());
 		config.setTraversar(null);
 		config.validate();
 	}

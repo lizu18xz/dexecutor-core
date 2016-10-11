@@ -36,7 +36,7 @@ public class DefaultDependentTasksExecutorImmediateRetryingTest {
 		ExecutionEngine<Integer, Integer> executionEngine = new DefaultExecutionEngine<>(executorService);
 
 		try {
-			DefaultDependentTasksExecutor<Integer, Integer> executor = new DefaultDependentTasksExecutor<Integer, Integer>(
+			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(
 					executionEngine, new SleepyTaskProvider());
 
 			executor.addDependency(1, 2);

@@ -33,7 +33,7 @@ public class DefaultDependentTasksExecutorConsiderExecutionErrorTest {
 
 		try {
 			SleepyTaskProvider taskProvider = new SleepyTaskProvider();
-			DefaultDependentTasksExecutor<Integer, Integer> executor = new DefaultDependentTasksExecutor<Integer, Integer>(
+			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(
 					executionEngine, taskProvider);
 
 			executor.addDependency(1, 2);

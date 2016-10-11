@@ -29,7 +29,7 @@ import java.io.Writer;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public interface DependentTasksExecutor<T extends Comparable<T>> {
+public interface Dexecutor<T extends Comparable<T>> {
 	/**
 	 * Add a node as independent, it does not require any dependent node
 	 * 

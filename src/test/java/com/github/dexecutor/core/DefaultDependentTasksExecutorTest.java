@@ -50,7 +50,7 @@ public class DefaultDependentTasksExecutorTest {
 
 	@Test
 	public void testAddAsDependencyToAllInitialNodes() {
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
+		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(false);
 		executor.addAsDependencyToAllInitialNodes(1);
 		Dag<Integer, Integer> graph = TestUtil.getGraph(executor);
 		assertThat(graph.size(), equalTo(1));
@@ -61,7 +61,7 @@ public class DefaultDependentTasksExecutorTest {
 
 	@Test
 	public void testAddAsDependentOnAllLeafNodes() {
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
+		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(false);
 		executor.addAsDependentOnAllLeafNodes(1);
 		Dag<Integer, Integer> graph = TestUtil.getGraph(executor);
 		assertThat(graph.size(), equalTo(1));
@@ -75,7 +75,7 @@ public class DefaultDependentTasksExecutorTest {
 
 	@Test
 	public void testPrint() {
-		DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);
+		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(false);
 		executor.addDependency(1, 2);
 		StringWriter writer = new StringWriter();
 		executor.print(writer);
@@ -85,7 +85,7 @@ public class DefaultDependentTasksExecutorTest {
 	@Test(expected = IllegalStateException.class)
 	public void shouldThrowExectionRunningTeminatedExecutor() {
 
-		final DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);		
+		final DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(false);		
 
 		executor.execute(new ExecutionConfig().scheduledRetrying(3, new Duration(1, TimeUnit.SECONDS)));
 		executor.execute(ExecutionConfig.TERMINATING);
@@ -95,14 +95,14 @@ public class DefaultDependentTasksExecutorTest {
 	public void shouldThrowExectionAwaitingTermination() {
 		new MockedExecutionService();
 		
-		final DefaultDependentTasksExecutor<Integer, Integer> executor = newTaskExecutor(false);		
+		final DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(false);		
 
 		executor.execute(ExecutionConfig.TERMINATING);
 	}
 
-	private DefaultDependentTasksExecutor<Integer, Integer> newTaskExecutor(boolean throwEx) {
+	private DefaultDexecutor<Integer, Integer> newTaskExecutor(boolean throwEx) {
 		ExecutionEngine<Integer, Integer> engine = new DefaultExecutionEngine<Integer, Integer>(newExecutor());
-		return new DefaultDependentTasksExecutor<Integer, Integer>(engine, new DummyTaskProvider(throwEx));
+		return new DefaultDexecutor<Integer, Integer>(engine, new DummyTaskProvider(throwEx));
 	}
 
 	private ExecutorService newExecutor() {

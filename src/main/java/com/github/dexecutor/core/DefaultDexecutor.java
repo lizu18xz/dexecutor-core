@@ -50,9 +50,9 @@ import com.github.dexecutor.core.task.TaskProvider;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> implements DependentTasksExecutor<T> {
+public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<T> {
 
-	private static final Logger logger = LoggerFactory.getLogger(DefaultDependentTasksExecutor.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultDexecutor.class);
 
 	private Validator<T, R> validator;
 	private Traversar<T, R> traversar;
@@ -63,15 +63,15 @@ public final class DefaultDependentTasksExecutor <T extends Comparable<T>, R> im
 
 	private DexecutorState<T, R> state;
 
-	public DefaultDependentTasksExecutor(final ExecutionEngine<T, R> executionEngine, final TaskProvider<T, R> taskProvider) {
-		this(new DependentTasksExecutorConfig<>(executionEngine, taskProvider));
+	public DefaultDexecutor(final ExecutionEngine<T, R> executionEngine, final TaskProvider<T, R> taskProvider) {
+		this(new DexecutorConfig<>(executionEngine, taskProvider));
 	}
 
 	/**
 	 * Creates the Executor with Config
 	 * @param config
 	 */
-	public DefaultDependentTasksExecutor(final DependentTasksExecutorConfig<T, R> config) {
+	public DefaultDexecutor(final DexecutorConfig<T, R> config) {
 		config.validate();
 
 		this.immediatelyRetryExecutor = Executors.newFixedThreadPool(config.getImmediateRetryPoolThreadsCount());

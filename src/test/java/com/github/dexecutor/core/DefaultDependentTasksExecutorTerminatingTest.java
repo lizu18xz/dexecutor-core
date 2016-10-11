@@ -47,7 +47,7 @@ public class DefaultDependentTasksExecutorTerminatingTest {
 		ExecutionEngine<Integer, Integer> executionEngine = new DefaultExecutionEngine<>(executorService);
 
 		try {
-			DefaultDependentTasksExecutor<Integer, Integer> executor = new DefaultDependentTasksExecutor<Integer, Integer>(executionEngine, new SleepyTaskProvider());
+			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(executionEngine, new SleepyTaskProvider());
 
 			executor.addDependency(1, 2);
 			executor.addDependency(1, 2);

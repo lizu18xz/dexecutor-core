@@ -24,7 +24,13 @@ import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.Validator;
 /**
- * Represents Dexecutor state at any given moment of time,
+ * Represents Dexecutor state at any given moment of time, It basically tracks 
+ * <ul>
+ * 	<li><code>Phase : </code> Current Phase Dexecutor is in</li>
+ *  <li><code>Graph : </code> Exposes API around building graph </li>
+ *  <li><code>unprocessed nodes count : </code></li>
+ *  <li><code>processed nodes : </code></li>
+ *  <li><code>Discontined nodes : </code></li>
  * 
  * @author Nadeem Mohammad
  *
@@ -82,6 +88,22 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	 * @return total number of nodes in this graph
 	 */
 	int graphSize();
+
+	/**
+	 * Prints the graph into the writer using the Traversar
+	 * 
+	 * @param traversar
+	 * @param writer
+	 */
+	void print(final Traversar<T, R> traversar, final Writer writer);
+	/**
+	 * validates the graph using the validator
+	 * 
+	 * @param validator
+	 */
+	void validate(final Validator<T, R> validator);
+
+
 	/**
 	 * sets the phase to that of provided
 	 * @param currentPhase
@@ -103,19 +125,5 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	boolean isDiscontinuedNodesNotEmpty();
 	Collection<Node<T, R>> getDiscontinuedNodes();
 	void markDiscontinuedNodesProcessed();
-	void processLater(final Collection<Node<T, R>> nodes);
-	
-	/**
-	 * Prints the graph into the writer using the Traversar
-	 * 
-	 * @param traversar
-	 * @param writer
-	 */
-	void print(final Traversar<T, R> traversar, final Writer writer);
-	/**
-	 * validates the graph using the validator
-	 * 
-	 * @param validator
-	 */
-	void validate(final Validator<T, R> validator);
+	void processLater(final Collection<Node<T, R>> nodes);	
 }

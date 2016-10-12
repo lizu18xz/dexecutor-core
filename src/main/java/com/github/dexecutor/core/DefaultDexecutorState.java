@@ -35,7 +35,7 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 	private Phase currentPhase;
 	private AtomicInteger nodesCount;
 	private Collection<Node<T, R>> processedNodes;
-	private Collection<Node<T, R>> continueAfterSuccessNodes;
+	private Collection<Node<T, R>> discontinuedNodes;
 
 	public DefaultDexecutorState() {
 		
@@ -46,7 +46,7 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 		this.currentPhase = Phase.BUILDING;
 		this.nodesCount = new AtomicInteger(0);
 		this.processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
-		this.continueAfterSuccessNodes = new CopyOnWriteArrayList<Node<T, R>>();
+		this.discontinuedNodes = new CopyOnWriteArrayList<Node<T, R>>();
 	}
 
 	public void addIndependent(final T nodeValue) {
@@ -131,20 +131,20 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 		this.processedNodes.add(node);
 	}
 
-	public boolean isContinueAfterSuccessNodesNotEmpty() {
-		return !this.continueAfterSuccessNodes.isEmpty();
+	public boolean isDiscontinuedNodesNotEmpty() {
+		return !this.discontinuedNodes.isEmpty();
 	}
 	
-	public Collection<Node<T, R>> getContinueAfterSuccessNodes() {
-		return new ArrayList<Node<T, R>>(this.continueAfterSuccessNodes);
+	public Collection<Node<T, R>> getDiscontinuedNodes() {
+		return new ArrayList<Node<T, R>>(this.discontinuedNodes);
 	}
 	
-	public void clearContinueAfterSuccessNodes() {
-		this.continueAfterSuccessNodes.clear();
+	public void allDiscontinuedNodesProcessed() {
+		this.discontinuedNodes.clear();
 	}
 
-	public void processAfterSuccess(final Collection<Node<T, R>> nodes) {
-		this.continueAfterSuccessNodes.addAll(nodes);
+	public void processLater(final Collection<Node<T, R>> nodes) {
+		this.discontinuedNodes.addAll(nodes);
 	}
 
 	

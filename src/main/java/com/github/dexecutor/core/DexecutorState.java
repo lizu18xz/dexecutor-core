@@ -100,10 +100,10 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	boolean shouldProcess(final Node<T, R> node);
 	void processingDone(Node<T, R> node);
 
-	boolean isContinueAfterSuccessNodesNotEmpty();
-	Collection<Node<T, R>> getContinueAfterSuccessNodes();
-	void clearContinueAfterSuccessNodes();
-	void processAfterSuccess(final Collection<Node<T, R>> nodes);
+	boolean isDiscontinuedNodesNotEmpty();
+	Collection<Node<T, R>> getDiscontinuedNodes();
+	void allDiscontinuedNodesProcessed();
+	void processLater(final Collection<Node<T, R>> nodes);
 	
 	/**
 	 * Prints the graph into the writer using the Traversar

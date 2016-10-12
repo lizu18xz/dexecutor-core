@@ -225,16 +225,16 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 			updateNode(executionResult, processedNode);
 			this.state.processingDone(processedNode);
 
-			if (executionResult.isSuccess() && !this.executionEngine.isAnyTaskInError() && this.state.isContinueAfterSuccessNodesNotEmpty()) {
-				Collection<Node<T, R>> recover = new HashSet<>(this.state.getContinueAfterSuccessNodes());	
-				this.state.clearContinueAfterSuccessNodes();
+			if (executionResult.isSuccess() && !this.executionEngine.isAnyTaskInError() && this.state.isDiscontinuedNodesNotEmpty()) {
+				Collection<Node<T, R>> recover = new HashSet<>(this.state.getDiscontinuedNodes());	
+				this.state.allDiscontinuedNodesProcessed();
 				doExecute(recover, config);
 			}
 
 			if (config.isNonTerminating() ||  (!this.executionEngine.isAnyTaskInError())) {
 				doExecute(processedNode.getOutGoingNodes(), config);				
 			} else if (this.executionEngine.isAnyTaskInError() && executionResult.isSuccess()) { 
-				this.state.processAfterSuccess(processedNode.getOutGoingNodes());
+				this.state.processLater(processedNode.getOutGoingNodes());
 			} else if (shouldDoImmediateRetry(config, executionResult, processedNode)) {
 				logger.debug("Submitting for Immediate retry, node {}", executionResult.getId());
 				submitForImmediateRetry(config, processedNode);

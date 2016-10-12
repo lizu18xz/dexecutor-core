@@ -125,5 +125,5 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	boolean isDiscontinuedNodesNotEmpty();
 	Collection<Node<T, R>> getDiscontinuedNodes();
 	void markDiscontinuedNodesProcessed();
-	void processLater(final Collection<Node<T, R>> nodes);	
+	void processAfterNoError(final Collection<Node<T, R>> nodes);	
 }

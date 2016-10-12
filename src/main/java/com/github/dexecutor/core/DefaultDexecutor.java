@@ -234,7 +234,7 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 			if (config.isNonTerminating() ||  (!this.executionEngine.isAnyTaskInError())) {
 				doExecute(processedNode.getOutGoingNodes(), config);				
 			} else if (this.executionEngine.isAnyTaskInError() && executionResult.isSuccess()) { 
-				this.state.processLater(processedNode.getOutGoingNodes());
+				this.state.processAfterNoError(processedNode.getOutGoingNodes());
 			} else if (shouldDoImmediateRetry(config, executionResult, processedNode)) {
 				logger.debug("Submitting for Immediate retry, node {}", executionResult.getId());
 				submitForImmediateRetry(config, processedNode);

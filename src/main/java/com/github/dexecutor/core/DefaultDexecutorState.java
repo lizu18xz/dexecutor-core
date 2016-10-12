@@ -143,7 +143,7 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 		this.discontinuedNodes.clear();
 	}
 
-	public void processLater(final Collection<Node<T, R>> nodes) {
+	public void processAfterNoError(final Collection<Node<T, R>> nodes) {
 		this.discontinuedNodes.addAll(nodes);
 	}
 

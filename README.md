@@ -67,8 +67,8 @@ This will produce the dexecutor-core-VERSION.jar file under the target directory
 If you need help using Dexecutor feel free to drop an email or create an issue in github.com (preferred)
 
 ## Contributions
-To help Dexecutor development you are encouraged to provide 
-* Suggestion/feedback/Issue
+To help Dexecutor development you are encouraged to  
+* Provide suggestion/feedback/Issue
 * pull requests for new features
 * Star :star2: the project
 

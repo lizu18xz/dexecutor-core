@@ -127,7 +127,7 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
         return this.processedNodes.containsAll(nodes);
     }
 	
-	public void processingDone(Node<T, R> node) {
+	public void markProcessingDone(final Node<T, R> node) {
 		this.processedNodes.add(node);
 	}
 
@@ -139,7 +139,7 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 		return new ArrayList<Node<T, R>>(this.discontinuedNodes);
 	}
 	
-	public void allDiscontinuedNodesProcessed() {
+	public void markDiscontinuedNodesProcessed() {
 		this.discontinuedNodes.clear();
 	}
 

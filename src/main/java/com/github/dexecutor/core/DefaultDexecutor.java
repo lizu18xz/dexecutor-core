@@ -180,7 +180,7 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 				} else {
 					node.setSkipped();
 					logger.debug("Execution Skipped for node # {} ", node.getValue());
-					this.state.processingDone(node);
+					this.state.markProcessingDone(node);
 					doExecute(node.getOutGoingNodes(), config);
 				}
 			} else {
@@ -223,11 +223,11 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 
 			final Node<T, R> processedNode = this.state.getGraphNode(executionResult.getId());
 			updateNode(executionResult, processedNode);
-			this.state.processingDone(processedNode);
+			this.state.markProcessingDone(processedNode);
 
 			if (executionResult.isSuccess() && !this.executionEngine.isAnyTaskInError() && this.state.isDiscontinuedNodesNotEmpty()) {
 				Collection<Node<T, R>> recover = new HashSet<>(this.state.getDiscontinuedNodes());	
-				this.state.allDiscontinuedNodesProcessed();
+				this.state.markDiscontinuedNodesProcessed();
 				doExecute(recover, config);
 			}
 

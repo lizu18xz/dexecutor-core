@@ -98,11 +98,11 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	int decrementUnProcessedNodesCount();
 
 	boolean shouldProcess(final Node<T, R> node);
-	void processingDone(Node<T, R> node);
+	void markProcessingDone(Node<T, R> node);
 
 	boolean isDiscontinuedNodesNotEmpty();
 	Collection<Node<T, R>> getDiscontinuedNodes();
-	void allDiscontinuedNodesProcessed();
+	void markDiscontinuedNodesProcessed();
 	void processLater(final Collection<Node<T, R>> nodes);
 	
 	/**

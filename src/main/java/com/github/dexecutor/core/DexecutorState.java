@@ -28,9 +28,9 @@ import com.github.dexecutor.core.graph.Validator;
  * <ul>
  * 	<li><code>Phase : </code> Current Phase Dexecutor is in</li>
  *  <li><code>Graph : </code> Exposes API around building graph </li>
- *  <li><code>unprocessed nodes count : </code></li>
- *  <li><code>processed nodes : </code></li>
- *  <li><code>Discontined nodes : </code></li>
+ *  <li><code>unprocessed nodes count : </code>How many nodes are waiting to be processed</li>
+ *  <li><code>processed nodes : </code> Nodes which are processed till that point</li>
+ *  <li><code>Discontinued nodes : </code>Nodes for which processing should continue after system comes to valid state</li>
  * 
  * @author Nadeem Mohammad
  *
@@ -114,16 +114,50 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	 * @return the current phase of execution
 	 */
 	Phase getCurrentPhase();
-
+	/**
+	 * 
+	 * @return the total number of unprocessed nodes(Waiting for execution result) at any given moment of time.
+	 */
 	int getUnProcessedNodesCount();
-	int incrementUnProcessedNodesCount();
-	int decrementUnProcessedNodesCount();
-
+	/**
+	 * increments the count of total number of unprocessed nodes
+	 */
+	void incrementUnProcessedNodesCount();
+	/**
+	 * decrements the count of total number of unprocessed nodes
+	 */
+	void decrementUnProcessedNodesCount();
+	
+	/**
+	 * 
+	 * @param node
+	 * @return weather the {@code node} should be processed by dexecutor or not
+	 */
 	boolean shouldProcess(final Node<T, R> node);
+	/**
+	 * Mark the {@code node} as processed.
+	 * @param node
+	 */
 	void markProcessingDone(Node<T, R> node);
-
+	
+	/**
+	 * 
+	 * @return {@code true} if there nodes that should be processed, if some were discontinued due to error.
+	 * 			{@code false} otherwise
+	 */
 	boolean isDiscontinuedNodesNotEmpty();
+	/**
+	 * 
+	 * @return the @nodes that are waiting to be processed, which were discontinued due to error
+	 */
 	Collection<Node<T, R>> getDiscontinuedNodes();
+	/**
+	 * clear (or marks) all the discontinued nodes till this point as processed
+	 */
 	void markDiscontinuedNodesProcessed();
+	/**
+	 * Add to existing collection of discontinued nodes to be processed later, if system come to valid state.
+	 * @param nodes
+	 */
 	void processAfterNoError(final Collection<Node<T, R>> nodes);	
 }

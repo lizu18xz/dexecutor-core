@@ -97,11 +97,11 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 		return this.graph.get(id);
 	}
 
-	public int incrementUnProcessedNodesCount() {
-		return this.nodesCount.incrementAndGet();
+	public void incrementUnProcessedNodesCount() {
+		this.nodesCount.incrementAndGet();
 	}
-	public int decrementUnProcessedNodesCount() {
-		return this.nodesCount.decrementAndGet();
+	public void decrementUnProcessedNodesCount() {
+		this.nodesCount.decrementAndGet();
 	}
 	
 	public int getUnProcessedNodesCount() {

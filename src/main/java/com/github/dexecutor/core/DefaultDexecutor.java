@@ -54,14 +54,14 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultDexecutor.class);
 
-	private Validator<T, R> validator;
-	private Traversar<T, R> traversar;
-	private TaskProvider<T, R> taskProvider;
-	private ExecutionEngine<T, R> executionEngine;
-	private ExecutorService immediatelyRetryExecutor;
-	private ScheduledExecutorService scheduledRetryExecutor;
+	private final Validator<T, R> validator;
+	private final Traversar<T, R> traversar;
+	private final TaskProvider<T, R> taskProvider;
+	private final ExecutionEngine<T, R> executionEngine;
+	private final ExecutorService immediatelyRetryExecutor;
+	private final ScheduledExecutorService scheduledRetryExecutor;
 
-	private DexecutorState<T, R> state;
+	private final DexecutorState<T, R> state;
 
 	public DefaultDexecutor(final ExecutionEngine<T, R> executionEngine, final TaskProvider<T, R> taskProvider) {
 		this(new DexecutorConfig<>(executionEngine, taskProvider));

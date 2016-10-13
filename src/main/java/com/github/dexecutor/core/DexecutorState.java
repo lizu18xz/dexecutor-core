@@ -138,7 +138,7 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	 * Mark the {@code node} as processed.
 	 * @param node
 	 */
-	void markProcessingDone(Node<T, R> node);
+	void markProcessingDone(final Node<T, R> node);
 	
 	/**
 	 * 

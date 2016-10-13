@@ -33,8 +33,9 @@ public class DefaultDependentTasksExecutorConsiderExecutionErrorTest {
 
 		try {
 			SleepyTaskProvider taskProvider = new SleepyTaskProvider();
-			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(
-					executionEngine, taskProvider);
+			DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(executionEngine, taskProvider);
+			config.setDexecutorState(new DefaultDexecutorState<Integer, Integer>());
+			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(config);
 
 			executor.addDependency(1, 2);
 			executor.addDependency(1, 2);

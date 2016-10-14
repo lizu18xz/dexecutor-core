@@ -13,7 +13,7 @@ public class ExecutionConfig {
 	
 	/**
 	 * 
-	 * @return {@ ExecutionConfig} representing non-terminating execution behaivor
+	 * @return {@ ExecutionConfig} representing non-terminating execution behavior
 	 */
 	public ExecutionConfig nonTerminating() {
 		this.executionBehavior = ExecutionBehavior.NON_TERMINATING;

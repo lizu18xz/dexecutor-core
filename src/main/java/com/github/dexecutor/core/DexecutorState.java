@@ -142,6 +142,12 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	
 	/**
 	 * 
+	 * @return processedNodes
+	 */
+	Collection<Node<T, R>> getProcessedNodes();	
+	
+	/**
+	 * 
 	 * @return {@code true} if there nodes that should be processed, if some were discontinued due to error.
 	 * 			{@code false} otherwise
 	 */
@@ -159,5 +165,5 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	 * Add to existing collection of discontinued nodes to be processed later, if system come to valid state.
 	 * @param nodes
 	 */
-	void processAfterNoError(final Collection<Node<T, R>> nodes);	
+	void processAfterNoError(final Collection<Node<T, R>> nodes);
 }

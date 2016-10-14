@@ -131,6 +131,11 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 		this.processedNodes.add(node);
 	}
 
+	@Override
+	public Collection<Node<T, R>> getProcessedNodes() {
+		return new ArrayList<>(this.processedNodes);
+	}
+	
 	public boolean isDiscontinuedNodesNotEmpty() {
 		return !this.discontinuedNodes.isEmpty();
 	}

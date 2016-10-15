@@ -1,20 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.github.dexecutor.core.graph;
 
 import java.io.IOException;
@@ -29,31 +12,42 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A Traversar which does level order traversal of the given graph
+ * A Traversar which does level order traversal of the given graph and merges each level
  * 
  * @author Nadeem Mohammad
  *
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public class LevelOrderTraversar<T extends Comparable<T>, R> implements Traversar<T, R> {
+public class MergedLevelOrderTraversar<T extends Comparable<T>, R> implements Traversar<T, R> {
 
-	private static final Logger logger = LoggerFactory.getLogger(LevelOrderTraversar.class);
+	private static final String SPACE = " ";
+	private static final String EMPTY_STRING = "";
+
+	private static final Logger logger = LoggerFactory.getLogger(MergedLevelOrderTraversar.class);
 
 	private List<Node<T, R>> processed = new ArrayList<Node<T, R>>();
 
 	public void traverse(final Dag<T, R> graph, final Writer writer) {
 		List<List<List<Node<T, R>>>> levelOrderOfGraphs = traverseLevelOrder(graph);
-		int i = 0;
+
+		List<List<Node<T, R>>> merged = merge(levelOrderOfGraphs);
+		printGraph(merged, writer);
+	}
+
+	private List<List<Node<T, R>>> merge(final List<List<List<Node<T, R>>>> levelOrderOfGraphs) {
+		List<List<Node<T, R>>> merged  = new ArrayList<List<Node<T, R>>>();
+
 		for (List<List<Node<T, R>>> levelOrderOfGraph : levelOrderOfGraphs) {
-			try {
-				writer.write("Path #" + (i++) + "\n");
-				printGraph(levelOrderOfGraph, writer);
-				writer.write("\n");
-			} catch (IOException e) {
-				logger.error("Error Writing ", e);
+
+			for (int i = 0; i < levelOrderOfGraph.size(); i++) {
+				if (merged.size() <= i) {					
+					merged.add(new ArrayList<Node<T,R>>());
+				}
+				merged.get(i).addAll(levelOrderOfGraph.get(i));
 			}
 		}
+		return merged;
 	}
 
 	private List<List<List<Node<T, R>>>> traverseLevelOrder(final Dag<T, R> graph) {
@@ -91,7 +85,7 @@ public class LevelOrderTraversar<T extends Comparable<T>, R> implements Traversa
 		}
 	}
 
-	private boolean allProcessed(Set<Node<T, R>> inComingNodes) {
+	private boolean allProcessed(final Set<Node<T, R>> inComingNodes) {
 		return this.processed.containsAll(inComingNodes);
 	}
 
@@ -99,7 +93,7 @@ public class LevelOrderTraversar<T extends Comparable<T>, R> implements Traversa
 		for (List<Node<T, R>> nodes : list) {
 			try {
 				for (Node<T, R> node : nodes) {
-					writer.write(node + "" + node.getInComingNodes() + " ");
+					writer.write(node + EMPTY_STRING + node.getInComingNodes() + SPACE);
 				}
 				writer.write("\n");
 			} catch (IOException e) {

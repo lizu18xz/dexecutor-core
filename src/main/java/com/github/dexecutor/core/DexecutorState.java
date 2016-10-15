@@ -145,6 +145,10 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	 * @return processedNodes
 	 */
 	Collection<Node<T, R>> getProcessedNodes();	
+
+	public Collection<Node<T, R>> getScheduledNodes();
+
+	public void markScheduled(final Node<T, R> node);
 	
 	/**
 	 * 

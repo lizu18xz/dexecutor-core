@@ -30,6 +30,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.github.dexecutor.core.graph.Dag;
+import com.github.dexecutor.core.graph.LevelOrderTraversar;
+import com.github.dexecutor.core.graph.MergedLevelOrderTraversar;
+import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.support.TestUtil;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
@@ -67,19 +70,25 @@ public class DefaultDependentTasksExecutorTest {
 		assertThat(graph.size(), equalTo(1));
 		executor.addDependency(1, 2);
 		executor.addAsDependentOnAllLeafNodes(1);
-		assertThat(graph.size(), equalTo(2));
-		
-		
+		assertThat(graph.size(), equalTo(2));		
 	}
-
 
 	@Test
 	public void testPrint() {
-		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(false);
+		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(new LevelOrderTraversar<Integer, Integer>());
 		executor.addDependency(1, 2);
 		StringWriter writer = new StringWriter();
 		executor.print(writer);
 		assertThat(writer.toString(), equalTo("Path #0\n1[] \n2[1] \n\n"));
+	}
+	
+	@Test
+	public void testMergedPrint() {
+		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(new MergedLevelOrderTraversar<Integer, Integer>());
+		executor.addDependency(1, 2);
+		StringWriter writer = new StringWriter();
+		executor.print(writer);
+		assertThat(writer.toString(), equalTo("1[] \n2[1] \n"));
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -90,7 +99,7 @@ public class DefaultDependentTasksExecutorTest {
 		executor.execute(new ExecutionConfig().scheduledRetrying(3, new Duration(1, TimeUnit.SECONDS)));
 		executor.execute(ExecutionConfig.TERMINATING);
 	}
-	
+
 	@Test
 	public void shouldThrowExectionAwaitingTermination() {
 		new MockedExecutionService();
@@ -98,6 +107,13 @@ public class DefaultDependentTasksExecutorTest {
 		final DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(false);		
 
 		executor.execute(ExecutionConfig.TERMINATING);
+	}
+	
+	
+	private DefaultDexecutor<Integer, Integer> newTaskExecutor(Traversar<Integer, Integer> traversar) {
+		DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(new DefaultExecutionEngine<Integer, Integer>(newExecutor()), new DummyTaskProvider(false));
+		config.setTraversar(traversar);
+		return new DefaultDexecutor<Integer, Integer>(config);
 	}
 
 	private DefaultDexecutor<Integer, Integer> newTaskExecutor(boolean throwEx) {

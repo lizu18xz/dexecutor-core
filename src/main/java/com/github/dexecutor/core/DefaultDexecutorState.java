@@ -36,7 +36,6 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 	private AtomicInteger nodesCount;
 	private Collection<Node<T, R>> processedNodes;
 	private Collection<Node<T, R>> discontinuedNodes;
-	private Collection<Node<T, R>> scheduleNodes;
 
 	public DefaultDexecutorState() {
 		
@@ -48,7 +47,6 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 		this.nodesCount = new AtomicInteger(0);
 		this.processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
 		this.discontinuedNodes = new CopyOnWriteArrayList<Node<T, R>>();
-		this.scheduleNodes = new CopyOnWriteArrayList<Node<T, R>>();
 	}
 
 	public void addIndependent(final T nodeValue) {
@@ -135,14 +133,6 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 
 	public Collection<Node<T, R>> getProcessedNodes() {
 		return new ArrayList<>(this.processedNodes);
-	}
-	
-	public Collection<Node<T, R>> getScheduledNodes() {
-		return new ArrayList<>(this.scheduleNodes);
-	}
-
-	public void markScheduled(final Node<T, R> node) {
-		this.scheduleNodes.add(node);
 	}
 	
 	public boolean isDiscontinuedNodesNotEmpty() {

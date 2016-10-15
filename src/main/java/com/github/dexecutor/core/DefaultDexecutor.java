@@ -128,7 +128,6 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 		this.state.setCurrentPhase(Phase.TERMINATED);
 
 		logger.debug("Total Time taken to process {} jobs is {} ms.", state.graphSize(), end - start);
-		logger.debug("Scheduled Nodes Ordering {}", state.getScheduledNodes());
 		logger.debug("Processed Nodes Ordering {}", state.getProcessedNodes());
 	}
 
@@ -179,7 +178,6 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 					state.incrementUnProcessedNodesCount();
 					logger.debug("Going to schedule {} node", node.getValue());
 					this.executionEngine.submit(task);
-					this.state.markScheduled(node);
 				} else {
 					node.setSkipped();
 					logger.debug("Execution Skipped for node # {} ", node.getValue());
@@ -261,13 +259,11 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 	private void submitForImmediateRetry(final ExecutionConfig config, final Node<T, R> node) {
 		Task<T, R> task = newTask(config, node);		
 		this.immediatelyRetryExecutor.submit(retryingTask(config, task));
-		this.state.markScheduled(node);
 	}
 
 	private void submitForScheduledRetry(ExecutionConfig config, Node<T, R> node) {
 		Task<T, R> task = newTask(config, node);
 		this.scheduledRetryExecutor.schedule(retryingTask(config, task), config.getRetryDelay().getDuration(), config.getRetryDelay().getTimeUnit());
-		this.state.markScheduled(node);
 	}
 
 	private Task<T, R> newTask(final ExecutionConfig config, final Node<T, R> node) {

@@ -127,8 +127,8 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 
 		this.state.setCurrentPhase(Phase.TERMINATED);
 
-		logger.debug("Total Time taken to process {} jobs is {} ms.", state.graphSize(), end - start);
-		logger.debug("Processed Nodes Ordering {}", state.getProcessedNodes());
+		logger.debug("Total Time taken to process {} jobs is {} ms.", this.state.graphSize(), end - start);
+		logger.debug("Processed Nodes Ordering {}", this.state.getProcessedNodes());
 	}
 
 	private void shutdownExecutors() {

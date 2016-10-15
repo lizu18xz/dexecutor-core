@@ -22,7 +22,7 @@ import static com.github.dexecutor.core.support.Preconditions.checkNotNull;
 import java.util.concurrent.ExecutorService;
 
 import com.github.dexecutor.core.graph.CyclicValidator;
-import com.github.dexecutor.core.graph.LevelOrderTraversar;
+import com.github.dexecutor.core.graph.MergedLevelOrderTraversar;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.Validator;
 import com.github.dexecutor.core.task.TaskProvider;
@@ -64,8 +64,8 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 	/**
 	 * Traversar used to traverse the graph while printing it on a Writer
 	 */
-	private Traversar<T, R> traversar = new LevelOrderTraversar<T, R>();
-	
+	private Traversar<T, R> traversar = new MergedLevelOrderTraversar<T, R>();
+
 	private DexecutorState<T, R> dexecutorState = new DefaultDexecutorState<T, R>();
 	/**
 	 * Construct the object with mandatory params, rest are optional

@@ -38,10 +38,6 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 	private Collection<Node<T, R>> discontinuedNodes;
 
 	public DefaultDexecutorState() {
-		
-	}
-
-	public void initState() {
 		this.graph =  new DefaultDag<>();
 		this.currentPhase = Phase.BUILDING;
 		this.nodesCount = new AtomicInteger(0);
@@ -58,23 +54,11 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 	}
 	
 	public void addAsDependentOnAllLeafNodes(final T nodeValue) {
-		if (this.graph.size() == 0) {
-			addIndependent(nodeValue);
-		} else {
-			for (Node<T, R> node : this.graph.getLeafNodes()) {
-				addDependency(node.getValue(), nodeValue);
-			}
-		}
+		this.graph.addAsDependentOnAllLeafNodes(nodeValue);
 	}
 	
 	public void addAsDependencyToAllInitialNodes(final T nodeValue) {
-		if (this.graph.size() == 0) {
-			addIndependent(nodeValue);
-		} else {
-			for (Node<T, R> node : this.graph.getInitialNodes()) {
-				addDependency(nodeValue, node.getValue());
-			}
-		}
+		this.graph.addAsDependencyToAllInitialNodes(nodeValue);
 	}
 
 	public void setCurrentPhase(final Phase currentPhase) {

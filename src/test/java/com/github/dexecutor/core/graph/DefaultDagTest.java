@@ -18,6 +18,8 @@
 package com.github.dexecutor.core.graph;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 import java.util.Collection;
 import java.util.Set;
@@ -30,6 +32,28 @@ import org.junit.Test;
  *
  */
 public class DefaultDagTest {
+	
+	
+	@Test
+	public void testAddAsDependencyToAllInitialNodes() {
+		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
+		graph.addAsDependencyToAllInitialNodes(1);
+
+		assertThat(graph.size(), equalTo(1));
+		graph.addDependency(1, 2);
+		graph.addAsDependencyToAllInitialNodes(1);
+		assertThat(graph.size(), equalTo(2));
+	}
+
+	@Test
+	public void testAddAsDependentOnAllLeafNodes() {
+		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
+		graph.addAsDependentOnAllLeafNodes(1);
+		assertThat(graph.size(), equalTo(1));
+		graph.addDependency(1, 2);
+		graph.addAsDependentOnAllLeafNodes(1);
+		assertThat(graph.size(), equalTo(2));		
+	}
 	
 	@Test
 	public void nodeTest() {

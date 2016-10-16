@@ -27,7 +27,7 @@ import org.junit.Test;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 
-public class DependentTasksExecutorConfigTest {
+public class DexecutorConfigTest {
 	
 	
 	@Test

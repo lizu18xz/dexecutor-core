@@ -29,6 +29,18 @@ import java.util.Set;
  */
 public interface Dag<T extends Comparable<T>, R> {
 	/**
+	 * Adds the node as dependent on all leaf nodes (at the time of adding), meaning all leaf nodes would be evaluated first and then the given node
+	 * 
+	 * @param nodeValue
+	 */
+	void addAsDependentOnAllLeafNodes(final T nodeValue);
+	/**
+	 * Adds the node as dependency to all initial nodes (at the time of adding), meaning this given node would be evaluated first and then all initial nodes would run in parallel
+	 * 
+	 * @param nodeValue
+	 */
+	void addAsDependencyToAllInitialNodes(final T nodeValue);
+	/**
 	 * Should add the two nodes in the datastructure in such a way that {@code evalFirstValue} should be evaluated before {@code evalAfterValue}.
 	 * Nodes should be created only if it is not already added.
 	 * 
@@ -70,5 +82,5 @@ public interface Dag<T extends Comparable<T>, R> {
 	 * @param id
 	 * @return the @Node with the given id
 	 */
-	Node<T, R> get(final T id);
+	Node<T, R> get(final T id);	
 }

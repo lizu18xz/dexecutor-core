@@ -38,12 +38,7 @@ import com.github.dexecutor.core.graph.Validator;
  * @param <R> Type of Node/Task result
  */
 public interface DexecutorState<T extends Comparable<T>, R> {
-	
-	/**
-	 * Initialize the Dexecutor state, either to new or existing state
-	 */
-	void initState();
-	
+
 	/**
 	 * Add a node as independent, it does not require any dependent node
 	 * 

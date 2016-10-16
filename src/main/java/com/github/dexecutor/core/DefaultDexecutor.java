@@ -82,8 +82,6 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 		this.traversar = config.getTraversar();
 		this.taskProvider = config.getTaskProvider();
 		this.state = config.getDexecutorState();
-
-		this.state.initState();
 	}
 
 	public void print(final Writer writer) {
@@ -109,6 +107,15 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 	public void addAsDependencyToAllInitialNodes(final T nodeValue) {
 		checkValidPhase();
 		this.state.addAsDependencyToAllInitialNodes(nodeValue);				
+	}
+
+	@Override
+	public void recoverExecution(final ExecutionConfig config) {
+		logger.debug("Recovering Dexecutor from Phase : {}" , this.state.getCurrentPhase());
+		if (Phase.RUNNING.equals(this.state.getCurrentPhase())) {
+			doWaitForExecution(config);
+			//TODO: Add further logic to recover non processed nodes.
+		}		
 	}
 
 	public void execute(final ExecutionConfig config) {
@@ -172,6 +179,7 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 
 	private void doExecute(final Collection<Node<T, R>> nodes, final ExecutionConfig config) {
 		for (Node<T, R> node : nodes) {
+			forceStopIfRequired();
 			if (this.state.shouldProcess(node)) {				
 				Task<T, R> task = newTask(config, node);
 				if (shouldExecute(node, task)) {					
@@ -217,7 +225,7 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 
 	private void doWaitForExecution(final ExecutionConfig config) {
 		while (state.getUnProcessedNodesCount() > 0) {
-
+			forceStopIfRequired();
 			ExecutionResult<T, R> executionResult = this.executionEngine.processResult();
 			state.decrementUnProcessedNodesCount();
 			logger.debug("Processing of node {} done, with status {}", executionResult.getId(), executionResult.getStatus());
@@ -317,5 +325,17 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 		} else {
 			processedNode.setSuccess();
 		}
+	}
+
+	private void forceStopIfRequired() {
+		if (!shouldContinueProcessingNodes()) {
+			this.immediatelyRetryExecutor.shutdownNow();
+			this.scheduledRetryExecutor.shutdownNow();
+			throw new IllegalStateException("Forced to Stop the instance of Dexecutor!");
+		}		
+	}
+
+	protected boolean shouldContinueProcessingNodes() {
+		return true;
 	}
 }

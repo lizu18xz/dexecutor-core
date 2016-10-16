@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import org.assertj.core.api.Condition;
 import org.junit.Test;
 
 import com.github.dexecutor.core.graph.Node;
@@ -19,15 +17,8 @@ import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 
-public class DefaultDependentTasksExecutorScheduledRetryingTest {
+public class DexecutorNonTerminationTest {
 
-	Condition<Node<Integer, Integer>> nodeTwo = new Condition<Node<Integer, Integer>>() {
-		@Override
-		public boolean matches(Node<Integer, Integer> value) {
-			return value.getValue() == 2;
-		}
-	};
-	
 	@Test
 	public void testDependentTaskExecution() {
 
@@ -44,7 +35,6 @@ public class DefaultDependentTasksExecutorScheduledRetryingTest {
 			executor.addDependency(3, 4);
 			executor.addDependency(3, 5);
 			executor.addDependency(3, 6);
-			// executor.addDependency(10, 2); // cycle
 			executor.addDependency(2, 7);
 			executor.addDependency(2, 9);
 			executor.addDependency(2, 8);
@@ -54,12 +44,11 @@ public class DefaultDependentTasksExecutorScheduledRetryingTest {
 			executor.addDependency(13, 14);
 			executor.addIndependent(11);
 
-			executor.execute(new ExecutionConfig().scheduledRetrying(4, new Duration(1, TimeUnit.NANOSECONDS)));
-
+			executor.execute(ExecutionConfig.NON_TERMINATING);
+			
 			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
-			assertThat(processedNodesOrder).size().isEqualTo(16);
-			assertThat(processedNodesOrder).areExactly(3, nodeTwo);
+			assertThat(processedNodesOrder).size().isEqualTo(14);
 			
 		} finally {
 			try {
@@ -95,8 +84,6 @@ public class DefaultDependentTasksExecutorScheduledRetryingTest {
 	}
 
 	private static class SleepyTaskProvider implements TaskProvider<Integer, Integer> {
-		
-		private AtomicInteger count = new AtomicInteger(0);
 
 		public Task<Integer, Integer> provideTask(final Integer id) {
 
@@ -106,14 +93,12 @@ public class DefaultDependentTasksExecutorScheduledRetryingTest {
 
 				public Integer execute() {
 					if (id == 2) {
-						count.incrementAndGet();
-						if (count.get() < 3) {							
-							throw new IllegalArgumentException("Invalid task");
-						}						
+						throw new IllegalArgumentException("Invalid task");
 					}
 					return id;
 				}
 			};
 		}
 	}
+
 }

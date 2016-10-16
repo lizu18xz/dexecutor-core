@@ -29,11 +29,9 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.github.dexecutor.core.graph.Dag;
 import com.github.dexecutor.core.graph.LevelOrderTraversar;
 import com.github.dexecutor.core.graph.MergedLevelOrderTraversar;
 import com.github.dexecutor.core.graph.Traversar;
-import com.github.dexecutor.core.support.TestUtil;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskExecutionException;
@@ -49,29 +47,7 @@ import mockit.integration.junit4.JMockit;
  *
  */
 @RunWith(JMockit.class)
-public class DefaultDependentTasksExecutorTest {
-
-	@Test
-	public void testAddAsDependencyToAllInitialNodes() {
-		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(false);
-		executor.addAsDependencyToAllInitialNodes(1);
-		Dag<Integer, Integer> graph = TestUtil.getGraph(executor);
-		assertThat(graph.size(), equalTo(1));
-		executor.addDependency(1, 2);
-		executor.addAsDependencyToAllInitialNodes(1);
-		assertThat(graph.size(), equalTo(2));
-	}
-
-	@Test
-	public void testAddAsDependentOnAllLeafNodes() {
-		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(false);
-		executor.addAsDependentOnAllLeafNodes(1);
-		Dag<Integer, Integer> graph = TestUtil.getGraph(executor);
-		assertThat(graph.size(), equalTo(1));
-		executor.addDependency(1, 2);
-		executor.addAsDependentOnAllLeafNodes(1);
-		assertThat(graph.size(), equalTo(2));		
-	}
+public class DexecutorTest {
 
 	@Test
 	public void testPrint() {

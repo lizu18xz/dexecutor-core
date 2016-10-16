@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.assertj.core.api.Condition;
 import org.junit.Test;
@@ -18,9 +19,9 @@ import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 
-public class DefaultDependentTasksExecutorScheduledRetryingTerminatingTest {
-	
-	Condition<Node<Integer, Integer>> nodeTwoCondition = new Condition<Node<Integer, Integer>>() {
+public class DexecutorScheduledRetryingTest {
+
+	Condition<Node<Integer, Integer>> nodeTwo = new Condition<Node<Integer, Integer>>() {
 		@Override
 		public boolean matches(Node<Integer, Integer> value) {
 			return value.getValue() == 2;
@@ -57,8 +58,8 @@ public class DefaultDependentTasksExecutorScheduledRetryingTerminatingTest {
 
 			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
-			assertThat(processedNodesOrder).size().isGreaterThan(8);
-			assertThat(processedNodesOrder).areExactly(5, nodeTwoCondition);
+			assertThat(processedNodesOrder).size().isEqualTo(16);
+			assertThat(processedNodesOrder).areExactly(3, nodeTwo);
 			
 		} finally {
 			try {
@@ -74,9 +75,18 @@ public class DefaultDependentTasksExecutorScheduledRetryingTerminatingTest {
 		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();
 		result.add(new Node<Integer, Integer>(1));
 		result.add(new Node<Integer, Integer>(2));
+		result.add(new Node<Integer, Integer>(7));
+		result.add(new Node<Integer, Integer>(9));
+		result.add(new Node<Integer, Integer>(10));
+		result.add(new Node<Integer, Integer>(8));
 		result.add(new Node<Integer, Integer>(11));
 		result.add(new Node<Integer, Integer>(12));
 		result.add(new Node<Integer, Integer>(3));
+		result.add(new Node<Integer, Integer>(13));
+		result.add(new Node<Integer, Integer>(5));
+		result.add(new Node<Integer, Integer>(6));
+		result.add(new Node<Integer, Integer>(4));
+		result.add(new Node<Integer, Integer>(14));
 		return result;
 	}
 
@@ -85,6 +95,8 @@ public class DefaultDependentTasksExecutorScheduledRetryingTerminatingTest {
 	}
 
 	private static class SleepyTaskProvider implements TaskProvider<Integer, Integer> {
+		
+		private AtomicInteger count = new AtomicInteger(0);
 
 		public Task<Integer, Integer> provideTask(final Integer id) {
 
@@ -94,7 +106,10 @@ public class DefaultDependentTasksExecutorScheduledRetryingTerminatingTest {
 
 				public Integer execute() {
 					if (id == 2) {
-						throw new IllegalArgumentException("Invalid task");
+						count.incrementAndGet();
+						if (count.get() < 3) {							
+							throw new IllegalArgumentException("Invalid task");
+						}						
 					}
 					return id;
 				}

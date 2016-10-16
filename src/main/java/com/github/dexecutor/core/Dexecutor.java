@@ -62,7 +62,12 @@ public interface Dexecutor<T extends Comparable<T>> {
 	 * @param ExecutionConfig
 	 */
 	void execute(final ExecutionConfig config);
-	
+
+	/**
+	 * After a dexecutor crash, create a new instance of dexecutor and call this method for recovery
+	 * @param config
+	 */
+	void recoverExecution(final ExecutionConfig config);
 	/**
 	 * Prints the graph into the writer
 	 * 

@@ -1,9 +1,9 @@
 package com.github.dexecutor.core;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,19 +12,21 @@ import java.util.concurrent.TimeUnit;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
 
+import com.github.dexecutor.core.graph.Node;
+import com.github.dexecutor.core.support.TestUtil;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 
-public class DefaultDependentTasksExecutorConsiderExecutionErrorTest {
-
-	Condition<Boolean> trueCondition = new Condition<Boolean>() {
+public class DexecutorScheduledRetryingTerminatingTest {
+	
+	Condition<Node<Integer, Integer>> nodeTwoCondition = new Condition<Node<Integer, Integer>>() {
 		@Override
-		public boolean matches(Boolean value) {
-			return value == Boolean.TRUE;
+		public boolean matches(Node<Integer, Integer> value) {
+			return value.getValue() == 2;
 		}
 	};
-
+	
 	@Test
 	public void testDependentTaskExecution() {
 
@@ -32,10 +34,8 @@ public class DefaultDependentTasksExecutorConsiderExecutionErrorTest {
 		ExecutionEngine<Integer, Integer> executionEngine = new DefaultExecutionEngine<>(executorService);
 
 		try {
-			SleepyTaskProvider taskProvider = new SleepyTaskProvider();
-			DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(executionEngine, taskProvider);
-			config.setDexecutorState(new DefaultDexecutorState<Integer, Integer>());
-			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(config);
+			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(
+					executionEngine, new SleepyTaskProvider());
 
 			executor.addDependency(1, 2);
 			executor.addDependency(1, 2);
@@ -53,10 +53,12 @@ public class DefaultDependentTasksExecutorConsiderExecutionErrorTest {
 			executor.addDependency(13, 14);
 			executor.addIndependent(11);
 
-			executor.execute(new ExecutionConfig().immediateRetrying(2));
+			executor.execute(new ExecutionConfig().scheduledRetrying(4, new Duration(1, TimeUnit.NANOSECONDS)));
 
-			assertThat(taskProvider.getShouldConsiderExecutionErrors()).size().isEqualTo(3);
-			assertThat(taskProvider.getShouldConsiderExecutionErrors()).areExactly(1, trueCondition);
+			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
+			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
+			assertThat(processedNodesOrder).size().isGreaterThan(8);
+			assertThat(processedNodesOrder).areExactly(5, nodeTwoCondition);
 			
 		} finally {
 			try {
@@ -67,14 +69,22 @@ public class DefaultDependentTasksExecutorConsiderExecutionErrorTest {
 			}
 		}
 	}
+	
+	private Collection<Node<Integer, Integer>> executionOrderExpectedResult() {
+		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();
+		result.add(new Node<Integer, Integer>(1));
+		result.add(new Node<Integer, Integer>(2));
+		result.add(new Node<Integer, Integer>(11));
+		result.add(new Node<Integer, Integer>(12));
+		result.add(new Node<Integer, Integer>(3));
+		return result;
+	}
 
 	private ExecutorService newExecutor() {
 		return Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
 	}
 
 	private static class SleepyTaskProvider implements TaskProvider<Integer, Integer> {
-		
-		private List<Boolean> errors = new ArrayList<>();
 
 		public Task<Integer, Integer> provideTask(final Integer id) {
 
@@ -84,16 +94,11 @@ public class DefaultDependentTasksExecutorConsiderExecutionErrorTest {
 
 				public Integer execute() {
 					if (id == 2) {
-						errors.add(shouldConsiderExecutionError());
 						throw new IllegalArgumentException("Invalid task");
 					}
 					return id;
 				}
 			};
-		}
-
-		public List<Boolean> getShouldConsiderExecutionErrors() {
-			return this.errors;			
 		}
 	}
 }

@@ -17,6 +17,7 @@
 
 package com.github.dexecutor.core.graph;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,9 +34,34 @@ import java.util.Set;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public final class DefaultDag<T extends Comparable<T>, R> implements Dag<T, R> {
+public final class DefaultDag<T extends Comparable<T>, R> implements Dag<T, R>, Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private Map<T, Node<T, R>> nodes = new HashMap<T, Node<T, R>>();
+	
+	@Override
+	public void addAsDependentOnAllLeafNodes(T nodeValue) {
+		if (this.size() == 0) {
+			addIndependent(nodeValue);
+		} else {
+			for (Node<T, R> node : this.getLeafNodes()) {
+				addDependency(node.getValue(), nodeValue);
+			}
+		}
+		
+	}
+
+	@Override
+	public void addAsDependencyToAllInitialNodes(T nodeValue) {
+		if (this.size() == 0) {
+			addIndependent(nodeValue);
+		} else {
+			for (Node<T, R> node : this.getInitialNodes()) {
+				addDependency(nodeValue, node.getValue());
+			}
+		}		
+	}
 
 	public void addIndependent(final T nodeValue) {
 		addOrGet(nodeValue);

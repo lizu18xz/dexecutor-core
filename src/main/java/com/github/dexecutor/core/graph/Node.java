@@ -17,6 +17,7 @@
 
 package com.github.dexecutor.core.graph;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -28,8 +29,9 @@ import java.util.Set;
  *
  * @param <T>
  */
-public final class Node<T, R> {
+public final class Node<T, R> implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Unique id of the node
 	 */

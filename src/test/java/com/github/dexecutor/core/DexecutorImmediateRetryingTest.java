@@ -1,5 +1,6 @@
 package com.github.dexecutor.core;
 
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -16,13 +17,12 @@ import org.junit.Test;
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.support.TestUtil;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
-import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 
-public class DefaultDependentTasksExecutorSkippLogicTest {
+public class DexecutorImmediateRetryingTest {
 
-	Condition<Node<Integer, Integer>> nodeTwo = new Condition<Node<Integer, Integer>>() {
+	Condition<Node<Integer, Integer>> nodeTwoCondition = new Condition<Node<Integer, Integer>>() {
 		@Override
 		public boolean matches(Node<Integer, Integer> value) {
 			return value.getValue() == 2;
@@ -55,12 +55,12 @@ public class DefaultDependentTasksExecutorSkippLogicTest {
 			executor.addDependency(13, 14);
 			executor.addIndependent(11);
 
-			executor.execute(ExecutionConfig.NON_TERMINATING);
+			executor.execute(new ExecutionConfig().immediateRetrying(3));
 
 			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
-			assertThat(processedNodesOrder).size().isEqualTo(14);
-			assertThat(processedNodesOrder).areExactly(1, nodeTwo);
+			assertThat(processedNodesOrder).size().isEqualTo(16);
+			assertThat(processedNodesOrder).areExactly(3, nodeTwoCondition);
 			
 		} finally {
 			try {
@@ -71,6 +71,8 @@ public class DefaultDependentTasksExecutorSkippLogicTest {
 			}
 		}
 	}
+	
+
 	
 	private Collection<Node<Integer, Integer>> executionOrderExpectedResult() {
 		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();
@@ -106,7 +108,6 @@ public class DefaultDependentTasksExecutorSkippLogicTest {
 				private static final long serialVersionUID = 1L;
 
 				public Integer execute() {
-					shouldConsiderExecutionError();
 					if (id == 2) {
 						count.incrementAndGet();
 						if (count.get() < 3) {							
@@ -114,16 +115,6 @@ public class DefaultDependentTasksExecutorSkippLogicTest {
 						}						
 					}
 					return id;
-				}
-
-				@Override
-				public boolean shouldExecute(ExecutionResults<Integer, Integer> parentResults) {
-					if (id == 2) {
-						return false;
-					} else if (parentResults.anyParentSkipped()) {
-						return false;
-					}
-					return true;
 				}
 			};
 		}

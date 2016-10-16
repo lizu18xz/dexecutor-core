@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.github.dexecutor.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,17 +34,20 @@ import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 
-public class DefaultDependentTasksExecutorNonTerminationTest {
-
+/**
+ * 
+ * @author Nadeem Mohammad
+ *
+ */
+public class DexecutorTerminatingTest {
+	
 	@Test
 	public void testDependentTaskExecution() {
-
 		ExecutorService executorService = newExecutor();
 		ExecutionEngine<Integer, Integer> executionEngine = new DefaultExecutionEngine<>(executorService);
 
 		try {
-			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(
-					executionEngine, new SleepyTaskProvider());
+			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(executionEngine, new SleepyTaskProvider());
 
 			executor.addDependency(1, 2);
 			executor.addDependency(1, 2);
@@ -44,47 +64,36 @@ public class DefaultDependentTasksExecutorNonTerminationTest {
 			executor.addDependency(13, 14);
 			executor.addIndependent(11);
 
-			executor.execute(ExecutionConfig.NON_TERMINATING);
+			executor.execute(ExecutionConfig.TERMINATING);
 			
 			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
-			assertThat(processedNodesOrder).size().isEqualTo(14);
+			assertThat(processedNodesOrder).size().isGreaterThanOrEqualTo(4);
 			
 		} finally {
 			try {
 				executorService.shutdownNow();
 				executorService.awaitTermination(1, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
-
+				
 			}
 		}
 	}
-	
+
 	private Collection<Node<Integer, Integer>> executionOrderExpectedResult() {
 		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();
 		result.add(new Node<Integer, Integer>(1));
 		result.add(new Node<Integer, Integer>(2));
-		result.add(new Node<Integer, Integer>(7));
-		result.add(new Node<Integer, Integer>(9));
-		result.add(new Node<Integer, Integer>(10));
-		result.add(new Node<Integer, Integer>(8));
 		result.add(new Node<Integer, Integer>(11));
 		result.add(new Node<Integer, Integer>(12));
-		result.add(new Node<Integer, Integer>(3));
-		result.add(new Node<Integer, Integer>(13));
-		result.add(new Node<Integer, Integer>(5));
-		result.add(new Node<Integer, Integer>(6));
-		result.add(new Node<Integer, Integer>(4));
-		result.add(new Node<Integer, Integer>(14));
 		return result;
 	}
-
 	private ExecutorService newExecutor() {
 		return Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
 	}
 
 	private static class SleepyTaskProvider implements TaskProvider<Integer, Integer> {
-
+		
 		public Task<Integer, Integer> provideTask(final Integer id) {
 
 			return new Task<Integer, Integer>() {
@@ -94,11 +103,10 @@ public class DefaultDependentTasksExecutorNonTerminationTest {
 				public Integer execute() {
 					if (id == 2) {
 						throw new IllegalArgumentException("Invalid task");
-					}
+					}					
 					return id;
 				}
-			};
-		}
+			};			
+		}		
 	}
-
 }

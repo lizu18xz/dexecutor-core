@@ -109,12 +109,14 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 
 	@Override
 	public void recoverExecution(final ExecutionConfig config) {
-		logger.debug("Recovering Dexecutor from Phase : {}" , this.state.getCurrentPhase());
 		if (Phase.RUNNING.equals(this.state.getCurrentPhase())) {
+			logger.debug("Recovering Dexecutor.");
 			doWaitForExecution(config);
 			doExecute(this.state.getNonProcessedRootNodes(), config);
 			doWaitForExecution(config);
-		}		
+		} else {	
+			logger.debug("Can't Recover Dexecutor from Phase : {}" , this.state.getCurrentPhase());
+		}
 	}
 
 	public void execute(final ExecutionConfig config) {

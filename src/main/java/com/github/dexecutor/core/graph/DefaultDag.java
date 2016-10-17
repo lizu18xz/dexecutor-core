@@ -108,6 +108,31 @@ public final class DefaultDag<T extends Comparable<T>, R> implements Dag<T, R>, 
 		return initialNodes;
 	}
 
+	public Set<Node<T, R>> getNonProcessedRootNodes() {
+		Set<Node<T, R>> result = new LinkedHashSet<Node<T, R>>();
+		doProcess(result, getInitialNodes());
+		return result;		
+	}
+
+	private void doProcess(Set<Node<T, R>> result, Set<Node<T, R>> nodes) {
+		for (Node<T, R> node : nodes) {
+			if (node.isNotProcessed() && allParentProcessed(node.getInComingNodes())) {
+				result.add(node); 
+			} else if (allParentProcessed(node.getInComingNodes())) {
+				doProcess(result, node.getOutGoingNodes());
+			}
+		}
+	}
+
+	private boolean allParentProcessed(final Set<Node<T, R>> inComingNodes) {
+		for (Node<T, R> node : inComingNodes) {
+			if (node.isNotProcessed()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public int size() {
 		return this.nodes.size();
 	}

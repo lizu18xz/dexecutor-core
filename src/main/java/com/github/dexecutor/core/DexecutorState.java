@@ -83,6 +83,11 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	 * @return total number of nodes in this graph
 	 */
 	int graphSize();
+	/**
+	 * 
+	 * @return the root non processed nodes
+	 */
+	Set<Node<T, R>> getNonProcessedRootNodes();
 
 	/**
 	 * Prints the graph into the writer using the Traversar

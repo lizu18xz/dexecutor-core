@@ -82,5 +82,10 @@ public interface Dag<T extends Comparable<T>, R> {
 	 * @param id
 	 * @return the @Node with the given id
 	 */
-	Node<T, R> get(final T id);	
+	Node<T, R> get(final T id);
+	/**
+	 * 
+	 * @return the root non processed nodes
+	 */
+	Set<Node<T, R>> getNonProcessedRootNodes();
 }

@@ -112,7 +112,8 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 		logger.debug("Recovering Dexecutor from Phase : {}" , this.state.getCurrentPhase());
 		if (Phase.RUNNING.equals(this.state.getCurrentPhase())) {
 			doWaitForExecution(config);
-			//TODO: Add further logic to recover non processed nodes.
+			doExecute(this.state.getNonProcessedRootNodes(), config);
+			doWaitForExecution(config);
 		}		
 	}
 
@@ -180,11 +181,11 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 			forceStopIfRequired();
 			if (this.state.shouldProcess(node)) {				
 				Task<T, R> task = newTask(config, node);
-				if (shouldExecute(node, task)) {					
-					state.incrementUnProcessedNodesCount();
+				if (node.isNotProcessed() && shouldExecute(node, task)) {					
+					this.state.incrementUnProcessedNodesCount();
 					logger.debug("Going to schedule {} node", node.getValue());
 					this.executionEngine.submit(task);
-				} else {
+				} else if (node.isNotProcessed()){
 					node.setSkipped();
 					logger.debug("Execution Skipped for node # {} ", node.getValue());
 					this.state.markProcessingDone(node);

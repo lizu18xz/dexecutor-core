@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
@@ -32,6 +33,92 @@ import org.junit.Test;
  *
  */
 public class DefaultDagTest {
+	
+	@Test
+	public void testNonProcessedRootNodesAreInitialNodes() {
+		
+		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
+		graph.addDependency(1, 2);
+		graph.addDependency(1, 2);
+		graph.addDependency(1, 3);
+		graph.addDependency(3, 4);
+		graph.addDependency(3, 5);
+		graph.addDependency(3, 6);
+		graph.addDependency(2, 7);
+		graph.addDependency(2, 9);
+		graph.addDependency(2, 8);
+		graph.addDependency(9, 10);
+		graph.addDependency(12, 13);
+		graph.addDependency(13, 4);
+		graph.addDependency(13, 14);
+		graph.addIndependent(11);
+		
+		assertThat(graph.getNonProcessedRootNodes()).size().isEqualTo(3);
+		assertThat(graph.getNonProcessedRootNodes()).containsAll(Arrays.<Node<Integer, Integer>>asList(new Node<Integer, Integer>(1), new Node<Integer, Integer>(11), new Node<Integer, Integer>(12)));
+	}
+	
+	@Test
+	public void testNonProcessedRootNodesAreInitialNodes1() {
+		
+		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
+		graph.addDependency(1, 2);
+		graph.addDependency(1, 2);
+		graph.addDependency(1, 3);
+		graph.addDependency(3, 4);
+		graph.addDependency(3, 5);
+		graph.addDependency(3, 6);
+		graph.addDependency(2, 7);
+		graph.addDependency(2, 9);
+		graph.addDependency(2, 8);
+		graph.addDependency(9, 10);
+		graph.addDependency(12, 13);
+		graph.addDependency(13, 4);
+		graph.addDependency(13, 14);
+		graph.addIndependent(11);
+		
+		graph.get(1).setErrored();
+		graph.get(2).setErrored();
+		graph.get(3).setErrored();
+		graph.get(12).setErrored();
+		graph.get(4).setErrored();
+		graph.get(8).setErrored();
+		graph.get(7).setErrored();
+		graph.get(5).setErrored();
+		
+		assertThat(graph.getNonProcessedRootNodes()).size().isEqualTo(4);
+		assertThat(graph.getNonProcessedRootNodes()).containsAll(Arrays.<Node<Integer, Integer>>asList(new Node<Integer, Integer>(13), new Node<Integer, Integer>(11), new Node<Integer, Integer>(9), new Node<Integer, Integer>(6)));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testNonProcessedRootNodesAreInitialNodesIntersection() {
+		
+		Dag<Integer, Integer> graph = new DefaultDag<Integer, Integer>();
+		graph.addDependency(1, 2);
+		graph.addDependency(1, 2);
+		graph.addDependency(1, 3);
+		graph.addDependency(3, 4);
+		graph.addDependency(3, 5);
+		graph.addDependency(3, 6);
+		graph.addDependency(2, 7);
+		graph.addDependency(2, 9);
+		graph.addDependency(2, 8);
+		graph.addDependency(9, 10);
+		graph.addDependency(12, 13);
+		graph.addDependency(13, 4);
+		graph.addDependency(13, 14);
+		graph.addIndependent(11);
+		
+		graph.get(1).setErrored();
+		graph.get(12).setErrored();
+		graph.get(11).setErrored();
+		graph.get(13).setErrored();
+		graph.get(14).setErrored();
+		
+		assertThat(graph.getNonProcessedRootNodes()).size().isEqualTo(2);
+		assertThat(graph.getNonProcessedRootNodes()).doesNotContain(new Node<Integer, Integer> (4));
+		assertThat(graph.getNonProcessedRootNodes()).containsAll(Arrays.<Node<Integer, Integer>>asList(new Node<Integer, Integer>(2), new Node<Integer, Integer>(3)));
+	}
 	
 	
 	@Test

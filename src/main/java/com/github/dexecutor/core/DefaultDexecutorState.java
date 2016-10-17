@@ -72,7 +72,11 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 	public Set<Node<T, R>> getInitialNodes() {
 		return this.graph.getInitialNodes();
 	}
-
+	
+	public Set<Node<T, R>> getNonProcessedRootNodes() {
+		return this.graph.getNonProcessedRootNodes();
+	}
+	
 	public int graphSize() {
 		return this.graph.size();
 	}

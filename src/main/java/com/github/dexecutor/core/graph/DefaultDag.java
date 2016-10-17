@@ -114,7 +114,7 @@ public final class DefaultDag<T extends Comparable<T>, R> implements Dag<T, R>, 
 		return result;		
 	}
 
-	private void doProcess(Set<Node<T, R>> result, Set<Node<T, R>> nodes) {
+	private void doProcess(final Set<Node<T, R>> result, final Set<Node<T, R>> nodes) {
 		for (Node<T, R> node : nodes) {
 			if (node.isNotProcessed() && allParentProcessed(node.getInComingNodes())) {
 				result.add(node); 

@@ -135,7 +135,6 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 		this.discontinuedNodes.addAll(nodes);
 	}
 
-	
 	public void print(final Traversar<T, R> traversar, final Writer writer) {
 		traversar.traverse(this.graph, writer);
 	}

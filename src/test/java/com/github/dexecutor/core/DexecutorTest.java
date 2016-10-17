@@ -54,8 +54,11 @@ public class DexecutorTest {
 		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(new LevelOrderTraversar<Integer, Integer>());
 		executor.addDependency(1, 2);
 		StringWriter writer = new StringWriter();
-		executor.print(writer);
+		executor.print(new LevelOrderTraversar<Integer, Integer>(), writer);
 		assertThat(writer.toString(), equalTo("Path #0\n1[] \n2[1] \n\n"));
+		StringWriter wr = new StringWriter();
+		executor.print(new LevelOrderTraversar<Integer, Integer>(), wr);
+		assertThat(wr.toString(), equalTo("Path #0\n1[] \n2[1] \n\n"));
 	}
 	
 	@Test
@@ -63,7 +66,7 @@ public class DexecutorTest {
 		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(new MergedLevelOrderTraversar<Integer, Integer>());
 		executor.addDependency(1, 2);
 		StringWriter writer = new StringWriter();
-		executor.print(writer);
+		executor.print(new MergedLevelOrderTraversar<Integer, Integer>(), writer);
 		assertThat(writer.toString(), equalTo("1[] \n2[1] \n"));
 	}
 
@@ -88,7 +91,7 @@ public class DexecutorTest {
 	
 	private DefaultDexecutor<Integer, Integer> newTaskExecutor(Traversar<Integer, Integer> traversar) {
 		DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(new DefaultExecutionEngine<Integer, Integer>(newExecutor()), new DummyTaskProvider(false));
-		config.setTraversar(traversar);
+		//config.setTraversar(traversar);
 		return new DefaultDexecutor<Integer, Integer>(config);
 	}
 

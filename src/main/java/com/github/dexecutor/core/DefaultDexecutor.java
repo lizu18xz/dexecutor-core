@@ -50,12 +50,11 @@ import com.github.dexecutor.core.task.TaskProvider;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<T> {
+public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<T, R> {
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultDexecutor.class);
 
 	private final Validator<T, R> validator;
-	private final Traversar<T, R> traversar;
 	private final TaskProvider<T, R> taskProvider;
 	private final ExecutionEngine<T, R> executionEngine;
 	private final ExecutorService immediatelyRetryExecutor;
@@ -79,13 +78,12 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 
 		this.executionEngine = config.getExecutorEngine();
 		this.validator = config.getValidator();
-		this.traversar = config.getTraversar();
 		this.taskProvider = config.getTaskProvider();
 		this.state = config.getDexecutorState();
 	}
 
-	public void print(final Writer writer) {
-		this.state.print(this.traversar, writer);
+	public void print(final Traversar<T, R> traversar, final Writer writer) {
+		this.state.print(traversar, writer);
 	}
 
 	public void addIndependent(final T nodeValue) {

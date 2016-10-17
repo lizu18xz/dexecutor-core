@@ -19,6 +19,8 @@ package com.github.dexecutor.core;
 
 import java.io.Writer;
 
+import com.github.dexecutor.core.graph.Traversar;
+
 /**
  * Main Interface for Dexecutor framework, It provides api to build the graph and and to kick off the execution.
  * 
@@ -29,7 +31,7 @@ import java.io.Writer;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public interface Dexecutor<T extends Comparable<T>> {
+public interface Dexecutor<T extends Comparable<T>, R> {
 	/**
 	 * Add a node as independent, it does not require any dependent node
 	 * 
@@ -69,9 +71,10 @@ public interface Dexecutor<T extends Comparable<T>> {
 	 */
 	void recoverExecution(final ExecutionConfig config);
 	/**
-	 * Prints the graph into the writer
+	 * Prints the graph into the writer, using the traversar
 	 * 
+	 * @param traversar
 	 * @param writer
 	 */
-	void print(final Writer writer);
+	void print(final Traversar<T, R> traversar, final Writer writer);
 }

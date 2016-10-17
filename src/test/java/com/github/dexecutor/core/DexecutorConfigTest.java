@@ -51,14 +51,6 @@ public class DexecutorConfigTest {
 		config.validate();
 	}
 
-
-	@Test(expected= IllegalArgumentException.class)
-	public void shouldThrowIllegalArgumentExceptionWhenTraversarIsNull() {
-		DexecutorConfig<String, String> config = new DexecutorConfig<String, String>(new DefaultExecutionEngine<String, String>(Executors.newCachedThreadPool()), newTaskProvider());
-		config.setTraversar(null);
-		config.validate();
-	}
-
 	private TaskProvider<String, String> newTaskProvider() {
 		return new TaskProvider<String, String>() {
 			

@@ -27,6 +27,7 @@ import java.io.Writer;
  * @param <R> Type of Node/Task result
  */
 public interface Traversar <T extends Comparable<T>, R> {
+	
 	/**
 	 * Traverse the given graph and print it on the Writer
 	 * @param graph

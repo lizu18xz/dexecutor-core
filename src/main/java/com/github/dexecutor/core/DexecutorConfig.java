@@ -22,8 +22,6 @@ import static com.github.dexecutor.core.support.Preconditions.checkNotNull;
 import java.util.concurrent.ExecutorService;
 
 import com.github.dexecutor.core.graph.CyclicValidator;
-import com.github.dexecutor.core.graph.MergedLevelOrderTraversar;
-import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.Validator;
 import com.github.dexecutor.core.task.TaskProvider;
 
@@ -61,10 +59,6 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 	 * Validator for validating the consturcted graph, defaults to detecting Cyclic checks
 	 */
 	private Validator<T, R> validator = new CyclicValidator<T, R>();
-	/**
-	 * Traversar used to traverse the graph while printing it on a Writer
-	 */
-	private Traversar<T, R> traversar = new MergedLevelOrderTraversar<T, R>();
 
 	private DexecutorState<T, R> dexecutorState = new DefaultDexecutorState<T, R>();
 	/**
@@ -93,9 +87,7 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 		checkNotNull(this.executionEngine, "Execution Engine should not be null");
 		checkNotNull(this.taskProvider, "Task Provider should not be null");
 		checkNotNull(this.validator, "Validator should not be null");
-		checkNotNull(this.traversar, "Traversar should not be null");
-		checkNotNull(this.dexecutorState, "Dexecutor State should not be null");
-		
+		checkNotNull(this.dexecutorState, "Dexecutor State should not be null");		
 	}
 
 	ExecutionEngine<T, R> getExecutorEngine() {
@@ -116,16 +108,7 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 	public void setValidator(final Validator<T, R> validator) {
 		this.validator = validator;
 	}
-	Traversar<T, R> getTraversar() {
-		return this.traversar;
-	}
-	/**
-	 * Change the traversar to that of specified
-	 * @param traversar
-	 */
-	public void setTraversar(final Traversar<T, R> traversar) {
-		this.traversar = traversar;
-	}
+
 	/**
 	 * 
 	 * @return the immediate retry thread pool count

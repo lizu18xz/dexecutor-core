@@ -109,11 +109,15 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 
 	@Override
 	public void recoverExecution(final ExecutionConfig config) {
-		logger.debug("Recovering Dexecutor.");
-		doWaitForExecution(config);
-		doExecute(this.state.getNonProcessedRootNodes(), config);
-		doWaitForExecution(config);
-		logger.debug("Processed Nodes Ordering {}", this.state.getProcessedNodes());
+		if (Phase.TERMINATED.equals(this.state.getCurrentPhase())) {
+			logger.debug("Can't Recover a terminiated Dexecutor");			
+		} else {	
+			logger.debug("Recovering Dexecutor.");
+			doWaitForExecution(config);
+			doExecute(this.state.getNonProcessedRootNodes(), config);
+			doWaitForExecution(config);
+			logger.debug("Processed Nodes Ordering {}", this.state.getProcessedNodes());
+		}
 	}
 
 	public void execute(final ExecutionConfig config) {

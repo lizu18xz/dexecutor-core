@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
@@ -18,8 +17,6 @@ import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 
 public class DexecutorRecoveringTest {
-	
-	private static AtomicInteger atomicInteger = new AtomicInteger(0);
 	
 	@Test
 	public void testDependentTaskExecution() {
@@ -88,10 +85,7 @@ public class DexecutorRecoveringTest {
 				private static final long serialVersionUID = 1L;
 
 				public Integer execute() {
-					if (atomicInteger.get()== 0 && id == 2) {
-						atomicInteger.incrementAndGet();
-						throw new IllegalArgumentException("Invalid task");
-					}					
+								
 					return id;
 				}
 			};			

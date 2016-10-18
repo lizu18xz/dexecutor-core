@@ -48,8 +48,7 @@ public final class DefaultDag<T extends Comparable<T>, R> implements Dag<T, R>, 
 			for (Node<T, R> node : this.getLeafNodes()) {
 				addDependency(node.getValue(), nodeValue);
 			}
-		}
-		
+		}		
 	}
 
 	@Override

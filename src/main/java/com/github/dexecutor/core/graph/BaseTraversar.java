@@ -56,10 +56,10 @@ public abstract class BaseTraversar <T extends Comparable<T>, R> implements Trav
 			for (int i = 0; i < size; i++) {
 				Node<T, R> node = queue.poll();
 				if (!this.processed.contains(node) && allProcessed(node.getInComingNodes())) {
-					if (!level.contains(node)) {
+					if (!level.contains(node) && !processedAtThisLevel(level, node.getInComingNodes())) {
 						level.add(node);
+						this.processed.add(node);
 					}
-					this.processed.add(node);
 					for (Node<T, R> ogn : node.getOutGoingNodes()) {
 						if (ogn != null && !this.processed.contains(ogn)) {
 							queue.offer(ogn);
@@ -69,6 +69,15 @@ public abstract class BaseTraversar <T extends Comparable<T>, R> implements Trav
 			}
 			result.add(level);
 		}
+	}
+
+	private boolean processedAtThisLevel(List<Node<T, R>> level, Set<Node<T, R>> inComingNodes) {
+		for (Node<T, R> node : inComingNodes) {
+			if (level.contains(node)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean allProcessed(final Set<Node<T, R>> inComingNodes) {

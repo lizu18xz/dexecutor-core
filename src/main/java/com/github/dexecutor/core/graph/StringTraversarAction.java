@@ -15,42 +15,33 @@
  * limitations under the License.
  */
 package com.github.dexecutor.core.graph;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * A Traversar which does level order traversal of the given graph and merges each level
  * 
  * @author Nadeem Mohammad
  *
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public class MergedLevelOrderTraversar<T extends Comparable<T>, R> extends BaseTraversar<T, R> {
+public class StringTraversarAction<T extends Comparable<T>, R> implements TraversarAction <T, R> {
 
-	@Override
-	public void traverse(final Dag<T, R> graph, final TraversarAction<T, R> action) {
-		List<List<List<Node<T, R>>>> levelOrderOfGraphs = traverseLevelOrder(graph);
-
-		List<List<Node<T, R>>> merged = merge(levelOrderOfGraphs);
-
-		action.onNewPath(0);
-		traversePath(merged, action);	
+	private final StringBuilder builder;
+	
+	public StringTraversarAction(final StringBuilder builder) {
+		this.builder = builder;
 	}
 
-	private List<List<Node<T, R>>> merge(final List<List<List<Node<T, R>>>> levelOrderOfGraphs) {
-		List<List<Node<T, R>>> merged  = new ArrayList<List<Node<T, R>>>();
+	@Override
+	public void onNode(Node<T, R> node) {
+		builder.append(node).append(node.getInComingNodes()).append(" ");				
+	}
 
-		for (List<List<Node<T, R>>> levelOrderOfGraph : levelOrderOfGraphs) {
-
-			for (int i = 0; i < levelOrderOfGraph.size(); i++) {
-				if (merged.size() <= i) {					
-					merged.add(new ArrayList<Node<T, R>>());
-				}
-				merged.get(i).addAll(levelOrderOfGraph.get(i));
-			}
-		}
-		return merged;
+	@Override
+	public void onNewPath(int pathNumber) {
+		builder.append("Path #").append(pathNumber);				
+	}
+	
+	@Override
+	public void onNewLevel(int levelNumber) {
+		builder.append("\n");				
 	}
 }

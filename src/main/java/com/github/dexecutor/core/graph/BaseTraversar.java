@@ -16,23 +16,22 @@
  */
 package com.github.dexecutor.core.graph;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+/**
+ * 
+ * @author Nadeem Mohammad
+ *
+ * @param <T>
+ *            Type of Node/Task ID
+ * @param <R>
+ *            Type of Node/Task result
+ */
 public abstract class BaseTraversar <T extends Comparable<T>, R> implements Traversar<T, R> {
-
-	private static final Logger logger = LoggerFactory.getLogger(BaseTraversar.class);
-
-	private static final String SPACE = " ";
-	private static final String EMPTY_STRING = "";
 
 	private List<Node<T, R>> processed = new ArrayList<Node<T, R>>();
 
@@ -84,16 +83,14 @@ public abstract class BaseTraversar <T extends Comparable<T>, R> implements Trav
 		return this.processed.containsAll(inComingNodes);
 	}
 
-	protected void printGraph(final List<List<Node<T, R>>> list, final Writer writer) {
+	protected void traversePath(final List<List<Node<T, R>>> list, final TraversarAction<T, R> action) {
+		int level = 0;
 		for (List<Node<T, R>> nodes : list) {
-			try {
-				for (Node<T, R> node : nodes) {
-					writer.write(node + EMPTY_STRING + node.getInComingNodes() + SPACE);
-				}
-				writer.write("\n");
-			} catch (IOException e) {
-				logger.error("Error Writing ", e);
-			}
+			action.onNewLevel(level);
+			for (Node<T, R> node : nodes) {
+				action.onNode(node);
+			}			
+			level++;
 		}
 	}
 }

@@ -20,7 +20,6 @@ package com.github.dexecutor.core;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-import java.io.StringWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -32,6 +31,7 @@ import org.junit.runner.RunWith;
 import com.github.dexecutor.core.graph.Dag;
 import com.github.dexecutor.core.graph.LevelOrderTraversar;
 import com.github.dexecutor.core.graph.MergedLevelOrderTraversar;
+import com.github.dexecutor.core.graph.StringTraversarAction;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.support.TestUtil;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
@@ -77,21 +77,18 @@ public class DexecutorTest {
 	public void testPrint() {
 		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(new LevelOrderTraversar<Integer, Integer>());
 		executor.addDependency(1, 2);
-		StringWriter writer = new StringWriter();
-		executor.print(new LevelOrderTraversar<Integer, Integer>(), writer);
-		assertThat(writer.toString(), equalTo("Path #0\n1[] \n2[1] \n\n"));
-		StringWriter wr = new StringWriter();
-		executor.print(new LevelOrderTraversar<Integer, Integer>(), wr);
-		assertThat(wr.toString(), equalTo("Path #0\n1[] \n2[1] \n\n"));
+		StringBuilder builder = new StringBuilder();
+		executor.print(new LevelOrderTraversar<Integer, Integer>(), new StringTraversarAction<Integer, Integer>(builder));
+		assertThat(builder.toString(), equalTo("Path #0\n1[] \n2[1] "));
 	}
 	
 	@Test
 	public void testMergedPrint() {
 		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(new MergedLevelOrderTraversar<Integer, Integer>());
 		executor.addDependency(1, 2);
-		StringWriter writer = new StringWriter();
-		executor.print(new MergedLevelOrderTraversar<Integer, Integer>(), writer);
-		assertThat(writer.toString(), equalTo("1[] \n2[1] \n"));
+		StringBuilder builder = new StringBuilder();
+		executor.print(new LevelOrderTraversar<Integer, Integer>(), new StringTraversarAction<Integer, Integer>(builder));
+		assertThat(builder.toString(), equalTo("Path #0\n1[] \n2[1] "));
 	}
 
 	@Test(expected = IllegalStateException.class)

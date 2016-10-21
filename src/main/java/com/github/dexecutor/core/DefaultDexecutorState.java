@@ -16,7 +16,6 @@
  */
 package com.github.dexecutor.core;
 
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -27,6 +26,7 @@ import com.github.dexecutor.core.graph.Dag;
 import com.github.dexecutor.core.graph.DefaultDag;
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.graph.Traversar;
+import com.github.dexecutor.core.graph.TraversarAction;
 import com.github.dexecutor.core.graph.Validator;
 
 public class DefaultDexecutorState<T extends Comparable<T>, R> implements DexecutorState <T, R> {
@@ -139,8 +139,8 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 		this.discontinuedNodes.addAll(nodes);
 	}
 
-	public void print(final Traversar<T, R> traversar, final Writer writer) {
-		traversar.traverse(this.graph, writer);
+	public void print(final Traversar<T, R> traversar, final TraversarAction<T, R> action) {
+		traversar.traverse(this.graph, action);
 	}
 
 	public void validate(final Validator<T, R> validator) {

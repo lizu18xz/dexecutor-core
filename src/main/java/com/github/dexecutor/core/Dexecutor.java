@@ -17,9 +17,8 @@
 
 package com.github.dexecutor.core;
 
-import java.io.Writer;
-
 import com.github.dexecutor.core.graph.Traversar;
+import com.github.dexecutor.core.graph.TraversarAction;
 
 /**
  * Main Interface for Dexecutor framework, It provides api to build the graph and and to kick off the execution.
@@ -76,5 +75,5 @@ public interface Dexecutor<T extends Comparable<T>, R> {
 	 * @param traversar
 	 * @param writer
 	 */
-	void print(final Traversar<T, R> traversar, final Writer writer);
+	void print(final Traversar<T, R> traversar, final TraversarAction<T, R> action);
 }

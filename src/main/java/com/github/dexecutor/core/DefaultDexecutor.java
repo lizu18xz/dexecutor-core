@@ -17,7 +17,6 @@
 
 package com.github.dexecutor.core;
 
-import java.io.Writer;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -32,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.graph.Traversar;
+import com.github.dexecutor.core.graph.TraversarAction;
 import com.github.dexecutor.core.graph.Validator;
 import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.ExecutionResults;
@@ -82,8 +82,8 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 		this.state = config.getDexecutorState();
 	}
 
-	public void print(final Traversar<T, R> traversar, final Writer writer) {
-		this.state.print(traversar, writer);
+	public void print(final Traversar<T, R> traversar, final TraversarAction<T, R> action) {
+		this.state.print(traversar, action);
 	}
 
 	public void addIndependent(final T nodeValue) {

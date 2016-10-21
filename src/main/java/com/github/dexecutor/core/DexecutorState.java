@@ -16,12 +16,12 @@
  */
 package com.github.dexecutor.core;
 
-import java.io.Writer;
 import java.util.Collection;
 import java.util.Set;
 
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.graph.Traversar;
+import com.github.dexecutor.core.graph.TraversarAction;
 import com.github.dexecutor.core.graph.Validator;
 /**
  * Represents Dexecutor state at any given moment of time, It basically tracks 
@@ -93,9 +93,9 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	 * Prints the graph into the writer using the Traversar
 	 * 
 	 * @param traversar
-	 * @param writer
+	 * @param action
 	 */
-	void print(final Traversar<T, R> traversar, final Writer writer);
+	void print(final Traversar<T, R> traversar, final TraversarAction<T, R> action);
 	/**
 	 * validates the graph using the validator
 	 * 

@@ -14,22 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.dexecutor.core.graph;
-
 /**
- * Provides an API to Traverse a given graph
+ * 
  * @author Nadeem Mohammad
  *
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public interface Traversar <T extends Comparable<T>, R> {
-	
+public interface TraversarAction<T extends Comparable<T>, R> {
 	/**
-	 * Traverse the given graph and print it on the Writer
-	 * @param graph
-	 * @param writer
+	 * 
+	 * @param pathNumber
 	 */
-	void traverse(final Dag<T, R> graph, final TraversarAction<T, R> action);
+	void onNewPath(int pathNumber);
+	/**
+	 * 
+	 * @param levelNumber
+	 */
+	void onNewLevel(int levelNumber);
+	/**
+	 * 
+	 * @param node
+	 */
+	void onNode(final Node<T, R> node);
 }

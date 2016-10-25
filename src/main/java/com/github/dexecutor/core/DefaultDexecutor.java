@@ -228,31 +228,36 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 	private void doWaitForExecution(final ExecutionConfig config) {
 		while (state.getUnProcessedNodesCount() > 0) {
 			forceStopIfRequired();
-			ExecutionResult<T, R> executionResult = this.executionEngine.processResult();
-			state.decrementUnProcessedNodesCount();
-			logger.debug("Processing of node {} done, with status {}", executionResult.getId(), executionResult.getStatus());
+			ExecutionResult<T, R> executionResult = this.executionEngine.processResult();			
+			doAfterExecutionDone(config, executionResult);
+		}
+	}
 
-			final Node<T, R> processedNode = this.state.getGraphNode(executionResult.getId());
-			updateNode(executionResult, processedNode);
-			this.state.markProcessingDone(processedNode);
+	//Check if it can run in separate thread
+	private void doAfterExecutionDone(final ExecutionConfig config, final ExecutionResult<T, R> executionResult) {
+		logger.debug("Processing of node {} done, with status {}", executionResult.getId(), executionResult.getStatus());
+		state.decrementUnProcessedNodesCount();
+		
+		final Node<T, R> processedNode = state.getGraphNode(executionResult.getId());
+		updateNode(executionResult, processedNode);
+		state.markProcessingDone(processedNode);
 
-			if (executionResult.isSuccess() && !this.executionEngine.isAnyTaskInError() && this.state.isDiscontinuedNodesNotEmpty()) {
-				Collection<Node<T, R>> recover = new HashSet<>(this.state.getDiscontinuedNodes());	
-				this.state.markDiscontinuedNodesProcessed();
-				doExecute(recover, config);
-			}
+		if (executionResult.isSuccess() && !executionEngine.isAnyTaskInError() && state.isDiscontinuedNodesNotEmpty()) {
+			Collection<Node<T, R>> recover = new HashSet<>(state.getDiscontinuedNodes());	
+			state.markDiscontinuedNodesProcessed();
+			doExecute(recover, config);
+		}
 
-			if (config.isNonTerminating() ||  (!this.executionEngine.isAnyTaskInError())) {
-				doExecute(processedNode.getOutGoingNodes(), config);				
-			} else if (this.executionEngine.isAnyTaskInError() && executionResult.isSuccess()) { 
-				this.state.processAfterNoError(processedNode.getOutGoingNodes());
-			} else if (shouldDoImmediateRetry(config, executionResult, processedNode)) {
-				logger.debug("Submitting for Immediate retry, node {}", executionResult.getId());
-				submitForImmediateRetry(config, processedNode);
-			} else if (shouldScheduleRetry(config, executionResult, processedNode)) {
-				logger.debug("Submitting for Scheduled retry, node {}", executionResult.getId());
-				submitForScheduledRetry(config, processedNode);
-			}
+		if (config.isNonTerminating() ||  (!executionEngine.isAnyTaskInError())) {
+			doExecute(processedNode.getOutGoingNodes(), config);				
+		} else if (executionEngine.isAnyTaskInError() && executionResult.isSuccess()) { 
+			state.processAfterNoError(processedNode.getOutGoingNodes());
+		} else if (shouldDoImmediateRetry(config, executionResult, processedNode)) {
+			logger.debug("Submitting for Immediate retry, node {}", executionResult.getId());
+			submitForImmediateRetry(config, processedNode);
+		} else if (shouldScheduleRetry(config, executionResult, processedNode)) {
+			logger.debug("Submitting for Scheduled retry, node {}", executionResult.getId());
+			submitForScheduledRetry(config, processedNode);
 		}
 	}
 

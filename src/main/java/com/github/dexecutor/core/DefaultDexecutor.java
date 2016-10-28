@@ -152,8 +152,8 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 	}
 
 	private void validate(final ExecutionConfig config) {
-		checkValidPhase();
 		config.validate();
+		checkValidPhase();
 		this.state.validate(this.validator);
 	}
 

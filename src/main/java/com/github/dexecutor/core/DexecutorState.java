@@ -19,6 +19,7 @@ package com.github.dexecutor.core;
 import java.util.Collection;
 import java.util.Set;
 
+import com.github.dexecutor.core.graph.DependencyAware;
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.TraversarAction;
@@ -37,39 +38,8 @@ import com.github.dexecutor.core.graph.Validator;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public interface DexecutorState<T extends Comparable<T>, R> {
+public interface DexecutorState<T extends Comparable<T>, R> extends DependencyAware<T> {
 
-	/**
-	 * Add a node as independent, it does not require any dependent node
-	 * 
-	 * @param nodeValue Unique node id
-	 */
-	void addIndependent(final T nodeValue);
-	/**
-	 * <p>Add Two dependent nodes into the graph, creating the nodes if not already present </p>
-	 * <p><code>evalFirstValue </code> would be executed first and then <code> evalAfterValue </code> </p>
-	 * 
-	 * @param evalFirstValue Node which should be evaluated first
-	 * @param evalAfterValue Node which should be evaluated after {@code evalFirstValue}
-	 */
-	void addDependency(final T evalFirstValue, final T evalAfterValue);
-	/**
-	 * Adds the node as dependent on all leaf nodes (at the time of adding), meaning all leaf nodes would be evaluated first and then the given node
-	 * 
-	 * @param nodeValue Node which should depend on all leaf nodes
-	 */
-	void addAsDependentOnAllLeafNodes(final T nodeValue);
-	/**
-	 * Adds the node as dependency to all initial nodes (at the time of adding), meaning this given node would be evaluated first and then all initial nodes would run in parallel
-	 * 
-	 * @param nodeValue Node on  which all initial nodes should depends on
-	 */
-	void addAsDependencyToAllInitialNodes(final T nodeValue);
-	/**
-	 * Returns the Set of nodes for which there is no incoming dependencies.
-	 * @return set of initial nodes
-	 */
-	Set<Node<T, R>> getInitialNodes();
 	/**
 	 * Returns the node with the given id
 	 * 
@@ -83,6 +53,13 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	 * @return total number of nodes in this graph
 	 */
 	int graphSize();
+	
+	/**
+	 * Returns the Set of nodes for which there is no incoming dependencies.
+	 * @return set of initial nodes
+	 */
+	Set<Node<T, R>> getInitialNodes();
+
 	/**
 	 * 
 	 * @return the root non processed nodes
@@ -102,7 +79,6 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	 * @param validator based on which validation would happen
 	 */
 	void validate(final Validator<T, R> validator);
-
 
 	/**
 	 * sets the phase to that of provided

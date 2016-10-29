@@ -118,7 +118,7 @@ public final class Node<T, R> implements Serializable {
 	 * @return {@code true} if the node is non processed
 	 */
 	public boolean isNotProcessed() {
-		return this.status == null;
+		return !isProcessed();
 	}
 
 	public boolean isProcessed() {

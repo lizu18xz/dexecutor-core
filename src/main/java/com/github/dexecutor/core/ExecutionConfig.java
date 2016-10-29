@@ -13,7 +13,7 @@ public class ExecutionConfig {
 	
 	/**
 	 * 
-	 * @return {@ ExecutionConfig} representing non-terminating execution behavior
+	 * @return {@code ExecutionConfig} representing non-terminating execution behavior
 	 */
 	public ExecutionConfig nonTerminating() {
 		this.executionBehavior = ExecutionBehavior.NON_TERMINATING;
@@ -22,7 +22,7 @@ public class ExecutionConfig {
 	
 	/**
 	 * 
-	 * @return {@ ExecutionConfig} representing terminating execution behaivor
+	 * @return {@code ExecutionConfig} representing terminating execution behaivor
 	 */
 	public ExecutionConfig terminating() {
 		this.executionBehavior = ExecutionBehavior.TERMINATING;
@@ -30,8 +30,8 @@ public class ExecutionConfig {
 	}
 	
 	/**
-	 * 
-	 * @return {@ ExecutionConfig} representing immediate retry execution behaivor
+	 * @param count number of times retry should happen
+	 * @return {@code ExecutionConfig} representing immediate retry execution behaivor
 	 */
 	public ExecutionConfig immediateRetrying(int count) {
 		this.executionBehavior = ExecutionBehavior.IMMEDIATE_RETRY_TERMINATING;
@@ -41,7 +41,9 @@ public class ExecutionConfig {
 	
 	/**
 	 * 
-	 * @return {@ ExecutionConfig} representing scheduled retry terminating execution behaivor
+	 * @param count the number of times retry should happen
+	 * @param delay the delay
+	 * @return {@code ExecutionConfig} representing scheduled retry terminating execution behaivor
 	 */
 	public ExecutionConfig scheduledRetrying(int count, Duration delay) {
 		this.executionBehavior = ExecutionBehavior.SCHEDULED_RETRY_TERMINATING;
@@ -73,24 +75,24 @@ public class ExecutionConfig {
 
 	/**
 	 * 
-	 * @return {@true} if the {@ExecutionBehavior} is TERMINATING
-	 * 			{@false} otherwise
+	 * @return {@code true} if the {@code ExecutionBehavior} is TERMINATING
+	 * 			{@code false} otherwise
 	 */
 	public boolean isTerminating() {
 		return ExecutionBehavior.TERMINATING.equals(this.executionBehavior);
 	}
 	/**
 	 * 
-	 * @return {@true} if the {@ExecutionBehavior} is NON_TERMINATING
-	 * 			{@false} otherwise
+	 * @return {@code true} if the {@code ExecutionBehavior} is NON_TERMINATING
+	 * 			{@code false} otherwise
 	 */
 	public boolean isNonTerminating() {
 		return ExecutionBehavior.NON_TERMINATING.equals(this.executionBehavior);
 	}
 	/**
 	 * 
-	 * @return {@true} if the {@ExecutionBehavior} is IMMEDIATE_RETRY_TERMINATING
-	 * 			{@false} otherwise
+	 * @return {@code true} if the {@code ExecutionBehavior} is IMMEDIATE_RETRY_TERMINATING
+	 * 			{@code false} otherwise
 	 */
 	public boolean isImmediatelyRetrying() {
 		return ExecutionBehavior.IMMEDIATE_RETRY_TERMINATING.equals(this.executionBehavior);
@@ -98,17 +100,17 @@ public class ExecutionConfig {
 	
 	/**
 	 * 
-	 * @return {@true} if the {@ExecutionBehavior} is SCHEDULED_RETRY_TERMINATING
-	 * 			{@false} otherwise
+	 * @return {@code true} if the {@code ExecutionBehavior} is SCHEDULED_RETRY_TERMINATING
+	 * 			{@code false} otherwise
 	 */
 	public boolean isScheduledRetrying() {
 		return ExecutionBehavior.SCHEDULED_RETRY_TERMINATING.equals(this.executionBehavior);
 	}
 	/**
 	 * 
-	 * @param currentCount
-	 * @return {@true} if a retry should be attempted, based on current retries already happened.
-	 * 			{@false} otherwise
+	 * @param currentCount the current count
+	 * @return {@code true} if a retry should be attempted, based on current retries already happened.
+	 * 			{@code false} otherwise
 	 */
 	public boolean shouldRetry(int currentCount) {
 		return this.retryCount != 0 && this.retryCount >= currentCount;

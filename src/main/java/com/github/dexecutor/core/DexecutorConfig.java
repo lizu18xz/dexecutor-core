@@ -63,8 +63,8 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 	private DexecutorState<T, R> dexecutorState = new DefaultDexecutorState<T, R>();
 	/**
 	 * Construct the object with mandatory params, rest are optional
-	 * @param executorService @ExecutorService
-	 * @param taskProvider @TaskProvider
+	 * @param executorService provided executor service
+	 * @param taskProvider provided task provider
 	 */
 	public DexecutorConfig(final ExecutorService executorService, final TaskProvider<T, R> taskProvider) {
 		checkNotNull(executorService, "Executer Service should not be null");
@@ -75,11 +75,11 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 
 	/**
 	 * Construct the object with mandatory params, rest are optional
-	 * @param executor  @ExecutionEngine
-	 * @param taskProvider @TaskProvider
+	 * @param executionEngine  provided execution Engine
+	 * @param taskProvider provided task provider
 	 */
-	public DexecutorConfig(final ExecutionEngine<T, R> executor, final TaskProvider<T, R> taskProvider) {
-		this.executionEngine = executor;
+	public DexecutorConfig(final ExecutionEngine<T, R> executionEngine, final TaskProvider<T, R> taskProvider) {
+		this.executionEngine = executionEngine;
 		this.taskProvider = taskProvider;
 	}
 
@@ -103,7 +103,7 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 	}
 	/**
 	 * change the validator to that of specified
-	 * @param validator
+	 * @param validator the validator
 	 */
 	public void setValidator(final Validator<T, R> validator) {
 		this.validator = validator;
@@ -118,7 +118,7 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 	}
 	/**
 	 * sets the immediate retry thread pool size to that of specified
-	 * @param immediateRetryPoolThreadsCount
+	 * @param immediateRetryPoolThreadsCount Number of threads that should process retry immediately 
 	 */
 	public void setImmediateRetryPoolThreadsCount(int immediateRetryPoolThreadsCount) {
 		this.immediateRetryPoolThreadsCount = immediateRetryPoolThreadsCount;
@@ -132,7 +132,7 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 	}
 	/**
 	 * sets the scheduled thread pool size to that of specified
-	 * @param scheduledRetryPoolThreadsCount
+	 * @param scheduledRetryPoolThreadsCount Number of threads that should process retry immediately 
 	 */
 	public void setScheduledRetryPoolThreadsCount(int scheduledRetryPoolThreadsCount) {
 		this.scheduledRetryPoolThreadsCount = scheduledRetryPoolThreadsCount;

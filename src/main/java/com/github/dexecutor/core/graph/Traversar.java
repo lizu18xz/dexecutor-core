@@ -28,8 +28,8 @@ public interface Traversar <T extends Comparable<T>, R> {
 	
 	/**
 	 * Traverse the given graph and print it on the Writer
-	 * @param graph
-	 * @param writer
+	 * @param graph the graph which should be printed
+	 * @param action callback which would be called for  the  node order
 	 */
 	void traverse(final Dag<T, R> graph, final TraversarAction<T, R> action);
 }

@@ -69,7 +69,7 @@ public final class ExecutionResults<T, R> implements Serializable {
 	 * @return {@code true} If any parent is skipped
 	 * {@code false} if no parent is skipped
 	 * 
-	 * @return
+	 * @return the result
 	 */
 	public boolean anyParentSkipped() {
 		boolean parentSkipped = false;

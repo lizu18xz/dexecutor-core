@@ -43,7 +43,7 @@ public class Duration {
 
 	/**
 	 * 
-	 * @return {@TimeUnit} of the {@duration}
+	 * @return TimeUnit of the This Duration
 	 */
 	public TimeUnit getTimeUnit() {
 		return timeUnit;

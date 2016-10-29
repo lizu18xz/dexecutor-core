@@ -68,7 +68,7 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 
 	/**
 	 * Creates the Executor with Config
-	 * @param config
+	 * @param config based on which dexecutor would  be constructed
 	 */
 	public DefaultDexecutor(final DexecutorConfig<T, R> config) {
 		config.validate();

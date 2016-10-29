@@ -32,15 +32,15 @@ public interface ExecutionEngine<T extends Comparable<T>, R> {
 	/**
 	 * Submits the task for execution, the method is expected to return immediately.
 	 * 
-	 * @param @Task to be submitted for execution 
+	 * @param task to be submitted for execution 
 	 */
     void submit(final Task<T, R> task);
 
     /**
      * This method is expected to block, if there are no execution result, otherwise return the result immediately.
      * 
-     * @return @ExecutionResult returns the execution result.     * 
-     * @throws TaskExecutionException
+     * @return returns the execution result.     * 
+     * @throws TaskExecutionException if for some reason result can't be processed
      */    
     ExecutionResult<T, R> processResult() throws TaskExecutionException;
     /**

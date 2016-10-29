@@ -51,7 +51,7 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 	private final CompletionService<ExecutionResult<T, R>> completionService;
 	/**
 	 * Creates the default instance given @ExecutorService, internally it uses @CompletionService
-	 * @param executorService
+	 * @param executorService Underlying execution service, where in tasks would be scheduled.
 	 */
 	public DefaultExecutionEngine(final ExecutorService executorService) {
 		checkNotNull(executorService, "Executer Service should not be null");

@@ -31,12 +31,12 @@ public abstract class Task<T extends Comparable<T>, R> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	/**
-	 * id of the task, this would be same as that of {@Node} id
+	 * id of the task, this would be same as that of {@code Node} id
 	 */
 	private T id;
 	/**
 	 * Sets the new id
-	 * @param id
+	 * @param id the task id
 	 */
 	public void setId(final T id) {
 		this.id = id;
@@ -68,7 +68,7 @@ public abstract class Task<T extends Comparable<T>, R> implements Serializable {
 	/**
 	 * sets whether execution errors should be considered or not?
 	 * 
-	 * @param considerExecutionError
+	 * @param considerExecutionError the new value
 	 */
 	public void setConsiderExecutionError(boolean considerExecutionError) {
 		this.considerExecutionError = considerExecutionError;
@@ -76,7 +76,7 @@ public abstract class Task<T extends Comparable<T>, R> implements Serializable {
 	/**
 	 * Defines whether or not this task should be executed
 	 * 
-	 * @param parentResults
+	 * @param parentResults parent execution results
 	 * 
 	 * @return {@code true} If this task should be executed
 	 * {@code false} If the task should be skipped

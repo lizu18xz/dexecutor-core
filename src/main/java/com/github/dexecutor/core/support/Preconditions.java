@@ -30,11 +30,12 @@ public final class Preconditions {
 	}
 
 	/**
+	 * 
 	 * Checks if the reference is null, and if that is the case throws
 	 * IllegalArgumentException
-	 * 
-	 * @param reference
-	 * @param msg
+	 * @param <T> Type of refrence
+	 * @param reference the  reference to check
+	 * @param msg the message to spit
 	 * @throws IllegalArgumentException
 	 *             if the reference is null
 	 */

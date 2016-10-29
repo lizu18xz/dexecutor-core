@@ -25,17 +25,17 @@ package com.github.dexecutor.core.graph;
 public interface TraversarAction<T extends Comparable<T>, R> {
 	/**
 	 * 
-	 * @param pathNumber
+	 * @param pathNumber The path number in graph traversing
 	 */
 	void onNewPath(int pathNumber);
 	/**
 	 * 
-	 * @param levelNumber
+	 * @param levelNumber The level number in graph traversing
 	 */
 	void onNewLevel(int levelNumber);
 	/**
 	 * 
-	 * @param node
+	 * @param node The node in graph traversing
 	 */
 	void onNode(final Node<T, R> node);
 }

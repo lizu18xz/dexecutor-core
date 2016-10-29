@@ -47,7 +47,7 @@ public final class ThreadPoolUtil {
 	 * A computation-intensive task has a blocking coefficient of 0, whereas an
 	 * IO-intensive task has a value close to 1,
 	 * so we don't have to worry about the value reaching 1.
-	 *  @param blockingCoefficient 
+	 *  @param blockingCoefficient the coefficient
 	 *  @return Thread pool size
 	 */
 	public static int poolSize(double blockingCoefficient) {

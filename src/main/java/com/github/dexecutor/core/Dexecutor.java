@@ -25,7 +25,7 @@ import com.github.dexecutor.core.graph.TraversarAction;
  * 
  * @author Nadeem Mohammad
  * 
- * @see {@link DefaultDependentTasksExecutor}
+ * @see com.github.dexecutor.core.DefaultDexecutor
  *
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
@@ -34,46 +34,46 @@ public interface Dexecutor<T extends Comparable<T>, R> {
 	/**
 	 * Add a node as independent, it does not require any dependent node
 	 * 
-	 * @param nodeValue
+	 * @param nodeValue Unique node id
 	 */
 	void addIndependent(final T nodeValue);
 	/**
 	 * <p>Add Two dependent nodes into the graph, creating the nodes if not already present </p>
 	 * <p><code>evalFirstValue </code> would be executed first and then <code> evalAfterValue </code> </p>
 	 * 
-	 * @param evalFirstValue
-	 * @param evalAfterValue
+	 * @param evalFirstValue Node which should be evaluated first
+	 * @param evalAfterValue Node which should be evaluated after {@code evalFirstValue}
 	 */
 	void addDependency(final T evalFirstValue, final T evalAfterValue);
 	/**
 	 * Adds the node as dependent on all leaf nodes (at the time of adding), meaning all leaf nodes would be evaluated first and then the given node
 	 * 
-	 * @param nodeValue
+	 * @param nodeValue Node which should depend on all leaf nodes
 	 */
 	void addAsDependentOnAllLeafNodes(final T nodeValue);
 	/**
 	 * Adds the node as dependency to all initial nodes (at the time of adding), meaning this given node would be evaluated first and then all initial nodes would run in parallel
 	 * 
-	 * @param nodeValue
+	 * @param nodeValue Node on  which all initial nodes should depends on
 	 */
 	void addAsDependencyToAllInitialNodes(final T nodeValue);
 	/**
 	 * Kicks off the execution of the nodes based on the dependency graph constructed, using {@code addDepen***} apis
 	 * 
-	 * @param ExecutionConfig
+	 * @param config based on which execution should proceed.
 	 */
 	void execute(final ExecutionConfig config);
 
 	/**
 	 * After a dexecutor crash, create a new instance of dexecutor and call this method for recovery
-	 * @param config
+	 * @param config based on which execution would recover
 	 */
 	void recoverExecution(final ExecutionConfig config);
 	/**
 	 * Prints the graph into the writer, using the traversar
 	 * 
-	 * @param traversar
-	 * @param writer
+	 * @param traversar would traverse the graph
+	 * @param action callback which would be called based on traverse 
 	 */
 	void print(final Traversar<T, R> traversar, final TraversarAction<T, R> action);
 }

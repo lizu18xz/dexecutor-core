@@ -28,8 +28,8 @@ public interface TaskProvider <T extends Comparable<T>, R> {
 	/**
 	 * Given the node id, returns the task to be executed, while building graph only the node ids are required, when it comes to execution Task objects would be constructed
 	 * 
-	 * @param id
-	 * @return @Task
+	 * @param id task id
+	 * @return task the task which should be executed
 	 */
 	public Task<T, R> provideTask(final T id);	
 }

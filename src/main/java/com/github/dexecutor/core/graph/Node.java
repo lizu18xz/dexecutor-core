@@ -27,7 +27,8 @@ import java.util.Set;
  * 
  * @author Nadeem Mohammad
  *
- * @param <T>
+ * @param <T> Type of Node/Task ID
+ * @param <R> Type of Node/Task result
  */
 public final class Node<T, R> implements Serializable {
 
@@ -58,21 +59,21 @@ public final class Node<T, R> implements Serializable {
     private Set<Node<T, R>> outGoingEdges = new LinkedHashSet<Node<T, R>>();
     /**
      * Constructs the node with the given node Id
-     * @param val
+     * @param val the new unique id
      */
     public Node(final T val) {
 		this.value = val;
 	}
     /**
      * Add the given node, to the set of incoming nodes
-     * @param node
+     * @param node add as dependency to the node
      */
     public void addInComingNode(final Node<T, R> node) {	        
         this.inComingEdges.add(node);
     }
     /**
      * add the given to the set of out going nodes
-     * @param node
+     * @param node add as dependency to the node
      */
     public void addOutGoingNode(final Node<T, R> node) {	        
         this.outGoingEdges.add(node);
@@ -106,7 +107,7 @@ public final class Node<T, R> implements Serializable {
 		return result;
 	}
 	/**
-     * 
+     * @param result the new result
      * sets the node's execution result to a new value
      */
 	public void setResult(final R result) {
@@ -125,24 +126,24 @@ public final class Node<T, R> implements Serializable {
 	}
 	/**
      * 
-     * @return {@true} if the node's execution result us SUCCESS
-     * 			{@false} otherwise
+     * @return {@code true} if the node's execution result us SUCCESS
+     * 			{@code false} otherwise
      */
 	public boolean isSuccess() {
 		return NodeStatus.SUCCESS.equals(this.status);
 	}
 	/**
      * 
-     * @return {@true} if the node's execution result us ERRORED
-     * 			{@false} otherwise
+     * @return {@code true} if the node's execution result us ERRORED
+     * 			{@code false} otherwise
      */
 	public boolean isErrored() {
 		return NodeStatus.ERRORED.equals(this.status);
 	}
 	/**
      * 
-     * @return {@true} if the node's execution result us SKIPPED
-     * 			{@false} otherwise
+     * @return {@code true} if the node's execution result us SKIPPED
+     * 			{@code false} otherwise
      */
 	public boolean isSkipped() {
 		return NodeStatus.SKIPPED.equals(this.status);
@@ -177,6 +178,7 @@ public final class Node<T, R> implements Serializable {
 	}
 	
 	/**
+	 * @param data the data
 	 * Sets the node's data to a new value
 	 */
 	public void setData(Object data) {

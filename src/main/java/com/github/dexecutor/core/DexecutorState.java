@@ -31,7 +31,7 @@ import com.github.dexecutor.core.graph.Validator;
  *  <li><code>unprocessed nodes count : </code>How many nodes are waiting to be processed</li>
  *  <li><code>processed nodes : </code> Nodes which are processed till that point</li>
  *  <li><code>Discontinued nodes : </code>Nodes for which processing should continue after system comes to valid state</li>
- * 
+ * </ul>
  * @author Nadeem Mohammad
  *
  * @param <T> Type of Node/Task ID
@@ -42,27 +42,27 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	/**
 	 * Add a node as independent, it does not require any dependent node
 	 * 
-	 * @param nodeValue
+	 * @param nodeValue Unique node id
 	 */
 	void addIndependent(final T nodeValue);
 	/**
 	 * <p>Add Two dependent nodes into the graph, creating the nodes if not already present </p>
 	 * <p><code>evalFirstValue </code> would be executed first and then <code> evalAfterValue </code> </p>
 	 * 
-	 * @param evalFirstValue
-	 * @param evalAfterValue
+	 * @param evalFirstValue Node which should be evaluated first
+	 * @param evalAfterValue Node which should be evaluated after {@code evalFirstValue}
 	 */
 	void addDependency(final T evalFirstValue, final T evalAfterValue);
 	/**
 	 * Adds the node as dependent on all leaf nodes (at the time of adding), meaning all leaf nodes would be evaluated first and then the given node
 	 * 
-	 * @param nodeValue
+	 * @param nodeValue Node which should depend on all leaf nodes
 	 */
 	void addAsDependentOnAllLeafNodes(final T nodeValue);
 	/**
 	 * Adds the node as dependency to all initial nodes (at the time of adding), meaning this given node would be evaluated first and then all initial nodes would run in parallel
 	 * 
-	 * @param nodeValue
+	 * @param nodeValue Node on  which all initial nodes should depends on
 	 */
 	void addAsDependencyToAllInitialNodes(final T nodeValue);
 	/**
@@ -73,7 +73,7 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	/**
 	 * Returns the node with the given id
 	 * 
-	 * @param id
+	 * @param id The Unique node id
 	 * @return the @Node with the given id
 	 */
 	Node<T, R> getGraphNode(final T id);
@@ -92,21 +92,21 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	/**
 	 * Prints the graph into the writer using the Traversar
 	 * 
-	 * @param traversar
-	 * @param action
+	 * @param traversar would traverse the graph
+	 * @param action callback which would be called based on traverse
 	 */
 	void print(final Traversar<T, R> traversar, final TraversarAction<T, R> action);
 	/**
 	 * validates the graph using the validator
 	 * 
-	 * @param validator
+	 * @param validator based on which validation would happen
 	 */
 	void validate(final Validator<T, R> validator);
 
 
 	/**
 	 * sets the phase to that of provided
-	 * @param currentPhase
+	 * @param currentPhase the phase that should be set to 
 	 */
 	void setCurrentPhase(final Phase currentPhase);
 	/**
@@ -130,13 +130,13 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	
 	/**
 	 * 
-	 * @param node
+	 * @param node on which test should happen
 	 * @return weather the {@code node} should be processed by dexecutor or not
 	 */
 	boolean shouldProcess(final Node<T, R> node);
 	/**
-	 * Mark the {@code node} as processed.
-	 * @param node
+	 * 
+	 * @param node Mark the {@code node} as processed.
 	 */
 	void markProcessingDone(final Node<T, R> node);
 	
@@ -163,7 +163,7 @@ public interface DexecutorState<T extends Comparable<T>, R> {
 	void markDiscontinuedNodesProcessed();
 	/**
 	 * Add to existing collection of discontinued nodes to be processed later, if system come to valid state.
-	 * @param nodes
+	 * @param nodes which should be processed after retry success
 	 */
 	void processAfterNoError(final Collection<Node<T, R>> nodes);
 }

@@ -41,7 +41,7 @@ public final class DefaultDag<T extends Comparable<T>, R> implements Dag<T, R>, 
 	private Map<T, Node<T, R>> nodes = new HashMap<T, Node<T, R>>();
 	
 	@Override
-	public void addAsDependentOnAllLeafNodes(T nodeValue) {
+	public void addAsDependentOnAllLeafNodes(final T nodeValue) {
 		if (this.size() == 0) {
 			addIndependent(nodeValue);
 		} else {
@@ -52,7 +52,7 @@ public final class DefaultDag<T extends Comparable<T>, R> implements Dag<T, R>, 
 	}
 
 	@Override
-	public void addAsDependencyToAllInitialNodes(T nodeValue) {
+	public void addAsDependencyToAllInitialNodes(final T nodeValue) {
 		if (this.size() == 0) {
 			addIndependent(nodeValue);
 		} else {

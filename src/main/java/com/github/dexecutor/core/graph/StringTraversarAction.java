@@ -31,7 +31,7 @@ public class StringTraversarAction<T extends Comparable<T>, R> implements Traver
 	}
 
 	@Override
-	public void onNode(Node<T, R> node) {
+	public void onNode(final Node<T, R> node) {
 		builder.append(node).append(node.getInComingNodes()).append(" ");				
 	}
 

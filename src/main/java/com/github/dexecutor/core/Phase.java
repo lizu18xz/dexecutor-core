@@ -15,7 +15,12 @@
  * limitations under the License.
  */
 package com.github.dexecutor.core;
-
+/**
+ * Represents Dexecutor phases
+ * 
+ * @author Nadeem Mohammad
+ *
+ */
 public enum Phase {
 	BUILDING, RUNNING, TERMINATED;
 }

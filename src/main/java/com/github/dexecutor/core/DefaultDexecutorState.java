@@ -146,4 +146,9 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 	public void validate(final Validator<T, R> validator) {
 		validator.validate(this.graph);		
 	}
+
+	@Override
+	public void forcedStop() {
+			
+	}
 }

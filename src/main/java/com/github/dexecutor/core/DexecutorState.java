@@ -141,4 +141,8 @@ public interface DexecutorState<T extends Comparable<T>, R> extends DependencyAw
 	 * @param nodes which should be processed after retry success
 	 */
 	void processAfterNoError(final Collection<Node<T, R>> nodes);
+	/**
+	 * called to force stop
+	 */
+	void forcedStop();
 }

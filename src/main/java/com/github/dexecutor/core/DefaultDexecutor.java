@@ -336,6 +336,7 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 
 	private void forceStopIfRequired() {
 		if (!shouldContinueProcessingNodes()) {
+			this.state.forcedStop();
 			this.immediatelyRetryExecutor.shutdownNow();
 			this.scheduledRetryExecutor.shutdownNow();
 			throw new IllegalStateException("Forced to Stop the instance of Dexecutor!");

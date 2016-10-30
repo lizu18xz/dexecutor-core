@@ -15,7 +15,7 @@ Refer [wiki](https://github.com/dexecutor/dexecutor-core/wiki) or [Project Web s
 | Stable Release Version | JDK Version compatibility | Release Date |
 | ------------- | ------------- | ------------|
 | 2.0.0  | 1.8+ |  |
-| 1.1.2 | 1.6+ | 10/15/2016 |
+| 1.1.2 | 1.7+ | 10/15/2016 |
 
 ## License
 

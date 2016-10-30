@@ -39,7 +39,6 @@ import com.github.dexecutor.core.graph.Validator;
  * @param <R> Type of Node/Task result
  */
 public interface DexecutorState<T extends Comparable<T>, R> extends DependencyAware<T> {
-
 	/**
 	 * Returns the node with the given id
 	 * 

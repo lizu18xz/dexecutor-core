@@ -19,7 +19,7 @@ import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 
 public class DexecutorImmediateRetryingTerminatingTest {
-	
+
 	Condition<Node<Integer, Integer>> nodeTwoCondition = new Condition<Node<Integer, Integer>>() {
 		@Override
 		public boolean matches(Node<Integer, Integer> value) {
@@ -31,11 +31,10 @@ public class DexecutorImmediateRetryingTerminatingTest {
 	public void testDependentTaskExecution() {
 
 		ExecutorService executorService = newExecutor();
-		ExecutionEngine<Integer, Integer> executionEngine = new DefaultExecutionEngine<>(executorService);
 
 		try {
-			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(
-					executionEngine, new SleepyTaskProvider());
+			DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(executorService, new SleepyTaskProvider());
+			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(config);
 
 			executor.addDependency(1, 2);
 			executor.addDependency(1, 2);

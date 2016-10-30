@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.dexecutor.core.graph.Dag;
@@ -31,11 +32,12 @@ import com.github.dexecutor.core.graph.Validator;
 
 public class DefaultDexecutorState<T extends Comparable<T>, R> implements DexecutorState <T, R> {
 
-	private Dag<T, R> graph;
 	private Phase currentPhase;
-	private AtomicInteger nodesCount;
-	private Collection<Node<T, R>> processedNodes;
-	private Collection<Node<T, R>> discontinuedNodes;
+	private final Dag<T, R> graph;
+	private final AtomicInteger nodesCount;
+	private final Collection<Node<T, R>> processedNodes;
+	private final Collection<Node<T, R>> discontinuedNodes;
+	private final Collection<T> erroredTasks;
 
 	public DefaultDexecutorState() {
 		this.graph =  new DefaultDag<>();
@@ -43,6 +45,7 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 		this.nodesCount = new AtomicInteger(0);
 		this.processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
 		this.discontinuedNodes = new CopyOnWriteArrayList<Node<T, R>>();
+		this.erroredTasks = new CopyOnWriteArraySet<T>();
 	}
 
 	public void addIndependent(final T nodeValue) {
@@ -148,7 +151,22 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 	}
 
 	@Override
+	public void addErrored(T id) {
+		this.erroredTasks.add(id);		
+	}
+
+	@Override
+	public void removeErrored(T id) {
+		this.erroredTasks.remove(id);		
+	}
+
+	@Override
+	public int erroredCount() {
+		return this.erroredTasks.size();
+	}
+
+	@Override
 	public void forcedStop() {
 			
-	}
+	}	
 }

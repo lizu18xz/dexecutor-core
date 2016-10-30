@@ -27,7 +27,7 @@ import com.github.dexecutor.core.task.TaskProvider;
 
 /**
  * <p>Configuration Object for Dexecutor framework. At a minimum it needs {@code ExecutorService} and {@code TaskProvider}, rest are optional and takes default values</p>
- * <p>This provides way to hook in your own {@code Validator} and {@code Traversar}</p>
+ * <p>This provides way to hook in your own {@code DexecutorState} and {@code Validator} </p>
  * 
  * @author Nadeem Mohammad
  *
@@ -56,7 +56,7 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 	 */
 	private TaskProvider<T, R> taskProvider;
 	/**
-	 * Validator for validating the consturcted graph, defaults to detecting Cyclic checks
+	 * Validator for validating the constructed graph, defaults to detecting Cyclic checks
 	 */
 	private Validator<T, R> validator = new CyclicValidator<T, R>();
 
@@ -69,7 +69,7 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 	public DexecutorConfig(final ExecutorService executorService, final TaskProvider<T, R> taskProvider) {
 		checkNotNull(executorService, "Executer Service should not be null");
 		checkNotNull(taskProvider, "Task Provider should not be null");
-		this.executionEngine = new DefaultExecutionEngine<>(executorService);
+		this.executionEngine = new DefaultExecutionEngine<>(dexecutorState, executorService);
 		this.taskProvider = taskProvider;
 	}
 
@@ -137,12 +137,19 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 	public void setScheduledRetryPoolThreadsCount(int scheduledRetryPoolThreadsCount) {
 		this.scheduledRetryPoolThreadsCount = scheduledRetryPoolThreadsCount;
 	}
-
+	/**
+	 * 
+	 * @return the dexecutor state
+	 */
 	public DexecutorState<T, R> getDexecutorState() {
 		return this.dexecutorState;
 	}
-
-	public void setDexecutorState(DexecutorState<T, R> dexecutorState) {
+	
+	/**
+	 * 
+	 * @param dexecutorState to set to
+	 */
+	public void setDexecutorState(final DexecutorState<T, R> dexecutorState) {
 		this.dexecutorState = dexecutorState;
 	}
 }

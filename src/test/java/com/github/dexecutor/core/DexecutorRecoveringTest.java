@@ -21,8 +21,7 @@ public class DexecutorRecoveringTest {
 	@Test
 	public void testDependentTaskExecution() {
 		ExecutorService executorService = newExecutor();
-		ExecutionEngine<Integer, Integer> executionEngine = new DefaultExecutionEngine<>(executorService);
-		DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(executionEngine, new SleepyTaskProvider());
+		DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(executorService, new SleepyTaskProvider());
 		DexecutorState<Integer, Integer> state = new DefaultDexecutorState<>();
 		config.setDexecutorState(state);
 		DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(config);

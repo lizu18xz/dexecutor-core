@@ -29,12 +29,13 @@ public class DexecutorConsiderExecutionErrorTest {
 	public void testDependentTaskExecution() {
 
 		ExecutorService executorService = newExecutor();
-		ExecutionEngine<Integer, Integer> executionEngine = new DefaultExecutionEngine<>(executorService);
-
+		
 		try {
 			SleepyTaskProvider taskProvider = new SleepyTaskProvider();
+			DefaultDexecutorState<Integer, Integer> dexecutorState = new DefaultDexecutorState<Integer, Integer>();
+			ExecutionEngine<Integer, Integer> executionEngine = new DefaultExecutionEngine<>(dexecutorState, executorService);
 			DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(executionEngine, taskProvider);
-			config.setDexecutorState(new DefaultDexecutorState<Integer, Integer>());
+			config.setDexecutorState(dexecutorState);
 			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(config);
 
 			executor.addDependency(1, 2);

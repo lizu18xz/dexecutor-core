@@ -120,7 +120,7 @@ public interface DexecutorState<T extends Comparable<T>, R> extends DependencyAw
 	 * @return processedNodes
 	 */
 	Collection<Node<T, R>> getProcessedNodes();	
-	
+
 	/**
 	 * 
 	 * @return {@code true} if there nodes that should be processed, if some were discontinued due to error.
@@ -141,6 +141,21 @@ public interface DexecutorState<T extends Comparable<T>, R> extends DependencyAw
 	 * @param nodes which should be processed after retry success
 	 */
 	void processAfterNoError(final Collection<Node<T, R>> nodes);
+	/**
+	 * Add to errored collection
+	 * @param id id to add to errored collection
+	 */
+	void addErrored(T id);
+	/**
+	 * Remove errored collection
+	 * @param id to remove from errored collection
+	 */
+	void removeErrored(T id);
+	/**
+	 * @return Number of errors at this instance of time
+	 */
+	int erroredCount();
+	
 	/**
 	 * called to force stop
 	 */

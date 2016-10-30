@@ -19,10 +19,8 @@ package com.github.dexecutor.core;
 
 import static com.github.dexecutor.core.support.Preconditions.checkNotNull;
 
-import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 
@@ -45,7 +43,7 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultExecutionEngine.class);
 
-	private Collection<T> erroredTasks = new CopyOnWriteArraySet<T>();
+	private final DexecutorState<T, R> state;
 
 	private final ExecutorService executorService;
 	private final CompletionService<ExecutionResult<T, R>> completionService;
@@ -53,8 +51,9 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 	 * Creates the default instance given @ExecutorService, internally it uses @CompletionService
 	 * @param executorService Underlying execution service, where in tasks would be scheduled.
 	 */
-	public DefaultExecutionEngine(final ExecutorService executorService) {
+	public DefaultExecutionEngine(final DexecutorState<T, R> state, final ExecutorService executorService) {
 		checkNotNull(executorService, "Executer Service should not be null");
+		this.state = state;
 		this.executorService = executorService;
 		this.completionService = new ExecutorCompletionService<ExecutionResult<T, R>>(executorService);
 	}
@@ -77,9 +76,9 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 				ExecutionStatus status = ExecutionStatus.SUCCESS;
 				try {
 					r = task.execute();
-					erroredTasks.remove(task.getId());
+					state.removeErrored(task.getId());
 				} catch (Exception e) {
-					erroredTasks.add(task.getId());
+					state.addErrored(task.getId());
 					status = ExecutionStatus.ERRORED;
 					logger.error("Error Execution Task # {}", task.getId(), e);
 				}
@@ -101,7 +100,7 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 
 	@Override
 	public boolean isAnyTaskInError() {
-		return !this.erroredTasks.isEmpty();
+		return this.state.erroredCount() > 0;
 	}
 
 	@Override

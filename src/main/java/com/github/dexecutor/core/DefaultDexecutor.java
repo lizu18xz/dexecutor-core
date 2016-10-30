@@ -62,10 +62,6 @@ public final class DefaultDexecutor <T extends Comparable<T>, R> implements Dexe
 
 	private final DexecutorState<T, R> state;
 
-	public DefaultDexecutor(final ExecutionEngine<T, R> executionEngine, final TaskProvider<T, R> taskProvider) {
-		this(new DexecutorConfig<>(executionEngine, taskProvider));
-	}
-
 	/**
 	 * Creates the Executor with Config
 	 * @param config based on which dexecutor would  be constructed

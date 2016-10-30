@@ -111,14 +111,14 @@ public class DexecutorTest {
 	
 	
 	private DefaultDexecutor<Integer, Integer> newTaskExecutor(Traversar<Integer, Integer> traversar) {
-		DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(new DefaultExecutionEngine<Integer, Integer>(newExecutor()), new DummyTaskProvider(false));
-		//config.setTraversar(traversar);
+		DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(newExecutor(), new DummyTaskProvider(false));
+		
 		return new DefaultDexecutor<Integer, Integer>(config);
 	}
 
 	private DefaultDexecutor<Integer, Integer> newTaskExecutor(boolean throwEx) {
-		ExecutionEngine<Integer, Integer> engine = new DefaultExecutionEngine<Integer, Integer>(newExecutor());
-		return new DefaultDexecutor<Integer, Integer>(engine, new DummyTaskProvider(throwEx));
+		DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(newExecutor(),new DummyTaskProvider(throwEx));
+		return new DefaultDexecutor<Integer, Integer>(config);
 	}
 
 	private ExecutorService newExecutor() {

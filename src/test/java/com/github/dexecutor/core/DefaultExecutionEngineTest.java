@@ -44,7 +44,7 @@ public class DefaultExecutionEngineTest {
 
 	@Before
 	public void doBeforeEachTestCase() {
-		this.executionEngine = new DefaultExecutionEngine<Integer, Integer>(Executors.newCachedThreadPool());
+		this.executionEngine = new DefaultExecutionEngine<Integer, Integer>(new DefaultDexecutorState<>(), Executors.newCachedThreadPool());
 	}
 
 	@Test

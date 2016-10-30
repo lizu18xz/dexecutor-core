@@ -33,11 +33,10 @@ public class DexecutorImmediateRetryingTest {
 	public void testDependentTaskExecution() {
 
 		ExecutorService executorService = newExecutor();
-		ExecutionEngine<Integer, Integer> executionEngine = new DefaultExecutionEngine<>(executorService);
 
 		try {
-			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(
-					executionEngine, new SleepyTaskProvider());
+			DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(executorService, new SleepyTaskProvider());
+			DefaultDexecutor<Integer, Integer> executor = new DefaultDexecutor<Integer, Integer>(config);
 
 			executor.addDependency(1, 2);
 			executor.addDependency(1, 2);

@@ -338,7 +338,11 @@ public class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<
 			throw new IllegalStateException("Forced to Stop the instance of Dexecutor!");
 		}		
 	}
-
+	/**
+	 * Override this method if force stop is required
+	 * 
+	 * @return {@code true} if processing should continue otherwise {@code false}
+	 */
 	protected boolean shouldContinueProcessingNodes() {
 		return true;
 	}

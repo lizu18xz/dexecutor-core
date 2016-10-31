@@ -19,7 +19,24 @@ import com.github.dexecutor.core.task.TaskProvider;
 public class DexecutorRecoveringTest {
 	
 	@Test
-	public void testDependentTaskExecution() {
+	public void testRecover() {
+		DefaultDexecutor<Integer, Integer> executor = newDexecutor();
+
+		executor.recoverExecution(ExecutionConfig.NON_TERMINATING);
+		Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
+		assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
+		assertThat(processedNodesOrder).size().isEqualTo(14);	
+	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void testRecoverTerminated() {
+		DefaultDexecutor<Integer, Integer> executor = newDexecutor();
+
+		executor.execute(ExecutionConfig.NON_TERMINATING);		
+		executor.recoverExecution(ExecutionConfig.NON_TERMINATING);		
+	}
+
+	private DefaultDexecutor<Integer, Integer> newDexecutor() {
 		ExecutorService executorService = newExecutor();
 		DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(executorService, new SleepyTaskProvider());
 		DexecutorState<Integer, Integer> state = new DefaultDexecutorState<>();
@@ -40,17 +57,7 @@ public class DexecutorRecoveringTest {
 		executor.addDependency(13, 4);
 		executor.addDependency(13, 14);
 		executor.addIndependent(11);
-
-		try {
-			
-			executor.recoverExecution(ExecutionConfig.NON_TERMINATING);
-			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
-			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
-			assertThat(processedNodesOrder).size().isEqualTo(14);
-			
-		} catch(Exception e) {
-			
-		}		
+		return executor;
 	}
 
 	private Collection<Node<Integer, Integer>> executionOrderExpectedResult() {
@@ -71,6 +78,7 @@ public class DexecutorRecoveringTest {
 		result.add(new Node<Integer, Integer>(14));
 		return result;
 	}
+
 	private ExecutorService newExecutor() {
 		return Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
 	}

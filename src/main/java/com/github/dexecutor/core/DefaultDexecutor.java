@@ -106,7 +106,7 @@ public class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<
 	@Override
 	public void recoverExecution(final ExecutionConfig config) {
 		if (Phase.TERMINATED.equals(this.state.getCurrentPhase())) {
-			logger.debug("Can't Recover a terminiated Dexecutor");			
+			throw new IllegalStateException("Can't recover terminated dexecutor");		
 		} else {	
 			logger.debug("Recovering Dexecutor.");
 			doWaitForExecution(config);

@@ -30,9 +30,7 @@ import org.junit.runner.RunWith;
 
 import com.github.dexecutor.core.graph.Dag;
 import com.github.dexecutor.core.graph.LevelOrderTraversar;
-import com.github.dexecutor.core.graph.MergedLevelOrderTraversar;
 import com.github.dexecutor.core.graph.StringTraversarAction;
-import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.support.TestUtil;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.Task;
@@ -75,7 +73,7 @@ public class DexecutorTest {
 
 	@Test
 	public void testPrint() {
-		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(new LevelOrderTraversar<Integer, Integer>());
+		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor();
 		executor.addDependency(1, 2);
 		StringBuilder builder = new StringBuilder();
 		executor.print(new LevelOrderTraversar<Integer, Integer>(), new StringTraversarAction<Integer, Integer>(builder));
@@ -84,7 +82,7 @@ public class DexecutorTest {
 	
 	@Test
 	public void testMergedPrint() {
-		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor(new MergedLevelOrderTraversar<Integer, Integer>());
+		DefaultDexecutor<Integer, Integer> executor = newTaskExecutor();
 		executor.addDependency(1, 2);
 		StringBuilder builder = new StringBuilder();
 		executor.print(new LevelOrderTraversar<Integer, Integer>(), new StringTraversarAction<Integer, Integer>(builder));
@@ -110,7 +108,7 @@ public class DexecutorTest {
 	}
 	
 	
-	private DefaultDexecutor<Integer, Integer> newTaskExecutor(Traversar<Integer, Integer> traversar) {
+	private DefaultDexecutor<Integer, Integer> newTaskExecutor() {
 		DexecutorConfig<Integer, Integer> config = new DexecutorConfig<>(newExecutor(), new DummyTaskProvider(false));
 		
 		return new DefaultDexecutor<Integer, Integer>(config);

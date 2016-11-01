@@ -272,7 +272,7 @@ public class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<
 		this.immediatelyRetryExecutor.submit(retryingTask(config, task));
 	}
 
-	private void submitForScheduledRetry(ExecutionConfig config, Node<T, R> node) {
+	private void submitForScheduledRetry(final ExecutionConfig config, final Node<T, R> node) {
 		Task<T, R> task = newTask(config, node);
 		this.scheduledRetryExecutor.schedule(retryingTask(config, task), config.getRetryDelay().getDuration(), config.getRetryDelay().getTimeUnit());
 	}

@@ -151,12 +151,12 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 	}
 
 	@Override
-	public void addErrored(T id) {
+	public void addErrored(final T id) {
 		this.erroredTasks.add(id);		
 	}
 
 	@Override
-	public void removeErrored(T id) {
+	public void removeErrored(final T id) {
 		this.erroredTasks.remove(id);		
 	}
 

@@ -31,5 +31,5 @@ public interface TaskProvider <T extends Comparable<T>, R> {
 	 * @param id task id
 	 * @return task the task which should be executed
 	 */
-	public Task<T, R> provideTask(final T id);	
+	Task<T, R> provideTask(final T id);	
 }

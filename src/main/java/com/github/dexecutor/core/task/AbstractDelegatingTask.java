@@ -43,7 +43,7 @@ abstract class AbstractDelegatingTask <T extends Comparable<T>, R> extends Task<
 		this.task.setId(id);
 	}
 
-	public T getId() {;
+	public T getId() {
 		return this.task.getId();
 	}
 

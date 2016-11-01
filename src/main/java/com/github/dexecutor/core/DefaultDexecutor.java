@@ -244,7 +244,7 @@ public class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<
 			doExecute(recover, config);
 		}
 
-		if (config.isNonTerminating() ||  (!executionEngine.isAnyTaskInError())) {
+		if (config.isNonTerminating() || !executionEngine.isAnyTaskInError()) {
 			doExecute(processedNode.getOutGoingNodes(), config);				
 		} else if (executionEngine.isAnyTaskInError() && executionResult.isSuccess()) { 
 			state.processAfterNoError(processedNode.getOutGoingNodes());
@@ -269,12 +269,12 @@ public class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<
 
 	private void submitForImmediateRetry(final ExecutionConfig config, final Node<T, R> node) {
 		Task<T, R> task = newTask(config, node);		
-		this.immediatelyRetryExecutor.submit(retryingTask(config, task));
+		this.immediatelyRetryExecutor.submit(retryingTask(task));
 	}
 
 	private void submitForScheduledRetry(final ExecutionConfig config, final Node<T, R> node) {
 		Task<T, R> task = newTask(config, node);
-		this.scheduledRetryExecutor.schedule(retryingTask(config, task), config.getRetryDelay().getDuration(), config.getRetryDelay().getTimeUnit());
+		this.scheduledRetryExecutor.schedule(retryingTask(task), config.getRetryDelay().getDuration(), config.getRetryDelay().getTimeUnit());
 	}
 
 	private Task<T, R> newTask(final ExecutionConfig config, final Node<T, R> node) {
@@ -296,7 +296,7 @@ public class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<
 		}
 	}
 
-	private Runnable retryingTask(final ExecutionConfig config, final Task<T, R> task) {
+	private Runnable retryingTask(final Task<T, R> task) {
 		this.state.incrementUnProcessedNodesCount();
 		return new Runnable() {
 			@Override

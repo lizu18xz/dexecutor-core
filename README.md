@@ -59,7 +59,7 @@ Alternatively you can  pull Dexecutor from the central maven repository, just ad
 <dependency>
   <groupId>com.github.dexecutor</groupId>
   <artifactId>dexecutor-core</artifactId>
-  <version>1.1.2</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 

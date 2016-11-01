@@ -14,7 +14,7 @@ Refer [wiki](https://github.com/dexecutor/dexecutor-core/wiki) or [Project Web s
 
 | Stable Release Version | JDK Version compatibility | Release Date |
 | ------------- | ------------- | ------------|
-| 2.0.0  | 1.8+ |  |
+| 2.0.0  | 1.8+ | 11/01/2016 |
 | 1.1.2 | 1.7+ | 10/15/2016 |
 
 ## License
@@ -23,6 +23,7 @@ Dexecutor is licensed under **Apache Software License, Version 2.0**.
 
 ## News
 
+* Version **2.0.0** released on 11/01/2016.
 * Version **1.1.2** released on 10/15/2016.
 * Version **1.1.1** released on 10/08/2016.
 * Version **1.1.0** released on 10/06/2016.

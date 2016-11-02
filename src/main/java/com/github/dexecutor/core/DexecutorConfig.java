@@ -84,6 +84,15 @@ public class DexecutorConfig<T extends Comparable<T>, R> {
 		this.executionEngine = executionEngine;
 		this.taskProvider = taskProvider;
 	}
+	
+	public DexecutorConfig(final DexecutorState<T, R> dexecutorState, final ExecutionEngine<T, R> executionEngine, final TaskProvider<T, R> taskProvider) {
+		checkNotNull(executionEngine, "Execution Engine should not be null");
+		checkNotNull(taskProvider, "Task Provider should not be null");
+		checkNotNull(dexecutorState, "Dexecutor State should not be null");
+		this.executionEngine = executionEngine;
+		this.taskProvider = taskProvider;
+		this.dexecutorState = dexecutorState;
+	}
 
 	void validate() {
 		checkNotNull(this.executionEngine, "Execution Engine should not be null");

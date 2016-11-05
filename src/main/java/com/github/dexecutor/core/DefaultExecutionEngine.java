@@ -52,6 +52,7 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 	 * @param executorService Underlying execution service, where in tasks would be scheduled.
 	 */
 	public DefaultExecutionEngine(final DexecutorState<T, R> state, final ExecutorService executorService) {
+		checkNotNull(state, "State should not be null");
 		checkNotNull(executorService, "Executer Service should not be null");
 		this.state = state;
 		this.executorService = executorService;
@@ -65,6 +66,12 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 		} catch (Exception e) {
 			throw new TaskExecutionException("Task execution ", e);
 		}
+	}
+
+	@Override
+	public void submit(final Task<T, R> task) {
+		logger.debug("Received Task {} ", task.getId());
+		this.completionService.submit(newCallable(task));		
 	}
 
 	private Callable<ExecutionResult<T, R>> newCallable(final Task<T, R> task) {
@@ -85,12 +92,6 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 				return new ExecutionResult<T, R>(task.getId(), r, status);
 			}
 		};
-	}
-
-	@Override
-	public void submit(final Task<T, R> task) {
-		logger.debug("Received Task {} ", task.getId());
-		this.completionService.submit(newCallable(task));		
 	}
 
 	@Override

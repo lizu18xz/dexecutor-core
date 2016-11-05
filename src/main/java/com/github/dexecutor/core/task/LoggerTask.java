@@ -22,7 +22,7 @@ import java.io.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
- * A @AbstractDelegatingTask which logs the execution
+ * An {@code AbstractDelegatingTask} which logs the execution
  * 
  * @author Nadeem Mohammad
  *

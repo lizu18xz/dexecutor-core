@@ -119,7 +119,7 @@ public class DexecutorSkippLogicTest {
 				public boolean shouldExecute(ExecutionResults<Integer, Integer> parentResults) {
 					if (id == 2) {
 						return false;
-					} else if (parentResults.anyParentSkipped()) {
+					} else if (parentResults.anySkipped()) {
 						return false;
 					}
 					return true;

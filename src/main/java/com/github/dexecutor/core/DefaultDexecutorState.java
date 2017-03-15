@@ -29,6 +29,8 @@ import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.TraversarAction;
 import com.github.dexecutor.core.graph.Validator;
+import com.github.dexecutor.core.task.ExecutionResult;
+import com.github.dexecutor.core.task.ExecutionResults;
 
 public class DefaultDexecutorState<T extends Comparable<T>, R> implements DexecutorState <T, R> {
 
@@ -37,7 +39,7 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 	private final AtomicInteger nodesCount;
 	private final Collection<Node<T, R>> processedNodes;
 	private final Collection<Node<T, R>> discontinuedNodes;
-	private final Collection<T> erroredTasks;
+	private final Collection<ExecutionResult<T, R>> erroredTasks;
 
 	public DefaultDexecutorState() {
 		this.graph =  new DefaultDag<>();
@@ -45,7 +47,7 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 		this.nodesCount = new AtomicInteger(0);
 		this.processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
 		this.discontinuedNodes = new CopyOnWriteArrayList<Node<T, R>>();
-		this.erroredTasks = new CopyOnWriteArraySet<T>();
+		this.erroredTasks = new CopyOnWriteArraySet<ExecutionResult<T, R>>();
 	}
 
 	public void addIndependent(final T nodeValue) {
@@ -151,18 +153,27 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 	}
 
 	@Override
-	public void addErrored(final T id) {
-		this.erroredTasks.add(id);		
+	public void addErrored(final ExecutionResult<T, R> task) {
+		this.erroredTasks.add(task);		
 	}
 
 	@Override
-	public void removeErrored(final T id) {
-		this.erroredTasks.remove(id);		
+	public void removeErrored(final ExecutionResult<T, R> task) {
+		this.erroredTasks.remove(task);		
 	}
 
 	@Override
 	public int erroredCount() {
 		return this.erroredTasks.size();
+	}
+
+	@Override
+	public ExecutionResults<T, R> getErrored() {
+		ExecutionResults<T, R> result = new ExecutionResults<>();
+		for (ExecutionResult<T, R> r : this.erroredTasks) {
+			result.add(r);
+		}
+		return result;
 	}
 
 	@Override

@@ -24,6 +24,8 @@ import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.TraversarAction;
 import com.github.dexecutor.core.graph.Validator;
+import com.github.dexecutor.core.task.ExecutionResult;
+import com.github.dexecutor.core.task.ExecutionResults;
 /**
  * Represents Dexecutor state at any given moment of time, It basically tracks 
  * <ul>
@@ -143,18 +145,23 @@ public interface DexecutorState<T extends Comparable<T>, R> extends DependencyAw
 	void processAfterNoError(final Collection<Node<T, R>> nodes);
 	/**
 	 * Add to errored collection
-	 * @param id id to add to errored collection
+	 * @param task to add to errored collection
 	 */
-	void addErrored(T id);
+	void addErrored(ExecutionResult<T, R> task);
 	/**
 	 * Remove errored collection
-	 * @param id to remove from errored collection
+	 * @param task to remove from errored collection
 	 */
-	void removeErrored(T id);
+	void removeErrored(ExecutionResult<T, R> task);
 	/**
 	 * @return Number of errors at this instance of time
 	 */
 	int erroredCount();
+	/**
+	 * 
+	 * @return thre errored result
+	 */
+	ExecutionResults<T, R> getErrored();
 	
 	/**
 	 * called to force stop

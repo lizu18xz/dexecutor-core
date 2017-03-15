@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.task.ExecutionResult;
-import com.github.dexecutor.core.task.ExecutionStatus;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskExecutionException;
 /**
@@ -49,6 +48,7 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 	private final CompletionService<ExecutionResult<T, R>> completionService;
 	/**
 	 * Creates the default instance given @ExecutorService, internally it uses @CompletionService
+	 * @param state the state
 	 * @param executorService Underlying execution service, where in tasks would be scheduled.
 	 */
 	public DefaultExecutionEngine(final DexecutorState<T, R> state, final ExecutorService executorService) {
@@ -80,16 +80,17 @@ public final class DefaultExecutionEngine<T extends Comparable<T>, R> implements
 			@Override
 			public ExecutionResult<T, R> call() throws Exception {
 				R r = null;
-				ExecutionStatus status = ExecutionStatus.SUCCESS;
+				ExecutionResult<T, R> result = null;
 				try {
 					r = task.execute();
-					state.removeErrored(task.getId());
+					result = ExecutionResult.success(task.getId(), r);
+					state.removeErrored(result);
 				} catch (Exception e) {
-					state.addErrored(task.getId());
-					status = ExecutionStatus.ERRORED;
+					result = ExecutionResult.errored(task.getId(), r, e.getMessage());
+					state.addErrored(result);
 					logger.error("Error Execution Task # {}", task.getId(), e);
 				}
-				return new ExecutionResult<T, R>(task.getId(), r, status);
+				return result;
 			}
 		};
 	}

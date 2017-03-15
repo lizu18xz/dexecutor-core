@@ -29,25 +29,32 @@ import java.io.Serializable;
  * @param <R>
  *            Type of Node/Task result
  */
-public class ExecutionResult<T, R> implements Serializable {
+public final class ExecutionResult<T, R> implements Serializable {
 
+	private static final String EMPTY = "";
 	private static final long serialVersionUID = 1L;
 	private T id;
 	private R result;
 	private ExecutionStatus status = ExecutionStatus.SUCCESS;
-
-	public ExecutionResult(final T id) {
-		this.id = id;
-	}
-
-	public ExecutionResult(final T id, final R result) {
-		this(id, result, ExecutionStatus.SUCCESS);
-	}
+	private String message;
 
 	public ExecutionResult(final T id, final R result, final ExecutionStatus status) {
+		this(id, result, status, EMPTY);
+	}
+
+	private ExecutionResult(final T id, final R result, final ExecutionStatus status, final String msg) {
 		this.id = id;
 		this.result = result;
 		this.status = status;
+		this.message = msg;
+	}
+
+	public static <T, R> ExecutionResult<T, R> success(final T id, final R result) {
+		return new ExecutionResult<T, R>(id, result, ExecutionStatus.SUCCESS, EMPTY);
+	}
+
+	public static <T, R> ExecutionResult<T, R> errored(final T id, final R result, final String msg) {
+		return new ExecutionResult<T, R>(id, result, ExecutionStatus.ERRORED, msg);
 	}
 
 	/**
@@ -113,9 +120,43 @@ public class ExecutionResult<T, R> implements Serializable {
 	public boolean isSkipped() {
 		return ExecutionStatus.SKIPPED.equals(this.status);
 	}
+	
+	/**
+	 * 
+	 * @return the execution message
+	 */
+	public String getMessage() {
+		return message;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		@SuppressWarnings("unchecked")
+		ExecutionResult<T, R> other = (ExecutionResult<T, R>) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {
-		return "ExecutionResult [id=" + id + ", result=" + result + ", status=" + status + "]";
-	}
+		return "ExecutionResult [id=" + id + ", result=" + result + ", status=" + status + ", message=" + message + "]";
+	}	
 }

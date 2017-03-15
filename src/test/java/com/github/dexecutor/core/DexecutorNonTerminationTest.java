@@ -14,6 +14,7 @@ import org.junit.Test;
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.support.TestUtil;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
+import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 
@@ -42,7 +43,8 @@ public class DexecutorNonTerminationTest {
 			executor.addDependency(13, 14);
 			executor.addIndependent(11);
 
-			executor.execute(ExecutionConfig.NON_TERMINATING);
+			ExecutionResults<Integer, Integer> result = executor.execute(ExecutionConfig.NON_TERMINATING);
+			System.out.println(result);
 			
 			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());

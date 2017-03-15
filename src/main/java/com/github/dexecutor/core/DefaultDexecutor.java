@@ -116,7 +116,7 @@ public class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<
 		}
 	}
 
-	public void execute(final ExecutionConfig config) {
+	public ExecutionResults<T, R> execute(final ExecutionConfig config) {
 		validate(config);
 
 		this.state.setCurrentPhase(Phase.RUNNING);
@@ -134,6 +134,8 @@ public class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<
 
 		logger.debug("Total Time taken to process {} jobs is {} ms.", this.state.graphSize(), end - start);
 		logger.debug("Processed Nodes Ordering {}", this.state.getProcessedNodes());
+		
+		return this.state.getErrored();
 	}
 
 	private void shutdownExecutors() {

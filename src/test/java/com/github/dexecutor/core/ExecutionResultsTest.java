@@ -30,14 +30,14 @@ public class ExecutionResultsTest {
 	@Test
 	public void testThereIsParentResult() {
 		ExecutionResults<Integer, Integer> results = new ExecutionResults<Integer, Integer>();
-		results.add(new ExecutionResult<Integer, Integer>(1, 1));
-		assertThat(results.hasAnyParentResult(), equalTo(true));
+		results.add(ExecutionResult.success(1, 1));
+		assertThat(results.hasAnyResult(), equalTo(true));
 	}
 	
 	@Test
 	public void testThereIsNoParentResult() {
 		ExecutionResults<Integer, Integer> results = new ExecutionResults<Integer, Integer>();
-		assertThat(results.hasAnyParentResult(), equalTo(false));
+		assertThat(results.hasAnyResult(), equalTo(false));
 	}
 	
 	@Test
@@ -49,21 +49,21 @@ public class ExecutionResultsTest {
 	@Test
 	public void testGetFirstIsNotNull() {
 		ExecutionResults<Integer, Integer> results = new ExecutionResults<Integer, Integer>();
-		results.add(new ExecutionResult<Integer, Integer>(1, 1));
+		results.add(ExecutionResult.success(1, 1));
 		assertNotNull(results.getFirst());
 	}
 	
 	@Test
 	public void testGetAllShouldReturnOneObject() {
 		ExecutionResults<Integer, Integer> results = new ExecutionResults<Integer, Integer>();
-		results.add(new ExecutionResult<Integer, Integer>(1, 1));
+		results.add(ExecutionResult.success(1, 1));
 		assertThat(results.getAll().size(), equalTo(1));
 	}
 	
 	@Test
 	public void testToStringIsNotNull() {
 		ExecutionResults<Integer, Integer> results = new ExecutionResults<Integer, Integer>();
-		results.add(new ExecutionResult<Integer, Integer>(1, 1));
+		results.add(ExecutionResult.success(1, 1));
 		assertNotNull(results.toString());
 	}
 

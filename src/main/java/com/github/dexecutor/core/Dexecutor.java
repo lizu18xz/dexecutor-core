@@ -20,6 +20,7 @@ package com.github.dexecutor.core;
 import com.github.dexecutor.core.graph.DependencyAware;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.TraversarAction;
+import com.github.dexecutor.core.task.ExecutionResults;
 
 /**
  * Main Interface for Dexecutor framework, It provides api to build the graph and and to kick off the execution.
@@ -36,8 +37,10 @@ public interface Dexecutor<T extends Comparable<T>, R> extends DependencyAware<T
 	 * Kicks off the execution of the nodes based on the dependency graph constructed, using {@code addDepen***} apis
 	 * 
 	 * @param config based on which execution should proceed.
+	 * 
+	 * @return {@link ExecutionResults} the results
 	 */
-	void execute(final ExecutionConfig config);
+	ExecutionResults<T, R> execute(final ExecutionConfig config);
 
 	/**
 	 * After a dexecutor crash, create a new instance of dexecutor and call this method for recovery

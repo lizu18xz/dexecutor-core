@@ -109,9 +109,11 @@ public class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<
 			throw new IllegalStateException("Can't recover terminated dexecutor");		
 		} else {	
 			logger.debug("Recovering Dexecutor.");
+			this.state.onRecover();
 			doWaitForExecution(config);
 			doExecute(this.state.getNonProcessedRootNodes(), config);
 			doWaitForExecution(config);
+			this.state.onTerminate();
 			logger.debug("Processed Nodes Ordering {}", this.state.getProcessedNodes());
 		}
 	}
@@ -131,6 +133,7 @@ public class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<
 		long end = new Date().getTime();
 
 		this.state.setCurrentPhase(Phase.TERMINATED);
+		this.state.onTerminate();
 
 		logger.debug("Total Time taken to process {} jobs is {} ms.", this.state.graphSize(), end - start);
 		logger.debug("Processed Nodes Ordering {}", this.state.getProcessedNodes());

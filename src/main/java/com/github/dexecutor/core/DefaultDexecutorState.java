@@ -179,5 +179,15 @@ public class DefaultDexecutorState<T extends Comparable<T>, R> implements Dexecu
 	@Override
 	public void forcedStop() {
 			
+	}
+
+	@Override
+	public void onTerminate() {
+		
+	}
+
+	@Override
+	public void onRecover() {
+		
 	}	
 }

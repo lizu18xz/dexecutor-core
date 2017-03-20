@@ -167,4 +167,12 @@ public interface DexecutorState<T extends Comparable<T>, R> extends DependencyAw
 	 * called to force stop
 	 */
 	void forcedStop();
+	/**
+	 * called when Dexecutor is finished execution
+	 */
+	void onTerminate();
+	/**
+	 * called where Dexecutor is Recovered
+	 */
+	void onRecover();
 }

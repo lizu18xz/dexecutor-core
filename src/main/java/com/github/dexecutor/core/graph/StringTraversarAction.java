@@ -37,7 +37,7 @@ public class StringTraversarAction<T extends Comparable<T>, R> implements Traver
 
 	@Override
 	public void onNewPath(int pathNumber) {
-		builder.append("Path #").append(pathNumber);				
+		builder.append("\n").append("Path #").append(pathNumber);				
 	}
 	
 	@Override

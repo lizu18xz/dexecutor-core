@@ -22,7 +22,7 @@ public class LevelOrderTraversarTest {
 
 		final StringBuilder builder = new StringBuilder();
 		traversar.traverse(dag, new StringTraversarAction<Integer, Integer>(builder));
-		assertThat(builder.toString(), equalTo("Path #0\n1[] \n2[1] 3[1] \n4[2] \n5[3, 4] "));
+		assertThat(builder.toString(), equalTo("\nPath #0\n1[] \n2[1] 3[1] \n4[2] \n5[3, 4] "));
 	}
 
 	@Test
@@ -38,6 +38,6 @@ public class LevelOrderTraversarTest {
 		Traversar<Integer, Integer> traversar = new LevelOrderTraversar<>();
 		final StringBuilder builder = new StringBuilder();
 		traversar.traverse(dag, new StringTraversarAction<Integer, Integer>(builder));
-		assertThat(builder.toString(), equalTo("Path #0\n1[] \n2[1] \n3[1, 2] "));
+		assertThat(builder.toString(), equalTo("\nPath #0\n1[] \n2[1] \n3[1, 2] "));
 	}	
 }

@@ -77,7 +77,7 @@ public class DexecutorTest {
 		executor.addDependency(1, 2);
 		StringBuilder builder = new StringBuilder();
 		executor.print(new LevelOrderTraversar<Integer, Integer>(), new StringTraversarAction<Integer, Integer>(builder));
-		assertThat(builder.toString(), equalTo("Path #0\n1[] \n2[1] "));
+		assertThat(builder.toString(), equalTo("\nPath #0\n1[] \n2[1] "));
 	}
 	
 	@Test
@@ -86,7 +86,7 @@ public class DexecutorTest {
 		executor.addDependency(1, 2);
 		StringBuilder builder = new StringBuilder();
 		executor.print(new LevelOrderTraversar<Integer, Integer>(), new StringTraversarAction<Integer, Integer>(builder));
-		assertThat(builder.toString(), equalTo("Path #0\n1[] \n2[1] "));
+		assertThat(builder.toString(), equalTo("\nPath #0\n1[] \n2[1] "));
 	}
 
 	@Test(expected = IllegalStateException.class)

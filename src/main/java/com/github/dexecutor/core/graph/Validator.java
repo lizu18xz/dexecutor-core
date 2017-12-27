@@ -24,7 +24,7 @@ package com.github.dexecutor.core.graph;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public interface Validator<T extends Comparable<T>, R> {
+public interface Validator<T, R> {
 	/**
 	 * Called to figure out if a graph is valid or not, exception should be thrown if the graph is invalid
 	 * @param graph the should be validated

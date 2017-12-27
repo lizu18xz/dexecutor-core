@@ -27,7 +27,7 @@ import java.util.Set;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public interface Dag<T extends Comparable<T>, R> extends DependencyAware<T> {	
+public interface Dag<T, R> extends DependencyAware<T> {	
 	/**
 	 * Returns the total number of nodes in this graph
 	 * 

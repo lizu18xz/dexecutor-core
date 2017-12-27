@@ -27,7 +27,7 @@ import java.util.Collection;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public class CyclicValidator<T extends Comparable<T>, R> implements Validator<T, R> {
+public class CyclicValidator<T, R> implements Validator<T, R> {
 
 	private Collection<Node<T, R>> processedNodes = new ArrayList<Node<T, R>>();
 	private Collection<Node<T, R>> onStackNodes = new ArrayList<Node<T, R>>();

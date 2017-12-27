@@ -50,7 +50,7 @@ import com.github.dexecutor.core.task.TaskProvider;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public class DefaultDexecutor <T extends Comparable<T>, R> implements Dexecutor<T, R> {
+public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultDexecutor.class);
 

@@ -40,7 +40,7 @@ import com.github.dexecutor.core.task.ExecutionResults;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public interface DexecutorState<T extends Comparable<T>, R> extends DependencyAware<T> {
+public interface DexecutorState<T, R> extends DependencyAware<T> {
 	/**
 	 * Returns the node with the given id
 	 * 

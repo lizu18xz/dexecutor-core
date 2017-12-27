@@ -32,7 +32,7 @@ import com.github.dexecutor.core.task.ExecutionResults;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public interface Dexecutor<T extends Comparable<T>, R> extends DependencyAware<T> {	
+public interface Dexecutor<T, R> extends DependencyAware<T> {	
 	/**
 	 * Kicks off the execution of the nodes based on the dependency graph constructed, using {@code addDepen***} apis
 	 * 

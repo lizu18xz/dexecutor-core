@@ -27,7 +27,7 @@ import java.util.List;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public class MergedLevelOrderTraversar<T extends Comparable<T>, R> extends BaseTraversar<T, R> {
+public class MergedLevelOrderTraversar<T, R> extends BaseTraversar<T, R> {
 
 	@Override
 	public void traverse(final Dag<T, R> graph, final TraversarAction<T, R> action) {

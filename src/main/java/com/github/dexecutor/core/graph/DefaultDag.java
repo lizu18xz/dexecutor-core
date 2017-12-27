@@ -34,7 +34,7 @@ import java.util.Set;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public final class DefaultDag<T extends Comparable<T>, R> implements Dag<T, R>, Serializable {
+public final class DefaultDag<T, R> implements Dag<T, R>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

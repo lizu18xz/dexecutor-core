@@ -28,7 +28,7 @@ import com.github.dexecutor.core.task.TaskExecutionException;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public interface ExecutionEngine<T extends Comparable<T>, R> {
+public interface ExecutionEngine<T, R> {
 	/**
 	 * Submits the task for execution, the method is expected to return immediately.
 	 * 

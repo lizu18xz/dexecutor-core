@@ -32,7 +32,7 @@ import com.github.dexecutor.core.graph.Validator;
 import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.ExecutionResults;
 
-public class DefaultDexecutorState<T extends Comparable<T>, R> implements DexecutorState <T, R> {
+public class DefaultDexecutorState<T, R> implements DexecutorState <T, R> {
 
 	private Phase currentPhase;
 	private final Dag<T, R> graph;

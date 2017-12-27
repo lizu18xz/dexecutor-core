@@ -29,7 +29,7 @@ import java.util.List;
  * @param <R>
  *            Type of Node/Task result
  */
-public class LevelOrderTraversar<T extends Comparable<T>, R> extends BaseTraversar<T, R> {
+public class LevelOrderTraversar<T, R> extends BaseTraversar<T, R> {
 
 	@Override
 	public void traverse(final Dag<T, R> graph, final TraversarAction<T, R> action) {

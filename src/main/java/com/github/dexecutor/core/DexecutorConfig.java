@@ -34,7 +34,7 @@ import com.github.dexecutor.core.task.TaskProvider;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public class DexecutorConfig<T extends Comparable<T>, R> {
+public class DexecutorConfig<T, R> {
 	
 	/**
 	 * Number of threads that should handle the immediate retry.

@@ -22,7 +22,7 @@ package com.github.dexecutor.core.graph;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public class StringTraversarAction<T extends Comparable<T>, R> implements TraversarAction <T, R> {
+public class StringTraversarAction<T, R> implements TraversarAction <T, R> {
 
 	private final StringBuilder builder;
 	

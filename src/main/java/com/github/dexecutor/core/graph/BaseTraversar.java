@@ -31,7 +31,7 @@ import java.util.Set;
  * @param <R>
  *            Type of Node/Task result
  */
-public abstract class BaseTraversar <T extends Comparable<T>, R> implements Traversar<T, R> {
+public abstract class BaseTraversar <T, R> implements Traversar<T, R> {
 
 	private List<Node<T, R>> processed = new ArrayList<Node<T, R>>();
 

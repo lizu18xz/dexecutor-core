@@ -7,7 +7,7 @@ package com.github.dexecutor.core.graph;
  * @author Nadeem Mohammad
  *
  */
-public interface DependencyAware<T extends Comparable<T>> {
+public interface DependencyAware<T> {
 	/**
 	 * Adds the given node to the datastructure whith out any dependency
 	 * Nodes should be created only if it is not already added.

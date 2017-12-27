@@ -32,7 +32,7 @@ public class TaskFactory {
 	 * @param <T> Type of Node/Task ID
      * @param <R> Type of Node/Task result
 	 */
-	public static <T extends Comparable<T>, R> Task<T, R> newWorker(final Task<T, R> task) {
+	public static <T, R> Task<T, R> newWorker(final Task<T, R> task) {
 		return new LoggerTask<T, R>(task);
 	}
 }

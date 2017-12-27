@@ -22,7 +22,7 @@ package com.github.dexecutor.core.graph;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public interface TraversarAction<T extends Comparable<T>, R> {
+public interface TraversarAction<T, R> {
 	/**
 	 * 
 	 * @param pathNumber The path number in graph traversing

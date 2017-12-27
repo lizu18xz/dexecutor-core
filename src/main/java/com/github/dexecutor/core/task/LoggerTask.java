@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-class LoggerTask<T extends Comparable<T>, R> extends AbstractDelegatingTask<T, R> implements Serializable {
+class LoggerTask<T, R> extends AbstractDelegatingTask<T, R> implements Serializable {
 
 	private static final long serialVersionUID = 1L;	
 	private static final Logger logger = LoggerFactory.getLogger(LoggerTask.class);

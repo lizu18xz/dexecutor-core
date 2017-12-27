@@ -25,7 +25,7 @@ package com.github.dexecutor.core.task;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-abstract class AbstractDelegatingTask <T extends Comparable<T>, R> extends Task<T, R> {
+abstract class AbstractDelegatingTask <T, R> extends Task<T, R> {
 
 	private static final long serialVersionUID = 1L;
 

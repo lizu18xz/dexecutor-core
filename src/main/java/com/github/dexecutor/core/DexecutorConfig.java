@@ -61,15 +61,20 @@ public class DexecutorConfig<T, R> {
 	private Validator<T, R> validator = new CyclicValidator<T, R>();
 
 	private DexecutorState<T, R> dexecutorState = new DefaultDexecutorState<T, R>();
+
 	/**
 	 * Construct the object with mandatory params, rest are optional
 	 * @param executorService provided executor service
 	 * @param taskProvider provided task provider
 	 */
 	public DexecutorConfig(final ExecutorService executorService, final TaskProvider<T, R> taskProvider) {
+		this(executorService, taskProvider, null);
+	}
+	
+	public DexecutorConfig(final ExecutorService executorService, final TaskProvider<T, R> taskProvider, final ExecutionListener<T, R> listener) {
 		checkNotNull(executorService, "Executer Service should not be null");
 		checkNotNull(taskProvider, "Task Provider should not be null");
-		this.executionEngine = new DefaultExecutionEngine<>(this.dexecutorState, executorService);
+		this.executionEngine = new DefaultExecutionEngine<>(this.dexecutorState, executorService, listener);
 		this.taskProvider = taskProvider;
 	}
 
@@ -159,5 +164,11 @@ public class DexecutorConfig<T, R> {
 	 */
 	public void setDexecutorState(final DexecutorState<T, R> dexecutorState) {
 		this.dexecutorState = dexecutorState;
+	}
+
+	public void setExecutionListener(ExecutionListener<T, R> listener) {
+		if (listener != null) {
+			this.executionEngine.setExecutionListener(listener);
+		}
 	}
 }

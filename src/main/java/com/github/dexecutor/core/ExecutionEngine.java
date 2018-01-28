@@ -55,4 +55,10 @@ public interface ExecutionEngine<T, R> {
      * 		 {@code false} otherwise.
      */
     boolean isAnyTaskInError();
+    /**
+     * Sets the ExecutionListener
+     * 
+     * @param listener
+     */
+    void setExecutionListener(ExecutionListener<T, R> listener);
 }

@@ -44,19 +44,27 @@ public final class DefaultExecutionEngine<T, R> implements ExecutionEngine<T, R>
 
 	private final DexecutorState<T, R> state;
 
+	private ExecutionListener<T, R> executionListener = new QuiteExecutionListener<>();
 	private final ExecutorService executorService;
 	private final CompletionService<ExecutionResult<T, R>> completionService;
+	
+	public DefaultExecutionEngine(final DexecutorState<T, R> state, final ExecutorService executorService) {
+		this(state, executorService, null);
+	}
 	/**
 	 * Creates the default instance given @ExecutorService, internally it uses @CompletionService
 	 * @param state the state
 	 * @param executorService Underlying execution service, where in tasks would be scheduled.
 	 */
-	public DefaultExecutionEngine(final DexecutorState<T, R> state, final ExecutorService executorService) {
+	public DefaultExecutionEngine(final DexecutorState<T, R> state, final ExecutorService executorService, ExecutionListener<T, R> listener) {
 		checkNotNull(state, "State should not be null");
 		checkNotNull(executorService, "Executer Service should not be null");
 		this.state = state;
 		this.executorService = executorService;
 		this.completionService = new ExecutorCompletionService<ExecutionResult<T, R>>(executorService);
+		if (listener != null) {
+			this.executionListener = listener;
+		}
 	}
 
 	@Override
@@ -85,9 +93,11 @@ public final class DefaultExecutionEngine<T, R> implements ExecutionEngine<T, R>
 					r = task.execute();
 					result = ExecutionResult.success(task.getId(), r);
 					state.removeErrored(result);
+					executionListener.onSuccess(task);
 				} catch (Exception e) {
 					result = ExecutionResult.errored(task.getId(), r, e.getMessage());
 					state.addErrored(result);
+					executionListener.onError(task, e);
 					logger.error("Error Execution Task # {}", task.getId(), e);
 				}
 				return result;
@@ -108,5 +118,10 @@ public final class DefaultExecutionEngine<T, R> implements ExecutionEngine<T, R>
 	@Override
 	public String toString() {
 		return this.executorService.toString();
+	}
+
+	@Override
+	public void setExecutionListener(ExecutionListener<T, R> listener) {
+		this.executionListener = listener;		
 	}
 }

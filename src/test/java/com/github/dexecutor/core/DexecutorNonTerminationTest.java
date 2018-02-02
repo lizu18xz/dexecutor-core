@@ -48,7 +48,7 @@ public class DexecutorNonTerminationTest {
 			
 			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
-			assertThat(processedNodesOrder).size().isEqualTo(14);
+			assertThat(processedNodesOrder).size().isEqualTo(9);
 			
 		} finally {
 			try {
@@ -63,11 +63,11 @@ public class DexecutorNonTerminationTest {
 	private Collection<Node<Integer, Integer>> executionOrderExpectedResult() {
 		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();
 		result.add(new Node<Integer, Integer>(1));
-		result.add(new Node<Integer, Integer>(2));
-		result.add(new Node<Integer, Integer>(7));
-		result.add(new Node<Integer, Integer>(9));
-		result.add(new Node<Integer, Integer>(10));
-		result.add(new Node<Integer, Integer>(8));
+		//result.add(new Node<Integer, Integer>(2));
+		//result.add(new Node<Integer, Integer>(7));
+		//result.add(new Node<Integer, Integer>(9));
+		//result.add(new Node<Integer, Integer>(10));
+		//result.add(new Node<Integer, Integer>(8));
 		result.add(new Node<Integer, Integer>(11));
 		result.add(new Node<Integer, Integer>(12));
 		result.add(new Node<Integer, Integer>(3));

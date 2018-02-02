@@ -57,8 +57,8 @@ public class DexecutorScheduledRetryingTest {
 
 			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
-			assertThat(processedNodesOrder).size().isEqualTo(16);
-			assertThat(processedNodesOrder).areExactly(3, nodeTwo);
+			assertThat(processedNodesOrder).size().isEqualTo(14);
+			assertThat(processedNodesOrder).areExactly(1, nodeTwo);
 			
 		} finally {
 			try {

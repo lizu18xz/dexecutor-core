@@ -13,13 +13,13 @@ public interface ExecutionListener<T, R> {
 	/**
 	 * Called on successful node execution
 	 * 
-	 * @param node
+	 * @param task successfull one
 	 */
 	void onSuccess(Task<T, R> task);
 	/**
 	 * Called on errored node execution
-	 * 
-	 * @param node
+	 * @param task the errored one
+	 * @param exception the exception caught
 	 */
 	void onError(Task<T, R> task, Exception exception);
 }

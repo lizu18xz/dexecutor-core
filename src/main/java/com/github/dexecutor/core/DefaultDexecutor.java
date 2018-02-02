@@ -187,7 +187,7 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 				Task<T, R> task = newTask(config, node);
 				if (node.isNotProcessed() && shouldExecute(node, task)) {					
 					this.state.incrementUnProcessedNodesCount();
-					logger.debug("Going to schedule {} node", node.getValue());
+					logger.debug("Submitting {} node for execution", node.getValue());
 					this.executionEngine.submit(task);
 				} else if (node.isNotProcessed()){
 					node.setSkipped();
@@ -238,10 +238,13 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 	private void doAfterExecutionDone(final ExecutionConfig config, final ExecutionResult<T, R> executionResult) {
 		logger.debug("Processing of node {} done, with status {}", executionResult.getId(), executionResult.getStatus());
 		state.decrementUnProcessedNodesCount();
-		
+
 		final Node<T, R> processedNode = state.getGraphNode(executionResult.getId());
 		updateNode(executionResult, processedNode);
-		state.markProcessingDone(processedNode);
+
+		if (executionResult.isSuccess()) {
+			state.markProcessingDone(processedNode);
+		}
 
 		if (executionResult.isSuccess() && !executionEngine.isAnyTaskInError() && state.isDiscontinuedNodesNotEmpty()) {
 			Collection<Node<T, R>> recover = new HashSet<>(state.getDiscontinuedNodes());	
@@ -250,6 +253,7 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 		}
 
 		if (config.isNonTerminating() || !executionEngine.isAnyTaskInError()) {
+			//state.markProcessingDone(processedNode);
 			doExecute(processedNode.getOutGoingNodes(), config);				
 		} else if (executionEngine.isAnyTaskInError() && executionResult.isSuccess()) { 
 			state.processAfterNoError(processedNode.getOutGoingNodes());

@@ -56,8 +56,8 @@ public class DexecutorImmediateRetryingTerminatingTest {
 
 			Collection<Node<Integer, Integer>> processedNodesOrder = TestUtil.processedNodesOrder(executor);
 			assertThat(processedNodesOrder).containsAll(executionOrderExpectedResult());
-			assertThat(processedNodesOrder).size().isGreaterThan(5);
-			assertThat(processedNodesOrder).areExactly(3, nodeTwoCondition);
+			assertThat(processedNodesOrder).size().isGreaterThan(3);
+			assertThat(processedNodesOrder).areExactly(0, nodeTwoCondition);
 			
 		} finally {
 			try {
@@ -72,7 +72,7 @@ public class DexecutorImmediateRetryingTerminatingTest {
 	private Collection<Node<Integer, Integer>> executionOrderExpectedResult() {
 		List<Node<Integer, Integer>> result = new ArrayList<Node<Integer, Integer>>();
 		result.add(new Node<Integer, Integer>(1));
-		result.add(new Node<Integer, Integer>(2));
+		//result.add(new Node<Integer, Integer>(2));
 		result.add(new Node<Integer, Integer>(11));
 		result.add(new Node<Integer, Integer>(12));
 		result.add(new Node<Integer, Integer>(3));

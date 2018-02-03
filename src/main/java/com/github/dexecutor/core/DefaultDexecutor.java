@@ -253,7 +253,6 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 		}
 
 		if (config.isNonTerminating() || !executionEngine.isAnyTaskInError()) {
-			//state.markProcessingDone(processedNode);
 			doExecute(processedNode.getOutGoingNodes(), config);				
 		} else if (executionEngine.isAnyTaskInError() && executionResult.isSuccess()) { 
 			state.processAfterNoError(processedNode.getOutGoingNodes());

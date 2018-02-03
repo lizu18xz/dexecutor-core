@@ -22,5 +22,5 @@ package com.github.dexecutor.core;
  *
  */
 public enum Phase {
-	BUILDING, RUNNING, TERMINATED;
+	BUILDING, RUNNING, TERMINATED, STOPPED, RECOVERED;
 }

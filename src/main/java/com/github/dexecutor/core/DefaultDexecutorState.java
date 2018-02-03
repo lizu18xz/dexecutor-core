@@ -178,16 +178,16 @@ public class DefaultDexecutorState<T, R> implements DexecutorState <T, R> {
 
 	@Override
 	public void forcedStop() {
-			
+			this.currentPhase = Phase.STOPPED;
 	}
 
 	@Override
 	public void onTerminate() {
-		
+		this.currentPhase = Phase.TERMINATED;
 	}
 
 	@Override
 	public void onRecover() {
-		
+		this.currentPhase = Phase.RECOVERED;
 	}	
 }

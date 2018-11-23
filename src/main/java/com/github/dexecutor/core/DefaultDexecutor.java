@@ -185,7 +185,9 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 			forceStopIfRequired();
 			if (this.state.shouldProcess(node)) {				
 				Task<T, R> task = newTask(config, node);
-				if (node.isNotProcessed() && shouldExecute(node, task)) {					
+				ExecutionResults<T, R> parentResults = parentResults(node);
+				task.setParentResults(parentResults);
+				if (node.isNotProcessed() && task.shouldExecute(parentResults)) {					
 					this.state.incrementUnProcessedNodesCount();
 					logger.debug("Submitting {} node for execution", node.getValue());
 					this.executionEngine.submit(task);
@@ -199,13 +201,6 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 				logger.debug("node {} depends on {}", node.getValue(), node.getInComingNodes());
 			}
 		}
-	}
-
-	private boolean shouldExecute(final Node<T, R> node, final Task<T, R> task) {
-		if (task.shouldExecute(parentResults(node))) {
-			return true;
-		}
-		return false;
 	}
 
 	private ExecutionResults<T, R> parentResults(final Node<T, R> node) {

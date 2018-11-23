@@ -31,6 +31,10 @@ public abstract class Task<T, R> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	/**
+	 * parent results of the task being executed
+	 */
+	private ExecutionResults<T, R> parentResults;
+	/**
 	 * id of the task, this would be same as that of {@code Node} id
 	 */
 	private T id;
@@ -48,7 +52,21 @@ public abstract class Task<T, R> implements Serializable {
 	public T getId() {
 		return this.id;
 	}
-	
+
+	/**
+	 * 	
+	 * @return ExecutionResults
+	 */
+	public ExecutionResults<T, R> getParentResults() {
+		return parentResults;
+	}
+	/**
+	 * sets the parent results
+	 * @param parentResults
+	 */
+	public void setParentResults(ExecutionResults<T, R> parentResults) {
+		this.parentResults = parentResults;
+	}
 	/**
 	 * Framework would call this method, when it comes for tasks to be executed.
 	 * @return the result of task execution

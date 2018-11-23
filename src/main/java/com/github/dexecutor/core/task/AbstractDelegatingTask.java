@@ -38,24 +38,34 @@ abstract class AbstractDelegatingTask<T, R> extends Task<T, R> {
 	protected Task<T, R> getTargetTask() {
 		return this.task;
 	}
-	
+	@Override
 	public void setId(final T id) {
 		this.task.setId(id);
 	}
-
+	@Override
 	public T getId() {
 		return this.task.getId();
 	}
-
+	@Override
 	public boolean shouldConsiderExecutionError() {
 		return this.task.shouldConsiderExecutionError();
 	}
-
+	@Override
 	public void setConsiderExecutionError(boolean considerExecutionError) {
 		this.task.setConsiderExecutionError(considerExecutionError);
 	}
-
+	@Override
 	public boolean shouldExecute(final ExecutionResults<T, R> parentResults) {
 		return this.task.shouldExecute(parentResults);
+	}
+	
+	@Override
+	public void setParentResults(ExecutionResults<T, R> parentResults) {
+		this.task.setParentResults(parentResults);
+	}
+	
+	@Override
+	public ExecutionResults<T, R> getParentResults() {
+		return this.task.getParentResults();
 	}
 }

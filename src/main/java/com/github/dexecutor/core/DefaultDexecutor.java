@@ -137,8 +137,8 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 
 		logger.debug("Total Time taken to process {} jobs is {} ms.", this.state.graphSize(), end - start);
 		logger.debug("Processed Nodes Ordering {}", this.state.getProcessedNodes());
-		
-		return this.state.getErrored();
+
+		return this.state.getExecutionResults();
 	}
 
 	private void shutdownExecutors() {

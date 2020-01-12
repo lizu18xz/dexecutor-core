@@ -82,6 +82,36 @@ public final class ExecutionResults<T, R> implements Serializable {
 		
 		return parentSkipped;
 	}
+
+	public List<ExecutionResult<T, R>> getSkipped() {
+		List<ExecutionResult<T, R>> items = new ArrayList<ExecutionResult<T,R>>();
+		for (ExecutionResult<T, R> result : this.results) {
+			if (result.isSkipped()) {
+				items.add(result);
+			}
+		}
+		return items;
+	}
+
+	public List<ExecutionResult<T, R>> getSuccess() {
+		List<ExecutionResult<T, R>> items = new ArrayList<ExecutionResult<T,R>>();
+		for (ExecutionResult<T, R> result : this.results) {
+			if (result.isSuccess()) {
+				items.add(result);
+			}
+		}
+		return items;
+	}
+
+	public List<ExecutionResult<T, R>> getErrored() {
+		List<ExecutionResult<T, R>> items = new ArrayList<ExecutionResult<T,R>>();
+		for (ExecutionResult<T, R> result : this.results) {
+			if (result.isErrored()) {
+				items.add(result);
+			}
+		}
+		return items;
+	}
 	/**
 	 * 
 	 * @return all result in the collection

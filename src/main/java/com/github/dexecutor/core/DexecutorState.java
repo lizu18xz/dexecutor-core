@@ -159,9 +159,9 @@ public interface DexecutorState<T, R> extends DependencyAware<T> {
 	int erroredCount();
 	/**
 	 * 
-	 * @return thre errored result
+	 * @return returns all the execution results
 	 */
-	ExecutionResults<T, R> getErrored();
+	ExecutionResults<T, R> getExecutionResults();
 	
 	/**
 	 * called to force stop

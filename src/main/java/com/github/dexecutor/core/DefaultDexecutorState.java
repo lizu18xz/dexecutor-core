@@ -40,6 +40,7 @@ public class DefaultDexecutorState<T, R> implements DexecutorState <T, R> {
 	private final Collection<Node<T, R>> processedNodes;
 	private final Collection<Node<T, R>> discontinuedNodes;
 	private final Collection<ExecutionResult<T, R>> erroredTasks;
+	private final Collection<ExecutionResult<T, R>> executionResults;
 
 	public DefaultDexecutorState() {
 		this.graph =  new DefaultDag<>();
@@ -48,6 +49,7 @@ public class DefaultDexecutorState<T, R> implements DexecutorState <T, R> {
 		this.processedNodes = new CopyOnWriteArrayList<Node<T, R>>();
 		this.discontinuedNodes = new CopyOnWriteArrayList<Node<T, R>>();
 		this.erroredTasks = new CopyOnWriteArraySet<ExecutionResult<T, R>>();
+		this.executionResults = new CopyOnWriteArraySet<ExecutionResult<T, R>>();
 	}
 
 	public void addIndependent(final T nodeValue) {
@@ -154,12 +156,15 @@ public class DefaultDexecutorState<T, R> implements DexecutorState <T, R> {
 
 	@Override
 	public void addErrored(final ExecutionResult<T, R> task) {
-		this.erroredTasks.add(task);		
+		this.erroredTasks.add(task);
+		this.executionResults.add(task);
 	}
 
 	@Override
 	public void removeErrored(final ExecutionResult<T, R> task) {
-		this.erroredTasks.remove(task);		
+		this.executionResults.remove(task);
+		this.executionResults.add(task);
+		this.erroredTasks.remove(task);
 	}
 
 	@Override
@@ -168,9 +173,9 @@ public class DefaultDexecutorState<T, R> implements DexecutorState <T, R> {
 	}
 
 	@Override
-	public ExecutionResults<T, R> getErrored() {
+	public ExecutionResults<T, R> getExecutionResults() {
 		ExecutionResults<T, R> result = new ExecutionResults<>();
-		for (ExecutionResult<T, R> r : this.erroredTasks) {
+		for (ExecutionResult<T, R> r : this.executionResults) {
 			result.add(r);
 		}
 		return result;

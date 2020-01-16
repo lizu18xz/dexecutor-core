@@ -14,7 +14,7 @@ Refer [wiki](https://github.com/dexecutor/dexecutor-core/wiki) or [Project Web s
 
 | Stable Release Version | JDK Version compatibility | Release Date |
 | ------------- | ------------- | ------------|
-| 2.1.0  | 1.8+ | 11/23/2018 |
+| 2.1.1  | 1.8+ | 11/23/2018 |
 | 1.1.2 | 1.7+ | 10/15/2016 |
 
 ## License
@@ -22,7 +22,7 @@ Refer [wiki](https://github.com/dexecutor/dexecutor-core/wiki) or [Project Web s
 Dexecutor is licensed under **Apache Software License, Version 2.0**.
 
 ## News
-
+* Version **2.1.1** released on 01/17/2020.
 * Version **2.1.0** released on 11/23/2018.
 * Version **2.0.2** released on 01/27/2018.
 * Version **2.0.1** released on 03/15/2017.
@@ -62,7 +62,7 @@ Alternatively you can  pull Dexecutor from the central maven repository, just ad
 <dependency>
   <groupId>com.github.dexecutor</groupId>
   <artifactId>dexecutor-core</artifactId>
-  <version>2.1.0</version>
+  <version>2.1.1</version>
 </dependency>
 ```
 

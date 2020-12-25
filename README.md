@@ -40,7 +40,7 @@ Dexecutor is licensed under **Apache Software License, Version 2.0**.
 * Version **0.0.2** released on 08/21/2016.
 * Version **0.0.1** released on 08/20/2016.
 
-## 2.1.2
+### 2.1.2
 
 * Able to get any tasks results from within any other task `this.getResult(id)` you can call this from with in `Task.execute`
 

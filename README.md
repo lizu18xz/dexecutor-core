@@ -14,7 +14,7 @@ Refer [wiki](https://github.com/dexecutor/dexecutor-core/wiki) or [Project Web s
 
 | Stable Release Version | JDK Version compatibility | Release Date |
 | ------------- | ------------- | ------------|
-| 2.1.1  | 1.8+ | 01/17/2020 |
+| 2.1.2  | 1.8+ | 12/25/2020 |
 | 1.1.2 | 1.7+ | 10/15/2016 |
 
 ## License
@@ -22,6 +22,7 @@ Refer [wiki](https://github.com/dexecutor/dexecutor-core/wiki) or [Project Web s
 Dexecutor is licensed under **Apache Software License, Version 2.0**.
 
 ## News
+* Version **2.1.2** released on 12/25/2020.
 * Version **2.1.1** released on 01/17/2020.
 * Version **2.1.0** released on 11/23/2018.
 * Version **2.0.2** released on 01/27/2018.
@@ -39,6 +40,9 @@ Dexecutor is licensed under **Apache Software License, Version 2.0**.
 * Version **0.0.2** released on 08/21/2016.
 * Version **0.0.1** released on 08/20/2016.
 
+## 2.1.2
+
+* Able to get any tasks results from within any other task `this.getResult(id)` you can call this from with in `Task.execute`
 
 ## Maven Repository
 

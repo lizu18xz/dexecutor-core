@@ -35,7 +35,6 @@ import com.github.dexecutor.core.graph.TraversarAction;
 import com.github.dexecutor.core.graph.Validator;
 import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.ExecutionResults;
-import com.github.dexecutor.core.task.ExecutionStatus;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskFactory;
 import com.github.dexecutor.core.task.TaskProvider;
@@ -185,8 +184,9 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 			forceStopIfRequired();
 			if (this.state.shouldProcess(node)) {				
 				Task<T, R> task = newTask(config, node);
-				ExecutionResults<T, R> parentResults = parentResults(node);
+				ExecutionResults<T, R> parentResults = parentResults(task, node);
 				task.setParentResults(parentResults);
+				task.setNodeProvider(new DefaultNodeProvider<T, R>(state));
 				if (node.isNotProcessed() && task.shouldExecute(parentResults)) {					
 					this.state.incrementUnProcessedNodesCount();
 					logger.debug("Submitting {} node for execution", node.getValue());
@@ -203,22 +203,12 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 		}
 	}
 
-	private ExecutionResults<T, R> parentResults(final Node<T, R> node) {
+	private ExecutionResults<T, R> parentResults(Task<T, R> task, final Node<T, R> node) {
 		ExecutionResults<T, R> parentResult = new ExecutionResults<T, R>();
 		for (Node<T, R> pNode : node.getInComingNodes()) {
-			parentResult.add(new ExecutionResult<T, R>(pNode.getValue(), pNode.getResult(), status(pNode)));
+			parentResult.add(new ExecutionResult<T, R>(pNode.getValue(), pNode.getResult(), task.status(pNode)));
 		}
 		return parentResult;
-	}
-
-	private ExecutionStatus status(final Node<T, R> node) {
-		ExecutionStatus status = ExecutionStatus.SUCCESS;
-		if (node.isErrored()) {
-			status = ExecutionStatus.ERRORED;
-		} else if (node.isSkipped()) {
-			status = ExecutionStatus.SKIPPED;
-		}
-		return status;
 	}
 
 	private void doWaitForExecution(final ExecutionConfig config) {

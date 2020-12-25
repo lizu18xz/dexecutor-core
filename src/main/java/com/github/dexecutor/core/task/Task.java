@@ -19,6 +19,9 @@ package com.github.dexecutor.core.task;
 
 import java.io.Serializable;
 
+import com.github.dexecutor.core.graph.Node;
+import com.github.dexecutor.core.graph.NodeProvider;
+
 /**
  * Represent a unit of execution in Dexecutor framework
  * 
@@ -35,9 +38,43 @@ public abstract class Task<T, R> implements Serializable {
 	 */
 	private ExecutionResults<T, R> parentResults;
 	/**
+	 * Node Provider
+	 */
+	private NodeProvider<T, R> nodeProvider;
+	/**
 	 * id of the task, this would be same as that of {@code Node} id
 	 */
 	private T id;
+
+	/**
+	 * 
+	 * @param nodeProvider
+	 */
+	public void setNodeProvider(NodeProvider<T, R> nodeProvider) {
+		this.nodeProvider = nodeProvider;
+	}
+
+	protected ExecutionResult<T, R> getResult(T id) {
+		if (this.nodeProvider == null) {
+			return null;
+		}
+		Node<T, R> node = this.nodeProvider.getGraphNode(id);
+		if (node != null ) {
+			return new ExecutionResult<T, R>(node.getValue(), node.getResult(), status(node));
+		}
+		return null;
+	}
+
+	public ExecutionStatus status(final Node<T, R> node) {
+		ExecutionStatus status = ExecutionStatus.SUCCESS;
+		if (node.isErrored()) {
+			status = ExecutionStatus.ERRORED;
+		} else if (node.isSkipped()) {
+			status = ExecutionStatus.SKIPPED;
+		}
+		return status;
+	}
+
 	/**
 	 * Sets the new id
 	 * @param id the task id

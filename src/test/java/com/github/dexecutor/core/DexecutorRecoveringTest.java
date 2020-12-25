@@ -92,7 +92,7 @@ public class DexecutorRecoveringTest {
 				private static final long serialVersionUID = 1L;
 
 				public Integer execute() {
-								
+					System.out.println("Result : " + this.getResult(id - 1));		
 					return id;
 				}
 			};			

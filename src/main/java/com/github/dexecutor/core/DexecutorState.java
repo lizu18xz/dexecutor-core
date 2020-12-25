@@ -21,6 +21,7 @@ import java.util.Set;
 
 import com.github.dexecutor.core.graph.DependencyAware;
 import com.github.dexecutor.core.graph.Node;
+import com.github.dexecutor.core.graph.NodeProvider;
 import com.github.dexecutor.core.graph.Traversar;
 import com.github.dexecutor.core.graph.TraversarAction;
 import com.github.dexecutor.core.graph.Validator;
@@ -40,14 +41,8 @@ import com.github.dexecutor.core.task.ExecutionResults;
  * @param <T> Type of Node/Task ID
  * @param <R> Type of Node/Task result
  */
-public interface DexecutorState<T, R> extends DependencyAware<T> {
-	/**
-	 * Returns the node with the given id
-	 * 
-	 * @param id The Unique node id
-	 * @return the @Node with the given id
-	 */
-	Node<T, R> getGraphNode(final T id);
+public interface DexecutorState<T, R> extends DependencyAware<T>, NodeProvider<T, R> {
+
 	/**
 	 * Returns the total number of nodes in this graph
 	 * 

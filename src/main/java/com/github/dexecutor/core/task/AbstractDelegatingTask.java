@@ -17,6 +17,8 @@
 
 package com.github.dexecutor.core.task;
 
+import com.github.dexecutor.core.graph.NodeProvider;
+
 /**
  * Class to delegate responsibilities to underlying @Task
  * 
@@ -67,5 +69,10 @@ abstract class AbstractDelegatingTask<T, R> extends Task<T, R> {
 	@Override
 	public ExecutionResults<T, R> getParentResults() {
 		return this.task.getParentResults();
+	}
+	
+	@Override
+	public void setNodeProvider(NodeProvider<T, R> nodeProvider) {
+		this.task.setNodeProvider(nodeProvider);
 	}
 }

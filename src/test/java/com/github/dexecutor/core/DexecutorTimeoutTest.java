@@ -19,6 +19,7 @@ package com.github.dexecutor.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigInteger;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -111,17 +112,30 @@ public class DexecutorTimeoutTest {
 					
 					if (id == 14) {
 						try {
-							TimeUnit.MILLISECONDS.sleep(100);
+							TimeUnit.MILLISECONDS.sleep(30);
+							System.out.println("Done " + id);
 						} catch (InterruptedException e) {
 							logger.error(this.toString(), e);
 						}
+					} else if (id == 11) {
+						BigInteger factValue = BigInteger.ONE;
+						long t1 = System.nanoTime();
+						for (int i = 2; i <= 8000; i++) {
+							if (Thread.currentThread().isInterrupted()) {
+								logger.warn("Task #{} Interrupted, returning.....", id);
+								break ;
+							}
+							factValue = factValue.multiply(BigInteger.valueOf(i));
+						}
+						long t2 = System.nanoTime();
+						logger.info("Service Time(ms)= {}", ((double) (t2 - t1) / 1000000));
 					} else {
 						try {
 							TimeUnit.MILLISECONDS.sleep(1);
 						} catch (InterruptedException e) {
 							logger.error(this.toString(), e);
 						}
-					}
+					}					
 
 					return id;
 				}

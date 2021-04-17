@@ -22,6 +22,7 @@ Refer [wiki](https://github.com/dexecutor/dexecutor-core/wiki) or [Project Web s
 Dexecutor is licensed under **Apache Software License, Version 2.0**.
 
 ## News
+* Version **2.1.3** released on 4/17/2021.
 * Version **2.1.2** released on 12/25/2020.
 * Version **2.1.1** released on 01/17/2020.
 * Version **2.1.0** released on 11/23/2018.

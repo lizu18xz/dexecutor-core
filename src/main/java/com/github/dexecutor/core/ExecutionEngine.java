@@ -17,6 +17,8 @@
 
 package com.github.dexecutor.core;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskExecutionException;
@@ -61,4 +63,6 @@ public interface ExecutionEngine<T, R> {
      * @param listener to notify
      */
     void setExecutionListener(ExecutionListener<T, R> listener);
+
+    void setTimeoutScheduler(ScheduledExecutorService timeoutExecutor);
 }

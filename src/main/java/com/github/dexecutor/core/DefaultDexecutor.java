@@ -58,6 +58,7 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 	private final ExecutionEngine<T, R> executionEngine;
 	private final ExecutorService immediatelyRetryExecutor;
 	private final ScheduledExecutorService scheduledRetryExecutor;
+	private final ScheduledExecutorService timeoutExecutor;
 
 	private final DexecutorState<T, R> state;
 
@@ -70,11 +71,13 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 
 		this.immediatelyRetryExecutor = Executors.newFixedThreadPool(config.getImmediateRetryPoolThreadsCount());
 		this.scheduledRetryExecutor = Executors.newScheduledThreadPool(config.getScheduledRetryPoolThreadsCount());
+		this.timeoutExecutor = Executors.newScheduledThreadPool(config.getTimeoutSchedulerPoolThreadsCount());
 
 		this.executionEngine = config.getExecutorEngine();
 		this.validator = config.getValidator();
 		this.taskProvider = config.getTaskProvider();
 		this.state = config.getDexecutorState();
+		this.executionEngine.setTimeoutScheduler(timeoutExecutor);
 	}
 
 	public void print(final Traversar<T, R> traversar, final TraversarAction<T, R> action) {
@@ -143,9 +146,12 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 	private void shutdownExecutors() {
 		this.immediatelyRetryExecutor.shutdown();
 		this.scheduledRetryExecutor.shutdown();
+		this.timeoutExecutor.shutdown();
+
 		try {
 			this.immediatelyRetryExecutor.awaitTermination(1, TimeUnit.NANOSECONDS);
 			this.scheduledRetryExecutor.awaitTermination(1, TimeUnit.NANOSECONDS);
+			this.timeoutExecutor.awaitTermination(1, TimeUnit.NANOSECONDS);
 		} catch (InterruptedException e) {
 			logger.error("Error Shuting down Executor", e);
 		}		
@@ -227,7 +233,7 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 		final Node<T, R> processedNode = state.getGraphNode(executionResult.getId());
 		updateNode(executionResult, processedNode);
 
-		if (executionResult.isSuccess()) {
+		if (executionResult.isSuccess() || executionResult.isCancelled()) {
 			state.markProcessingDone(processedNode);
 		}
 
@@ -316,8 +322,10 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 	private void updateNode(final ExecutionResult<T, R> executionResult, final Node<T, R> processedNode) {
 		updateExecutionCount(processedNode);
 		processedNode.setResult(executionResult.getResult());
-		if(executionResult.isErrored()) {
+		if (executionResult.isErrored()) {
 			processedNode.setErrored();
+		} else if (executionResult.isCancelled()) { 
+			processedNode.setCancelled();
 		} else {
 			processedNode.setSuccess();
 		}
@@ -328,6 +336,7 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 			this.state.forcedStop();
 			this.immediatelyRetryExecutor.shutdownNow();
 			this.scheduledRetryExecutor.shutdownNow();
+			this.timeoutExecutor.shutdownNow();
 			throw new IllegalStateException("Forced to Stop the instance of Dexecutor!");
 		}		
 	}

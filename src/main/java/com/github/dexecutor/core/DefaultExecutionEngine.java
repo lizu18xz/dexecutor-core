@@ -20,13 +20,16 @@ package com.github.dexecutor.core;
 import static com.github.dexecutor.core.support.Preconditions.checkNotNull;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.dexecutor.core.concurrent.ExecutorCompletionService;
+import com.github.dexecutor.core.concurrent.IdentifiableRunnableFuture;
 import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskExecutionException;
@@ -46,8 +49,10 @@ public final class DefaultExecutionEngine<T, R> implements ExecutionEngine<T, R>
 
 	private ExecutionListener<T, R> executionListener = new QuiteExecutionListener<>();
 	private final ExecutorService executorService;
-	private final CompletionService<ExecutionResult<T, R>> completionService;
-	
+	private final ExecutorCompletionService<T, ExecutionResult<T, R>> completionService;
+
+	private ScheduledExecutorService timeoutExecutor;
+
 	public DefaultExecutionEngine(final DexecutorState<T, R> state, final ExecutorService executorService) {
 		this(state, executorService, null);
 	}
@@ -62,7 +67,7 @@ public final class DefaultExecutionEngine<T, R> implements ExecutionEngine<T, R>
 		checkNotNull(executorService, "Executer Service should not be null");
 		this.state = state;
 		this.executorService = executorService;
-		this.completionService = new ExecutorCompletionService<ExecutionResult<T, R>>(executorService);
+		this.completionService = new ExecutorCompletionService<T, ExecutionResult<T, R>>(executorService);
 		if (listener != null) {
 			this.executionListener = listener;
 		}
@@ -70,27 +75,60 @@ public final class DefaultExecutionEngine<T, R> implements ExecutionEngine<T, R>
 
 	@Override
 	public ExecutionResult<T, R> processResult() {
+		T identifier = null;
 		try {
-			return this.completionService.take().get();
+			@SuppressWarnings("unchecked")
+			IdentifiableRunnableFuture<T, ExecutionResult<T, R>> future = (IdentifiableRunnableFuture<T, ExecutionResult<T, R>>) this.completionService.take();
+			identifier = future.getIdentifier();
+			if (future.isCancelled()) {
+				ExecutionResult<T, R> result = ExecutionResult.cancelled(future.getIdentifier(), "Task cancelled");
+				state.removeErrored(result);
+				return result;
+			} else {
+				return future.get();
+			}
 		} catch (Exception e) {
-			throw new TaskExecutionException("Task execution ", e);
+			throw new TaskExecutionException(identifier + " Task execution ", e);
 		}
 	}
 
 	@Override
 	public void submit(final Task<T, R> task) {
 		logger.debug("Received Task {} ", task.getId());
-		this.completionService.submit(newCallable(task));		
+		Future<ExecutionResult<T, R>> future = this.completionService.submit(newCallable(task));
+
+		if (this.timeoutExecutor != null && task.getTimeout() != null) {
+			logger.trace("Task # {}, Is Timeout based", task.getId());
+			addTimeOut(task, future);
+		}
+	}
+
+	private void addTimeOut(Task<T, R> task, Future<ExecutionResult<T, R>> future) {
+
+		timeoutExecutor.schedule(new Runnable() {
+			public void run() {
+				if (task.isCompleted()) {
+					logger.trace("Task already completed {}", task);
+				} else if (task.isTimedOut()) {					
+					boolean result = future.cancel(true);
+					logger.trace("Task timed out {}, cancelled it? : {}", task, result);
+				} else {
+					logger.trace("Task Not timed out {}, adding it back", task);
+					addTimeOut(task, future);
+				}
+			}
+		}, task.getTimeout().toNanos(), TimeUnit.NANOSECONDS);
 	}
 
 	private Callable<ExecutionResult<T, R>> newCallable(final Task<T, R> task) {
-		return new Callable<ExecutionResult<T,R>>() {
+		return new IdentifiableCallable<T, ExecutionResult<T,R>>() {
 
 			@Override
 			public ExecutionResult<T, R> call() throws Exception {
 				R r = null;
 				ExecutionResult<T, R> result = null;
 				try {
+					task.markStart();
 					r = task.execute();
 					result = ExecutionResult.success(task.getId(), r);
 					state.removeErrored(result);
@@ -100,8 +138,16 @@ public final class DefaultExecutionEngine<T, R> implements ExecutionEngine<T, R>
 					state.addErrored(result);
 					executionListener.onError(task, e);
 					logger.error("Error Execution Task # {}", task.getId(), e);
+				} finally {
+					task.markEnd();
+					result.setTimes(task.getStartTime(), task.getEndTime());
 				}
 				return result;
+			}
+
+			@Override
+			public T getIdentifier() {
+				return task.getId();
 			}
 		};
 	}
@@ -124,5 +170,10 @@ public final class DefaultExecutionEngine<T, R> implements ExecutionEngine<T, R>
 	@Override
 	public void setExecutionListener(ExecutionListener<T, R> listener) {
 		this.executionListener = listener;		
+	}
+
+	@Override
+	public void setTimeoutScheduler(ScheduledExecutorService timeoutExecutor) {
+		this.timeoutExecutor = timeoutExecutor;		
 	}
 }

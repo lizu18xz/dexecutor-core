@@ -161,6 +161,10 @@ public final class Node<T, R> implements Serializable {
 	public void setErrored() {
 		this.status = NodeStatus.ERRORED;
 	}
+
+	public void setCancelled() {
+		this.status = NodeStatus.CANCELLED;
+	}
 	
 	/**
 	 * Sets the node's execution result to SKIPPED
@@ -223,6 +227,6 @@ public final class Node<T, R> implements Serializable {
      *
      */
     enum NodeStatus {
-    	ERRORED,SKIPPED,SUCCESS;
+    	ERRORED,SKIPPED,SUCCESS,CANCELLED;
     }	
 }

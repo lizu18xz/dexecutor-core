@@ -18,6 +18,8 @@
 package com.github.dexecutor.core.task;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import com.github.dexecutor.core.graph.Node;
 import com.github.dexecutor.core.graph.NodeProvider;
@@ -45,6 +47,14 @@ public abstract class Task<T, R> implements Serializable {
 	 * id of the task, this would be same as that of {@code Node} id
 	 */
 	private T id;
+	/**
+	 * start time for the task
+	 */
+	private LocalDateTime start;
+	/**
+	 * End time for the task
+	 */
+	private LocalDateTime end;
 
 	/**
 	 * 
@@ -139,4 +149,41 @@ public abstract class Task<T, R> implements Serializable {
 	public boolean shouldExecute(final ExecutionResults<T, R> parentResults) {
 		return true;
 	}
+
+	public void markStart() {
+		if (this.start == null) {			
+			this.start = LocalDateTime.now();
+		}
+	}
+
+	public LocalDateTime getStartTime() {
+		return this.start;
+	}
+
+	public void markEnd() {
+		if (this.end == null) {			
+			this.end = LocalDateTime.now();	
+		}
+	}
+	
+	public LocalDateTime getEndTime() {
+		return this.end;
+	}
+	
+	public boolean isCompleted() {
+		return getEndTime() != null;
+	}
+	
+	public Duration getTimeout() {
+		return null;
+	}
+
+	public boolean isTimedOut() {
+		return getTimeout() != null &&  getStartTime() != null && getStartTime().plus(getTimeout()).isBefore(LocalDateTime.now());
+	}
+
+	@Override
+	public String toString() {
+		return "Task [id=" + id + ", start=" + start + ", timeout=" + getTimeout() + ", end=" + end + "]";
+	}	
 }

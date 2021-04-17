@@ -45,6 +45,11 @@ public class DexecutorConfig<T, R> {
 	 * Number of threads that should handle the immediate retry.
 	 */
 	private int scheduledRetryPoolThreadsCount = 1;
+	
+	/**
+	 * Number of threads that should handle the timeout scheduler.
+	 */
+	private int timeoutSchedulerPoolThreadsCount = 2;
 
 	/**
 	 * executor is the main platform on which tasks are executed
@@ -150,6 +155,15 @@ public class DexecutorConfig<T, R> {
 	public void setScheduledRetryPoolThreadsCount(int scheduledRetryPoolThreadsCount) {
 		this.scheduledRetryPoolThreadsCount = scheduledRetryPoolThreadsCount;
 	}
+	
+	public int getTimeoutSchedulerPoolThreadsCount() {
+		return timeoutSchedulerPoolThreadsCount;
+	}
+
+	public void setTimeoutSchedulerPoolThreadsCount(int timeoutSchedulerPoolThreadsCount) {
+		this.timeoutSchedulerPoolThreadsCount = timeoutSchedulerPoolThreadsCount;
+	}
+
 	/**
 	 * 
 	 * @return the dexecutor state

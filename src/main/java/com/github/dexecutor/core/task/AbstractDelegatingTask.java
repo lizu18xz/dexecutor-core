@@ -17,6 +17,9 @@
 
 package com.github.dexecutor.core.task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import com.github.dexecutor.core.graph.NodeProvider;
 
 /**
@@ -74,5 +77,40 @@ abstract class AbstractDelegatingTask<T, R> extends Task<T, R> {
 	@Override
 	public void setNodeProvider(NodeProvider<T, R> nodeProvider) {
 		this.task.setNodeProvider(nodeProvider);
+	}
+
+	@Override
+	public void markEnd() {
+		this.task.markEnd();
+	}
+
+	@Override
+	public void markStart() {
+		this.task.markStart();
+	}
+
+	@Override
+	public LocalDateTime getStartTime() {
+		return this.task.getStartTime();
+	}
+
+	@Override
+	public LocalDateTime getEndTime() {
+		return this.task.getEndTime();
+	}
+
+	@Override
+	public Duration getTimeout() {
+		return this.task.getTimeout();
+	}
+	
+	@Override
+	public boolean isTimedOut() {
+		return this.task.isTimedOut();
+	}
+
+	@Override
+	public String toString() {
+		return this.task.toString();
 	}
 }

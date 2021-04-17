@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
@@ -30,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.github.dexecutor.core.concurrent.ExecutorCompletionService;
 import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.TaskExecutionException;
 
@@ -65,7 +65,7 @@ public class DefaultExecutionEngineTest {
 	}
 
 	private static class MockedCompletionService
-			extends MockUp<ExecutorCompletionService<ExecutionResult<Integer, Integer>>> {
+			extends MockUp<ExecutorCompletionService<Integer, ExecutionResult<Integer, Integer>>> {
 	
 		@Mock
 		public void $init(Executor executor) {

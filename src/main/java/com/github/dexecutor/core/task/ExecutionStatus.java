@@ -28,6 +28,9 @@ package com.github.dexecutor.core.task;
  * 		<li>
  * 			<code>SUCCESS</code> : Task Execution was successful
  * 		</li>
+ * 		<li>
+ * 			<code>CANCELLED</code> : Task Execution was cancelled
+ * 		</li>
  * 
  * </ul>
  * @author Nadeem Mohammad
@@ -35,5 +38,5 @@ package com.github.dexecutor.core.task;
  */
 
 public enum ExecutionStatus {
-	ERRORED, SKIPPED, SUCCESS;
+	ERRORED, SKIPPED, SUCCESS, CANCELLED;
 }

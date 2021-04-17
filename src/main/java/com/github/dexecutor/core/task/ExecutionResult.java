@@ -18,6 +18,7 @@
 package com.github.dexecutor.core.task;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * Holds execution result of a node identified by id
@@ -37,6 +38,15 @@ public final class ExecutionResult<T, R> implements Serializable {
 	private R result;
 	private ExecutionStatus status = ExecutionStatus.SUCCESS;
 	private String message;
+	
+	/**
+	 * start time for the task
+	 */
+	private LocalDateTime startTime;
+	/**
+	 * End time for the task
+	 */
+	private LocalDateTime endTime;
 
 	public ExecutionResult(final T id, final R result, final ExecutionStatus status) {
 		this(id, result, status, EMPTY);
@@ -55,6 +65,10 @@ public final class ExecutionResult<T, R> implements Serializable {
 
 	public static <T, R> ExecutionResult<T, R> errored(final T id, final R result, final String msg) {
 		return new ExecutionResult<T, R>(id, result, ExecutionStatus.ERRORED, msg);
+	}
+	
+	public static <T, R> ExecutionResult<T, R> cancelled(final T id, final String msg) {
+		return new ExecutionResult<T, R>(id, null, ExecutionStatus.CANCELLED, msg);
 	}
 
 	/**
@@ -111,6 +125,10 @@ public final class ExecutionResult<T, R> implements Serializable {
 	public boolean isErrored() {
 		return ExecutionStatus.ERRORED.equals(this.status);
 	}
+	
+	public boolean isCancelled() {
+		return ExecutionStatus.CANCELLED.equals(this.status);
+	}
 
 	/**
 	 * 
@@ -128,7 +146,20 @@ public final class ExecutionResult<T, R> implements Serializable {
 	public String getMessage() {
 		return message;
 	}
-	
+
+	public void setTimes(LocalDateTime startTime, LocalDateTime endTime) {
+		this.startTime = startTime;
+		this.endTime = endTime;
+	}
+
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -157,6 +188,7 @@ public final class ExecutionResult<T, R> implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ExecutionResult [id=" + id + ", result=" + result + ", status=" + status + ", message=" + message + "]";
-	}	
+		return "ExecutionResult [id=" + id + ", result=" + result + ", status=" + status + ", message=" + message
+				+ ", startTime=" + startTime + ", endTime=" + endTime + "]";
+	}
 }

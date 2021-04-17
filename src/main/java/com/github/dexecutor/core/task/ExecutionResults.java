@@ -83,10 +83,32 @@ public final class ExecutionResults<T, R> implements Serializable {
 		return parentSkipped;
 	}
 
+	public boolean anyCancelled() {
+		boolean parentSkipped = false;
+		for (ExecutionResult<T, R> parent : this.results) {
+			if (parent.isCancelled()) {
+				parentSkipped = true;
+				break;
+			}
+		}
+		
+		return parentSkipped;
+	}
+
 	public List<ExecutionResult<T, R>> getSkipped() {
 		List<ExecutionResult<T, R>> items = new ArrayList<ExecutionResult<T,R>>();
 		for (ExecutionResult<T, R> result : this.results) {
 			if (result.isSkipped()) {
+				items.add(result);
+			}
+		}
+		return items;
+	}
+
+	public List<ExecutionResult<T, R>> getCancelled() {
+		List<ExecutionResult<T, R>> items = new ArrayList<ExecutionResult<T,R>>();
+		for (ExecutionResult<T, R> result : this.results) {
+			if (result.isCancelled()) {
 				items.add(result);
 			}
 		}

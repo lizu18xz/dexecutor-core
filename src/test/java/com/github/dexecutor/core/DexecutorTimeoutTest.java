@@ -145,6 +145,9 @@ public class DexecutorTimeoutTest {
 
 				@Override
 				public Duration getTimeout() {
+					if (id == 2) {
+						return null;
+					}
 					return Duration.ofMillis(1);
 				}
 			};			

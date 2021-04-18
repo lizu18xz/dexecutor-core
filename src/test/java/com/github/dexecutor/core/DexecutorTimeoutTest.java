@@ -113,7 +113,6 @@ public class DexecutorTimeoutTest {
 					if (id == 14) {
 						try {
 							TimeUnit.MILLISECONDS.sleep(30);
-							System.out.println("Done " + id);
 						} catch (InterruptedException e) {
 							logger.error(this.toString(), e);
 						}

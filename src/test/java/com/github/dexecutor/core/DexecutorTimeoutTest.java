@@ -117,17 +117,7 @@ public class DexecutorTimeoutTest {
 							logger.error(this.toString(), e);
 						}
 					} else if (id == 11) {
-						BigInteger factValue = BigInteger.ONE;
-						long t1 = System.nanoTime();
-						for (int i = 2; i <= 8000; i++) {
-							if (Thread.currentThread().isInterrupted()) {
-								logger.warn("Task #{} Interrupted, returning.....", id);
-								break ;
-							}
-							factValue = factValue.multiply(BigInteger.valueOf(i));
-						}
-						long t2 = System.nanoTime();
-						logger.info("Service Time(ms)= {}", ((double) (t2 - t1) / 1000000));
+						heavyOperation(id);
 					} else {
 						try {
 							TimeUnit.MILLISECONDS.sleep(1);
@@ -137,6 +127,20 @@ public class DexecutorTimeoutTest {
 					}					
 
 					return id;
+				}
+
+				private void heavyOperation(final Integer id) {
+					BigInteger factValue = BigInteger.ONE;
+					long t1 = System.nanoTime();
+					for (int i = 2; i <= 8000; i++) {
+						if (Thread.currentThread().isInterrupted()) {
+							logger.warn("Task #{} Interrupted, returning.....", id);
+							break ;
+						}
+						factValue = factValue.multiply(BigInteger.valueOf(i));
+					}
+					long t2 = System.nanoTime();
+					logger.info("Service Time(ms)= {}", ((double) (t2 - t1) / 1000000));
 				}
 
 				@Override

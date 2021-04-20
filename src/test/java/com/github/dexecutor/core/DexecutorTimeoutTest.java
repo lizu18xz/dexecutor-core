@@ -133,6 +133,9 @@ public class DexecutorTimeoutTest {
 					BigInteger factValue = BigInteger.ONE;
 					long t1 = System.nanoTime();
 					for (int i = 2; i <= 8000; i++) {
+						// Future.cancel(...) delivers an interrupt signal to the thread asking it to stop. 
+						// You must ensure that your tasks respect the interrupt signals
+						// e.g. checks for Thread.currentThread().isInterrupted() at regular intervals.
 						if (Thread.currentThread().isInterrupted()) {
 							logger.warn("Task #{} Interrupted, returning.....", id);
 							break ;

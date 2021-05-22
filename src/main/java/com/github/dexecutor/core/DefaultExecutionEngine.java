@@ -132,14 +132,15 @@ public final class DefaultExecutionEngine<T, R> implements ExecutionEngine<T, R>
 					r = task.execute();
 					result = ExecutionResult.success(task.getId(), r);
 					state.removeErrored(result);
+					task.markEnd();
 					executionListener.onSuccess(task);
 				} catch (Exception e) {
 					result = ExecutionResult.errored(task.getId(), r, e.getMessage());
 					state.addErrored(result);
+					task.markEnd();
 					executionListener.onError(task, e);
 					logger.error("Error Execution Task # {}", task.getId(), e);
-				} finally {
-					task.markEnd();
+				} finally {					
 					result.setTimes(task.getStartTime(), task.getEndTime());
 				}
 				return result;

@@ -46,7 +46,7 @@ public interface Dexecutor<T, R> extends DependencyAware<T> {
 	 * After a dexecutor crash, create a new instance of dexecutor and call this method for recovery
 	 * @param config based on which execution would recover
 	 */
-	void recoverExecution(final ExecutionConfig config);
+	ExecutionResults<T, R> recoverExecution(final ExecutionConfig config);
 	/**
 	 * Prints the graph into the writer, using the traversar
 	 * 

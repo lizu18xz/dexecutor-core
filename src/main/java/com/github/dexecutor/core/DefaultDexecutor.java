@@ -106,7 +106,7 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 	}
 
 	@Override
-	public void recoverExecution(final ExecutionConfig config) {
+	public ExecutionResults<T, R> recoverExecution(final ExecutionConfig config) {
 		if (Phase.TERMINATED.equals(this.state.getCurrentPhase())) {
 			throw new IllegalStateException("Can't recover terminated dexecutor");		
 		} else {	
@@ -118,6 +118,7 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 			this.state.onTerminate();
 			logger.debug("Processed Nodes Ordering {}", this.state.getProcessedNodes());
 		}
+		return this.state.getExecutionResults();
 	}
 
 	public ExecutionResults<T, R> execute(final ExecutionConfig config) {
@@ -333,10 +334,11 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 
 	private void forceStopIfRequired() {
 		if (!shouldContinueProcessingNodes()) {
+			logger.debug("Force Stopping dexecutor");
 			this.state.forcedStop();
-			this.immediatelyRetryExecutor.shutdownNow();
-			this.scheduledRetryExecutor.shutdownNow();
-			this.timeoutExecutor.shutdownNow();
+			//this.immediatelyRetryExecutor.shutdownNow();
+			//this.scheduledRetryExecutor.shutdownNow();
+			//this.timeoutExecutor.shutdownNow();
 			throw new IllegalStateException("Forced to Stop the instance of Dexecutor!");
 		}		
 	}

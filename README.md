@@ -42,6 +42,11 @@ Dexecutor is licensed under **Apache Software License, Version 2.0**.
 * Version **0.0.1** released on 08/20/2016.
 
 
+### 2.1.4 (Upcoming)
+
+* Fixed end time issue with listener
+* Pause / Resume support
+
 ### 2.1.3
 
 * Time out support

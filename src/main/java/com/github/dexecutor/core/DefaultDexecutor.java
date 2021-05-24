@@ -112,11 +112,19 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 		} else {	
 			logger.debug("Recovering Dexecutor.");
 			this.state.onRecover();
+			long start = new Date().getTime();
 			doWaitForExecution(config);
 			doExecute(this.state.getNonProcessedRootNodes(), config);
 			doWaitForExecution(config);
+			shutdownExecutors();
+
+			long end = new Date().getTime();
+
+			this.state.setCurrentPhase(Phase.TERMINATED);
 			this.state.onTerminate();
-			logger.debug("Processed Nodes Ordering {}", this.state.getProcessedNodes());
+
+			logger.debug("Total Time taken to process {} jobs is {} ms, after recovery", this.state.graphSize(), end - start);
+			logger.debug("Processed Nodes Ordering, after recovery {}", this.state.getProcessedNodes());
 		}
 		return this.state.getExecutionResults();
 	}

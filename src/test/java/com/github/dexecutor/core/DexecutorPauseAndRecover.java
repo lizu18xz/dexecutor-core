@@ -55,7 +55,7 @@ public class DexecutorPauseAndRecover {
 				@Override
 				protected boolean shouldContinueProcessingNodes() {
 					counter++;
-					return counter != 2;
+					return counter != 3;
 				}
 			};
 

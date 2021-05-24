@@ -14,7 +14,7 @@ Refer [wiki](https://github.com/dexecutor/dexecutor-core/wiki) or [Project Web s
 
 | Stable Release Version | JDK Version compatibility | Release Date |
 | ------------- | ------------- | ------------|
-| 2.1.3  | 1.8+ | 4/17/2021 |
+| 2.1.4  | 1.8+ | 4/17/2021 |
 | 1.1.2 | 1.7+ | 10/15/2016 |
 
 ## License
@@ -22,6 +22,7 @@ Refer [wiki](https://github.com/dexecutor/dexecutor-core/wiki) or [Project Web s
 Dexecutor is licensed under **Apache Software License, Version 2.0**.
 
 ## News
+* Version **2.1.4** released on 5/24/2021.
 * Version **2.1.3** released on 4/17/2021.
 * Version **2.1.2** released on 12/25/2020.
 * Version **2.1.1** released on 01/17/2020.
@@ -42,7 +43,7 @@ Dexecutor is licensed under **Apache Software License, Version 2.0**.
 * Version **0.0.1** released on 08/20/2016.
 
 
-### 2.1.4 (Upcoming)
+### 2.1.4
 
 * Fixed end time issue with listener
 * Pause / Resume support

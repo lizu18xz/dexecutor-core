@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.dexecutor</groupId>
 	<artifactId>dexecutor-core</artifactId>
-	<version>2.1.4</version>
+	<version>2.1.5-SNAPSHOT</version>
 
 	<name>Dependent Tasks Executor Core</name>
 	<description>Executing dependent/Independent tasks in a reliable way, is made so easy that even your grandma can do it.</description>
@@ -35,7 +35,7 @@
 		<connection>scm:git:git://github.com/dexecutor/dexecutor-core.git</connection>
 		<developerConnection>scm:git:git@github.com:dexecutor/dexecutor-core.git</developerConnection>
 		<url>https://github.com/dexecutor/dexecutor-core</url>
-		<tag>dexecutor-core-2.1.4</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>

@@ -96,6 +96,9 @@ public final class DefaultDag<T, R> implements Dag<T, R>, Serializable {
 		return node;
 	}
 
+	/**
+	 * 获取头节点 遍历所以的 nodes 获取没有inComing的节点就是头节点
+	 * */
 	public Set<Node<T, R>> getInitialNodes() {
 		Set<Node<T, R>> initialNodes = new LinkedHashSet<Node<T, R>>();
 		for (Entry<T, Node<T, R>> entry : this.nodes.entrySet()) {

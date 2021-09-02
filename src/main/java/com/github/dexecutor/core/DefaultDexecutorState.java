@@ -37,6 +37,8 @@ public class DefaultDexecutorState<T, R> implements DexecutorState <T, R> {
 	private Phase currentPhase;
 	private final Dag<T, R> graph;
 	private final AtomicInteger nodesCount;
+
+	//已经执行node的集合
 	private final Collection<Node<T, R>> processedNodes;
 	private final Collection<Node<T, R>> discontinuedNodes;
 	private final Collection<ExecutionResult<T, R>> erroredTasks;

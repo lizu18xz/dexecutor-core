@@ -53,6 +53,7 @@ public final class ExecutionResult<T, R> implements Serializable {
 	}
 
 	private ExecutionResult(final T id, final R result, final ExecutionStatus status, final String msg) {
+		//node.getValue()  id就是node 的value,标识一个node  也就是一个task
 		this.id = id;
 		this.result = result;
 		this.status = status;

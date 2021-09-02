@@ -77,6 +77,10 @@ public final class DefaultExecutionEngine<T, R> implements ExecutionEngine<T, R>
 	public ExecutionResult<T, R> processResult() {
 		T identifier = null;
 		try {
+
+			/**
+			 * 阻塞队列中获取
+			 * */
 			@SuppressWarnings("unchecked")
 			IdentifiableRunnableFuture<T, ExecutionResult<T, R>> future = (IdentifiableRunnableFuture<T, ExecutionResult<T, R>>) this.completionService.take();
 			identifier = future.getIdentifier();

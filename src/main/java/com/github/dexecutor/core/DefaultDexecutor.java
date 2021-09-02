@@ -132,8 +132,10 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 	public ExecutionResults<T, R> execute(final ExecutionConfig config) {
 		validate(config);
 
+		//state 里面初始化了graph
 		this.state.setCurrentPhase(Phase.RUNNING);
 
+		//获取起始节点
 		Set<Node<T, R>> initialNodes = this.state.getInitialNodes();
 
 		long start = new Date().getTime();
@@ -189,8 +191,13 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 		}
 	}
 
+	//处理dag执行逻辑
 	private void doProcessNodes(final ExecutionConfig config, final Set<Node<T, R>> nodes) {
+
+		//第一次执行init节点
 		doExecute(nodes, config);
+
+		//等待节点执行完成执行outcome节点
 		doWaitForExecution(config);	
 	}
 
@@ -207,6 +214,7 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 					logger.debug("Submitting {} node for execution", node.getValue());
 					this.executionEngine.submit(task);
 				} else if (node.isNotProcessed()){
+					//节点被跳过
 					node.setSkipped();
 					logger.debug("Execution Skipped for node # {} ", node.getValue());
 					this.state.markProcessingDone(node);
@@ -229,6 +237,7 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 	private void doWaitForExecution(final ExecutionConfig config) {
 		while (state.getUnProcessedNodesCount() > 0) {
 			forceStopIfRequired();
+			//获取节点执行状态,从队列中获取执行完成的task,获取到说明task已经执行结束了 ExecutionResult保存了当前节点的node信息
 			ExecutionResult<T, R> executionResult = this.executionEngine.processResult();			
 			doAfterExecutionDone(config, executionResult);
 		}
@@ -252,6 +261,7 @@ public class DefaultDexecutor <T, R> implements Dexecutor<T, R> {
 			doExecute(recover, config);
 		}
 
+		//提交后续的node节点
 		if (config.isNonTerminating() || !executionEngine.isAnyTaskInError()) {
 			doExecute(processedNode.getOutGoingNodes(), config);				
 		} else if (executionEngine.isAnyTaskInError() && executionResult.isSuccess()) { 

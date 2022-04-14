@@ -38,6 +38,7 @@ public final class DefaultDag<T, R> implements Dag<T, R>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	//保存每个Node节点本身，方便获取node节点
 	private Map<T, Node<T, R>> nodes = new HashMap<T, Node<T, R>>();
 	
 	@Override

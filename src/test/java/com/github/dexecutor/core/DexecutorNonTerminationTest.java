@@ -20,6 +20,10 @@ import com.github.dexecutor.core.task.TaskProvider;
 
 public class DexecutorNonTerminationTest {
 
+
+	/**
+	 * 我的测试
+	 * */
 	@Test
 	public void testDependentTaskExecution() {
 
@@ -42,6 +46,7 @@ public class DexecutorNonTerminationTest {
 			executor.addDependency(13, 4);
 			executor.addDependency(13, 14);
 			executor.addIndependent(11);
+
 
 			ExecutionResults<Integer, Integer> result = executor.execute(ExecutionConfig.NON_TERMINATING);
 			System.out.println(result);
@@ -84,6 +89,8 @@ public class DexecutorNonTerminationTest {
 	}
 
 	private static class SleepyTaskProvider implements TaskProvider<Integer, Integer> {
+
+		private String aa;
 
 		public Task<Integer, Integer> provideTask(final Integer id) {
 
